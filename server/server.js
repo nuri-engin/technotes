@@ -31,6 +31,9 @@ app.use('/accounts', require('./accounts/accounts.controller'));
 // api routes for posts
 app.use('/posts', require('./posts/posts.controller'));
 
+// api routes for comments
+// app.use('/comments', require('./comments/comments.controller'));
+
 // swagger docs route
 app.use('/api-docs', require('_helpers/swagger'));
 

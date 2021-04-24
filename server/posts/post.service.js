@@ -53,6 +53,6 @@ async function getPost(id) {
 }
 
 function basicDetails(post) {
-    const { id, title, name, messsage, creator, selectedFile, createdAt, updated, tags, likes } = post;
-    return { id, title, name, messsage, creator, selectedFile, createdAt, updated, tags, likes };
+    const { id, title, name, messsage, creator, selectedFile, createdAt, updated, tags, likes, comments } = post;
+    return { id, title, name, messsage, creator, selectedFile, createdAt, updated, tags, likes, comments };
 }

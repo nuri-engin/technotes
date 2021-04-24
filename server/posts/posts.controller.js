@@ -31,16 +31,9 @@ function getAll(req, res, next) {
 }
 
 function createSchema(req, res, next) {
-    const schema = Joi.object({
-        title: Joi.string().required(),
-        message: Joi.string(),
-        creator: Joi.string(),
-        name: Joi.string(),
-        tags: Joi.array(),
-        selectedFile: Joi.string(),
-        likes: Joi.array(),
-        createdAt: Joi.date()
-    });
+    const schema = Joi.object(_getSchemaRules());
+
+    console.log("POST schema is: ", schema);
 
     validateRequest(req, next, schema);
 }
@@ -51,19 +44,8 @@ function create(req, res, next) {
         .catch(next);
 }
 
-
 function updateSchema(req, res, next) {
-    const schemaRules = {
-        title: Joi.string().empty(''),
-        message: Joi.string().empty(''),
-        creator: Joi.string().empty(''),
-        name: Joi.string().empty(''),
-        tags: Joi.array().empty(''),
-        selectedFile: Joi.string().empty(''),
-        likes: Joi.array().empty('')
-    };
-
-    const schema = Joi.object(schemaRules);
+    const schema = Joi.object(_getSchemaRules());
 
     validateRequest(req, next, schema);
 }
@@ -88,4 +70,19 @@ function _delete(req, res, next) {
     postService.delete(req.params.id)
         .then(() => res.json({ message: 'Post deleted successfully' }))
         .catch(next);
+}
+
+function _getSchemaRules() {
+    const schemaRules = {
+        title: Joi.string().empty(''),
+        message: Joi.string().empty(''),
+        creator: Joi.string().empty(''),
+        name: Joi.string().empty(''),
+        tags: Joi.array().empty(''),
+        selectedFile: Joi.string().empty(''),
+        comments: Joi.array().empty(''),
+        likes: Joi.array().empty('')
+    };
+
+    return schemaRules;
 }

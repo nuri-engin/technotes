@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Node.js Sign-up and Verification API
+  title: Tech Notes API
   description: Node.js + MongoDB - API with email sign-up, verification, authentication and forgot password
   version: 1.0.0
 
@@ -9,7 +9,7 @@ servers:
     description: Local development server
 
 paths:
-  /accounts/authenticate:
+  /api/accounts/authenticate:
     post:
       summary: Authenticate account credentials and return a JWT token and a cookie with a refresh token
       description: Accounts must be verified before authenticating.
@@ -81,7 +81,7 @@ paths:
                   message:
                     type: string
                     example: "Email or password is incorrect"
-  /accounts/refresh-token:
+  /api/accounts/refresh-token:
     post:
       summary: Use a refresh token to generate a new JWT token and a new refresh token
       description: The refresh token is sent and returned via cookies.
@@ -144,7 +144,7 @@ paths:
                   message:
                     type: string
                     example: "Invalid token"
-  /accounts/revoke-token:
+  /api/accounts/revoke-token:
     post:
       summary: Revoke a refresh token
       description: Admin users can revoke the tokens of any account, regular users can only revoke their own tokens.
@@ -190,7 +190,7 @@ paths:
                     example: "Invalid token"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
-  /accounts/register:
+  /api/accounts/register:
     post:
       summary: Register a new user account and send a verification email
       description: The first account registered in the system is assigned the `Admin` role, other accounts are assigned the `User` role.
@@ -241,7 +241,7 @@ paths:
                   message:
                     type: string
                     example: "Registration successful, please check your email for verification instructions"
-  /accounts/verify-email:
+  /api/accounts/verify-email:
     post:
       summary: Verify a new account with a verification token received by email after registration
       operationId: verifyEmail
@@ -278,7 +278,7 @@ paths:
                   message:
                     type: string
                     example: "Verification failed"
-  /accounts/forgot-password:
+  /api/accounts/forgot-password:
     post:
       summary: Submit email address to reset the password on an account
       operationId: forgotPassword
@@ -305,7 +305,7 @@ paths:
                   message:
                     type: string
                     example: "Please check your email for password reset instructions"
-  /accounts/validate-reset-token:
+  /api/accounts/validate-reset-token:
     post:
       summary: Validate the reset password token received by email after submitting to the /accounts/forgot-password route
       operationId: validateResetToken
@@ -342,7 +342,7 @@ paths:
                   message:
                     type: string
                     example: "Invalid token"
-  /accounts/reset-password:
+  /api/accounts/reset-password:
     post:
       summary: Reset the password for an account
       operationId: resetPassword
@@ -387,7 +387,7 @@ paths:
                   message:
                     type: string
                     example: "Invalid token"
-  /accounts:
+  /api/accounts:
     get:
       summary: Get a list of all accounts
       description: Restricted to admin users.
@@ -513,7 +513,7 @@ paths:
                     example: "Email 'jason@example.com' is already registered"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
-  /accounts/{id}:
+  /api/accounts/{id}:
     parameters:
       - in: path
         name: id
@@ -656,6 +656,266 @@ paths:
         "401":
           $ref: "#/components/responses/UnauthorizedError"
 
+  /api/posts:
+    get:
+      summary: Get a list of all post messages
+      description: Restricted to admin users.
+      operationId: getAllPosts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: An array of all post messsages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: "60845f68f84d58892f0bd3bf"
+                    title:
+                      type: string
+                      example: "Sample post title"
+                    message:
+                      type: string
+                      example: "Sample post message"
+                    name:
+                      type: string
+                      example: "Jason"
+                    creator:
+                      type: string
+                      example: "1233456"
+                    createdAt:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+                    updated:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+                    tags:
+                      type: array
+                      example:  ["tag1, foo, bar"]
+                    likes:
+                      type: array
+                      example:  ["1233456"]
+
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+        summary: Create a new post
+        description: Restricted to admin users.
+        operationId: createPost
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: "Sample post"
+                  message:
+                    type: string
+                    example: "Sample post"
+                  name:
+                    type: string
+                    example: "Jason"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  tags:
+                    type: array
+                    example:  ["tag1, foo, bar"]
+                required:
+                  - name
+                  - creator
+                  - title
+                  - message
+        responses:
+          "200":
+            description: Post created successfully. The details of the new post are returned.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                      id:
+                        type: string
+                        example: "60845f68f84d58892f0bd3bf"
+                      title:
+                        type: string
+                        example: "Sample post title"
+                      message:
+                        type: string
+                        example: "Sample post message"
+                      name:
+                        type: string
+                        example: "Jason"
+                      creator:
+                        type: string
+                        example: "1233456"
+                      createdAt:
+                        type: string
+                        example: "2021-04-24T18:11:52.600Z"
+                      updated:
+                        type: string
+                        example: "2021-04-24T18:11:52.600Z"
+                      tags:
+                        type: array
+                        example:  ["tag1, foo, bar"]
+                      likes:
+                        type: array
+                        example:  []
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+        
+  /api/posts/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Post id
+        required: true
+        example: "5eb12e197e06a76ccdefc121"
+        schema:
+          type: string
+    get:
+      summary: Get a single post by id
+      description: See a specific poss.
+      operationId: getPostById
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Details of the specified post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "60845f68f84d58892f0bd3bf"
+                  title:
+                    type: string
+                    example: "Sample post title"
+                  message:
+                    type: string
+                    example: "Sample post message"
+                  name:
+                    type: string
+                    example: "Jason"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  createdAt:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  updated:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  tags:
+                    type: array
+                    example:  ["tag1, foo, bar"]
+                  likes:
+                    type: array
+                    example:  ["1233456"]
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      summary: Update a post
+      description: Admin users can update any post including role, regular users are restricted to their own post.
+      operationId: updatePost
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  title:
+                    type: string
+                    example: "Sample post"
+                  message:
+                    type: string
+                    example: "Sample post"
+                  name:
+                    type: string
+                    example: "Jason"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  tags:
+                    type: array
+                    example:  ["tag1, foo, bar"]
+      responses:
+        "200":
+          description: Post updated successfully. The details of the updated post are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "60845f68f84d58892f0bd3bf"
+                  title:
+                    type: string
+                    example: "Sample post title"
+                  message:
+                    type: string
+                    example: "Sample post message"
+                  name:
+                    type: string
+                    example: "Jason"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  createdAt:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  updated:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  tags:
+                    type: array
+                    example:  ["tag1, foo, bar"]
+                  likes:
+                    type: array
+                    example:  ["1233456"]
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      summary: Delete a post
+      description: Admin users can delete any post, regular users are restricted to their own posts.
+      operationId: deletePost
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Post deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Post deleted successfully"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
 components:
   securitySchemes:
     bearerAuth:

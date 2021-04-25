@@ -773,7 +773,6 @@ paths:
                         example:  []
           "401":
             $ref: "#/components/responses/UnauthorizedError"
-        
   /api/posts/{id}:
     parameters:
       - in: path
@@ -916,6 +915,255 @@ paths:
           $ref: "#/components/responses/NotFoundError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+
+  /api/comments:
+    get:
+      summary: Get a list of all comments
+      description: Anyone can get the comments.
+      operationId: getAllComments
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: An array of all comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: "60845f68f84d58892f0bd3bf"
+                    postmessage_id:
+                      type: string
+                      example: "60850f4ef86468349cf40b81"
+                    message:
+                      type: string
+                      example: "Sample post message"
+                    creator:
+                      type: string
+                      example: "1233456"
+                    createdAt:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+                    updated:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+        summary: Create a new comment
+        description: Any user can post a new comment.
+        operationId: createComment
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  postmessage_id:
+                    type: string
+                    example: "60850f4ef86468349cf40b81"
+                  message:
+                    type: string
+                    example: "Sample comment text"
+                  creator:
+                    type: string
+                    example: "1233456"
+                required:
+                  - postmessage_id
+                  - creator
+                  - message
+        responses:
+          "200":
+            description: Comment created successfully. The details of the new comment are returned.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: "60845f68f84d58892f0bd3bf"
+                    postmessage_id:
+                      type: string
+                      example: "60850f4ef86468349cf40b81"
+                    message:
+                      type: string
+                      example: "Sample comment message"
+                    creator:
+                      type: string
+                      example: "1233456"
+                    createdAt:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+                    updated:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+  /api/comments/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Comment id
+        required: true
+        example: "5eb12e197e06a76ccdefc121"
+        schema:
+          type: string
+    get:
+      summary: Get a single comment by id
+      description: See a specific comment.
+      operationId: getCommentById
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Details of the specified comment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "60845f68f84d58892f0bd3bf"
+                  postmessage_id:
+                    type: string
+                    example: "60850f4ef86468349cf40b81"
+                  message:
+                    type: string
+                    example: "Sample comment message"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  createdAt:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  updated:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      summary: Update a comment
+      description: Admin users can update any comment including role, regular users are restricted to their own comment.
+      operationId: updateComment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postmessage_id:
+                  type: string
+                  example: "60850f4ef86468349cf40b81"
+                message:
+                  type: string
+                  example: "Sample comment text"
+                creator:
+                  type: string
+                  example: "1233456"
+      responses:
+        "200":
+          description: Comment updated successfully. The details of the updated comment are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "60845f68f84d58892f0bd3bf"
+                  postmessage_id:
+                    type: string
+                    example: "60850f4ef86468349cf40b81"
+                  message:
+                    type: string
+                    example: "Sample comment message"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  createdAt:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  updated:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      summary: Delete a comment
+      description: Admin users can delete any comment, regular users are restricted to their own comment.
+      operationId: deleteComment
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Comment deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Comment deleted successfully"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/comments/{postmessage_id}:
+    get:
+      summary: Get whole comments of a specific post
+      description: See whole comments.
+      operationId: getCommentByPostMessageId
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: An array of the specified post message id comments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "60845f68f84d58892f0bd3bf"
+                  postmessage_id:
+                    type: string
+                    example: "60850f4ef86468349cf40b81"
+                  message:
+                    type: string
+                    example: "Sample comment message"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  createdAt:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  updated:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
 components:
   securitySchemes:
     bearerAuth:

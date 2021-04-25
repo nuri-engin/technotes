@@ -15,7 +15,7 @@ router.get('/', authorize(Role.Admin), getAll);
 router.get('/:id', authorize(Role.Admin), getComment);
 router.get('/post/:postmessage_id', authorize(Role.Admin), getPostmessageComments);
 router.post('/', authorize(Role.Admin), createSchema, create);
-// router.put('/:id', authorize(), updateSchema, update);
+router.put('/:id', authorize(), updateSchema, update);
 router.delete('/:id', authorize(), _delete);
 
 /**
@@ -32,9 +32,6 @@ function getAll(req, res, next) {
 }
 
 function getPostmessageComments(req, res, next) {
-
-    console.log("Post Message ID: ", req.params.postmessage_id);
-
     if (!req.params.postmessage_id) return res.status(401).json({ message: 'No comment found' });
 
     commentService.getPostmessageComments(req.params.postmessage_id)
@@ -75,18 +72,21 @@ function updateSchema(req, res, next) {
 }
 
 function update(req, res, next) {
-    // users can update their own post and admins can update any post
+    // users can update their own comments and admins can update any post
     if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    postService.update(req.params.id, req.body)
-        .then(post => res.json(post))
+    commentService.update(req.params.id, req.body)
+        .then(comment => res.json(comment))
         .catch(next);
 }
 
 function _delete(req, res, next) {
-    if (!req.params.id) return res.status(401).json({ message: 'No comment found' });
+    // users can update their own comments and admins can update any post
+    if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
 
     commentService.delete(req.params.id)
         .then(() => res.json({ message: 'Comment deleted successfully' }))

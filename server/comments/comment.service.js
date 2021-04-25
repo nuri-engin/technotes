@@ -50,7 +50,7 @@ async function update(id, params) {
     const comment = await getComment(id);
 
     // copy params to comment and save
-    Object.assign(post, params);
+    Object.assign(comment, params);
 
     comment.updated = Date.now();
 

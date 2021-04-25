@@ -26,13 +26,13 @@ app.use(cookieParser());
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
 // api routes for accounts
-app.use('/accounts', require('./accounts/accounts.controller'));
+app.use('/api/accounts', require('./accounts/accounts.controller'));
 
 // api routes for posts
-app.use('/posts', require('./posts/posts.controller'));
+app.use('/api/posts', require('./posts/posts.controller'));
 
 // api routes for comments
-// app.use('/comments', require('./comments/comments.controller'));
+app.use('/api/comments', require('./comments/comments.controller'));
 
 // swagger docs route
 app.use('/api-docs', require('_helpers/swagger'));

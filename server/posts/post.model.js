@@ -12,10 +12,6 @@ const schema = new Schema({
         type: [String],
         default: []
     },
-    comments: {
-        type: [Object],
-        default: []
-    },
     updated: Date,
     createdAt: {
         type: Date,

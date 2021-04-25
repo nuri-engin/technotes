@@ -6,13 +6,13 @@
 	},
 	"item": [
 		{
-			"name": "reqister",
+			"name": "[account] reqister",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"title\": \"Ms\",\n  \"firstName\": \"Melina\",\n  \"lastName\": \"Zarkandi\",\n  \"email\": \"mzarkandi@gmail.com\",\n  \"password\": \"melina123\",\n  \"confirmPassword\": \"melina123\",\n  \"acceptTerms\": true\n}",
+					"raw": "{\n  \"title\": \"Mr\",\n  \"firstName\": \"Nuri\",\n  \"lastName\": \"Engin\",\n  \"email\": \"nuridesengin@gmail.com\",\n  \"password\": \"123123\",\n  \"confirmPassword\": \"123123\",\n  \"acceptTerms\": true\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -20,13 +20,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:{{PORT}}/accounts/register",
+					"raw": "http://localhost:{{PORT}}/api/accounts/register",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "{{PORT}}",
 					"path": [
+						"api",
 						"accounts",
 						"register"
 					]
@@ -35,13 +36,13 @@
 			"response": []
 		},
 		{
-			"name": "/accounts/verify-email",
+			"name": "[account] verify",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"token\": \"dc5c40fc37673144b82fe1df44155460c7e8b7a4ac2f38a0405fb6a7d7e6c4aaab651f794a668982\"\n}\n",
+					"raw": "{\n  \"token\": \"922c6c0cce799e18a8a8c78a06e832a8b50b8fe8860c1733b4eb6cd3e5e8d4549d17a17ea25c279d\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -49,13 +50,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:{{PORT}}/accounts/verify-email",
+					"raw": "http://localhost:{{PORT}}/api/accounts/verify-email",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "{{PORT}}",
 					"path": [
+						"api",
 						"accounts",
 						"verify-email"
 					]
@@ -64,7 +66,7 @@
 			"response": []
 		},
 		{
-			"name": "login",
+			"name": "[account] login",
 			"event": [
 				{
 					"listen": "test",
@@ -96,13 +98,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:{{PORT}}/accounts/authenticate",
+					"raw": "http://localhost:{{PORT}}/api/accounts/authenticate",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "{{PORT}}",
 					"path": [
+						"api",
 						"accounts",
 						"authenticate"
 					]
@@ -111,20 +114,13 @@
 			"response": []
 		},
 		{
-			"name": "/accounts/forgot-password",
+			"name": "[account] forgot-password",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = JSON.parse(responseBody);",
-							"var token = jsonData && jsonData.jwtToken;",
-							"",
-							"console.log(token);",
-							"",
-							"if (token) {",
-							"    postman.setEnvironmentVariable(\"token\", token);",
-							"}"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -143,13 +139,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:{{PORT}}/accounts/forgot-password",
+					"raw": "http://localhost:{{PORT}}/api/accounts/forgot-password",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "{{PORT}}",
 					"path": [
+						"api",
 						"accounts",
 						"forgot-password"
 					]
@@ -158,20 +155,13 @@
 			"response": []
 		},
 		{
-			"name": "/accounts/reset-password",
+			"name": "[account] reset-password",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = JSON.parse(responseBody);",
-							"var token = jsonData && jsonData.jwtToken;",
-							"",
-							"console.log(token);",
-							"",
-							"if (token) {",
-							"    postman.setEnvironmentVariable(\"token\", token);",
-							"}"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -190,13 +180,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:{{PORT}}/accounts/reset-password",
+					"raw": "http://localhost:{{PORT}}/api/accounts/reset-password",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "{{PORT}}",
 					"path": [
+						"api",
 						"accounts",
 						"reset-password"
 					]
@@ -205,36 +196,7 @@
 			"response": []
 		},
 		{
-			"name": "/accounts/{id}",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"title\": \"Mr\",\n  \"firstName\": \"Nuri\",\n  \"lastName\": \"Engin\",\n  \"email\": \"nuri@engin.web.tr\",\n  \"password\": \"pass123\",\n  \"confirmPassword\": \"pass123\",\n  \"acceptTerms\": true\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:{{PORT}}/accounts/607dda3b2ea2955aad7b2653",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"accounts",
-						"607dda3b2ea2955aad7b2653"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "/accounts",
+			"name": "[account] get all",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -249,13 +211,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:{{PORT}}/accounts/",
+					"raw": "http://localhost:{{PORT}}/api/accounts/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "{{PORT}}",
 					"path": [
+						"api",
 						"accounts",
 						""
 					]
@@ -264,18 +227,19 @@
 			"response": []
 		},
 		{
-			"name": "/accounts/{id}",
+			"name": "[account] get a specific {id}",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:{{PORT}}/accounts/607dda3b2ea2955aad7b2653",
+					"raw": "http://localhost:{{PORT}}/api/accounts/607dda3b2ea2955aad7b2653",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "{{PORT}}",
 					"path": [
+						"api",
 						"accounts",
 						"607dda3b2ea2955aad7b2653"
 					]
@@ -284,7 +248,47 @@
 			"response": []
 		},
 		{
-			"name": "/accounts/{id}",
+			"name": "[account] update a specific {id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Mr\",\n  \"firstName\": \"Nuri\",\n  \"lastName\": \"Engin\",\n  \"email\": \"nuri@engin.web.tr\",\n  \"password\": \"pass123\",\n  \"confirmPassword\": \"pass123\",\n  \"acceptTerms\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:{{PORT}}/api/accounts/607dda3b2ea2955aad7b2653",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"api",
+						"accounts",
+						"607dda3b2ea2955aad7b2653"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[account] delete a specific {id}",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -299,101 +303,23 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:{{PORT}}/accounts/607f07e4dd9c962814b6ac1f",
+					"raw": "http://localhost:{{PORT}}/api/accounts/608456cd13933775f45cb1b2",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "{{PORT}}",
 					"path": [
+						"api",
 						"accounts",
-						"607f07e4dd9c962814b6ac1f"
+						"608456cd13933775f45cb1b2"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "GET /posts",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:{{PORT}}/posts",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"posts"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "PUT post",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"title\": \"Deneme POSTMAN gonderisi\",\n    \"message\": \"Bu bir GUNCELLENMIS mesajdir.....\",\n    \"creator\": \"1233456\",\n    \"name\": \"Safa\",\n    \"tags\": \"safa, post, deneme\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:{{PORT}}/posts/60806aea1342b1654ffa1084",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"posts",
-						"60806aea1342b1654ffa1084"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "POST post",
+			"name": "[posts] create a post",
 			"event": [
 				{
 					"listen": "test",
@@ -420,6 +346,89 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
+					"raw": "{\n    \"title\": \". Nullam non scelerisque metus.\",\n    \"message\": \" Donec sollicitudin magna et malesuada facilisis. Mauris efficitur dictum lectus, condimentum iaculis nisl ullamcorper eget. Fusce facilisis dictum consequat. Proin venenatis lectus vel pretium vehicula. Quisque magna mauris, auctor quis fermentum ac, tempor in sapien. Cras finibus vulputate justo, in aliquam nisl maximus eu. Mauris rutrum accumsan arcu, sed suscipit sapien pulvinar sit amet. Aenean volutpat ligula eu imperdiet interdum. Phasellus ut ipsum elit. In eget pharetra eros. Phasellus malesuada nisl dolor, vitae suscipit est imperdiet et. Integer eros tortor, tincidunt quis maximus sed, vehicula non est. Vestibulum mollis est vitae metus pharetra, at aliquet ante ullamcorper. In rutrum leo ligula, molestie semper ipsum finibus id. \",\n    \"creator\": \"6081c3a0c3ca771bc61a72c5\",\n    \"name\": \"Melina\",\n    \"tags\": [\"melina, post, lorem\"]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:{{PORT}}/api/posts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[posts] get all",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:{{PORT}}/api/posts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[posts] get a specific {id}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
 					"raw": "{\n    \"title\": \"Deneme POSTMAN gonderisi\",\n    \"message\": \"Bu bir GUNCELLENMIS mesajdir.....\",\n    \"creator\": \"1233456\",\n    \"name\": \"Safa\",\n    \"tags\": [\"safa, post, deneme\"]\n}",
 					"options": {
 						"raw": {
@@ -428,14 +437,303 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:{{PORT}}/posts",
+					"raw": "http://localhost:{{PORT}}/api/posts/6081c674c3ca771bc61a72c9",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "{{PORT}}",
 					"path": [
-						"posts"
+						"api",
+						"posts",
+						"6081c674c3ca771bc61a72c9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[posts] update a specific {id}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"comments\": [\n            {\n                \"postid\": 123,\n                \"user\": 12321,\n                \"comment\": \"Aloha!\"\n            },\n            {\n                \"postid\": 321,\n                \"user\": 321,\n                \"comment\": \"Yup!\"\n            }\n        ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:{{PORT}}/api/posts/60845f68f84d58892f0bd3bf",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"api",
+						"posts",
+						"60845f68f84d58892f0bd3bf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[posts] delete a specific {id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:{{PORT}}/api/posts/60845d62e1774983285c3ca7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"api",
+						"posts",
+						"60845d62e1774983285c3ca7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[comments] create a comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"postmessage_id\": \"60850f4ef86468349cf40b81\",\n    \"message\": \"Consectetur adipiscing elit. Nulla in mi at ligula commodo lacinia a vitae dui. Curabitur rutrum scelerisque enim ac fringilla. Vivamus a ligula vitae lorem condimentum aliquet at quis nibh. Etiam suscipit quam eget vestibulum auctor. \",\n    \"creator\": \"607f08c8dd9c962814b6ac20\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:{{PORT}}/api/comments/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"api",
+						"comments",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[comments] get all",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:{{PORT}}/api/comments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"api",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[comments] get all of a PostMessage {postmessage_id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:{{PORT}}/api/comments/post/60850f4ef86468349cf40b81",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"api",
+						"comments",
+						"post",
+						"60850f4ef86468349cf40b81"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[comments] get a specific {id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:{{PORT}}/api/comments/60850febf86468349cf40b85",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"api",
+						"comments",
+						"60850febf86468349cf40b85"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[comments] update a specific {id}",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n     \"message\": \" Guncellenmis mesaj\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:{{PORT}}/api/comments/60850febf86468349cf40b85",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"api",
+						"comments",
+						"60850febf86468349cf40b85"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[comments] delete a specific {id}",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:{{PORT}}/api/comments/60851011f86468349cf40b86",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "{{PORT}}",
+					"path": [
+						"api",
+						"comments",
+						"60851011f86468349cf40b86"
 					]
 				}
 			},

@@ -1,16 +1,19 @@
 <template>
   <div id="app">
     <Navbar />
+    <Filterbar />
   </div>
 </template>
 
 <script>
 import Navbar from '@/components/Navbar.vue'
+import Filterbar from '@/components/FilterBar.vue'
 
 export default {
   name: 'App',
   components: {
-    Navbar
+    Navbar,
+    Filterbar
   }
 }
 </script>

@@ -30,7 +30,7 @@ export default {
 <style scoped>
 .navbar-wrapper {
   margin-top: 30px;
-  padding: 3px 30px;
+  padding: 2px 30px;
   background-color: #3c6562;
   width: 100%;
   display: flex;

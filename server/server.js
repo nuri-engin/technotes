@@ -30,6 +30,7 @@ app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: 
 app.get('/', (req, res) => {
     res.send(`
         Hello to TechNotes API... 
+        
         Please ensure to request to deployed API!
         @ https://technotes-api-dev.herokuapp.com/
     `);

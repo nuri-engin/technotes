@@ -31,8 +31,11 @@ app.get('/', (req, res) => {
     res.send(`
         Hello to TechNotes API... 
         
-        Please ensure to request to deployed API!
+        Please ensure to request to deployed API!...
         @ https://technotes-api-dev.herokuapp.com/
+
+        API doc enabled!
+        @ https://technotes-api-dev.herokuapp.com/api-docs/
     `);
 });
 

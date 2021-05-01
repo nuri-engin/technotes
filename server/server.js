@@ -4,8 +4,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const dotenv = require('dotenv');
 
+const dotenv = require('dotenv');
+const router = express.Router();
 
 /**
  * Server Startup File
@@ -25,13 +26,22 @@ app.use(cookieParser());
 // allow cors requests from any origin and with credentials
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
+// Welcome the visitors...
+app.get('/', (req, res) => {
+    res.send(`
+        Hello to TechNotes API... \n
+        Please ensure to request to deployed API!
+        @ https://technotes-api-dev.herokuapp.com/
+    `);
+});
+
 // api routes for accounts
 app.use('/api/accounts', require('./accounts/accounts.controller'));
 
 // api routes for posts
 app.use('/api/posts', require('./posts/posts.controller'));
 
-// api routes for comments
+// api routes for commentapis
 app.use('/api/comments', require('./comments/comments.controller'));
 
 // swagger docs route

@@ -88,11 +88,11 @@ export default {
 }
 
 .search-input {
-  padding-top: 10px;
-  background-color: transparent;
-  border: none;
-  color: white;
-  padding-left: 30px;
+  padding-top: 10px !important;
+  background-color: transparent !important;
+  border: none !important;
+  color: white !important;
+  padding-left: 30px !important;
 }
 
 .search-icon {

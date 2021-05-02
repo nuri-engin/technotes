@@ -45,11 +45,12 @@
                   label-for="input-1"
                 >
                   <b-form-input
+                    name="title"
                     id="input-1"
+                    @input="(value) => updateTitle(value)"
                     required
                   ></b-form-input>
                 </b-form-group>
-
 
                 <b-form-group
                   id="input-group-2"
@@ -58,7 +59,9 @@
                 >
                   <b-form-textarea
                     id="input-2"
-                    placeholder="Add more details ..." 
+                    name= "description"
+                    placeholder="Add more details ..."
+                    @input="(value) => updateDescription(value)"
                     rows="4"
                     max-rows="6"
                   ></b-form-textarea>
@@ -69,8 +72,10 @@
                   label="Tags"
                   label-for="input-3"
                 >
-                  <b-form-tags
-                    id="input-3"
+                  <b-form-tags 
+                    id="input-3" 
+                    name="tags"
+                    @input="(value) => updateTags(value)"
                   ></b-form-tags>
                 </b-form-group>
               </b-form>
@@ -79,7 +84,7 @@
             <div class="modal-footer">
               <b-button
                 class="modal-default-button"
-                @click="showNewNoteModal = false"
+                @click="generateNote()"
               >
                 Create
               </b-button>
@@ -92,17 +97,39 @@
 </template>
 
 <script>
+import service from "@/service";
 export default {
   name: "Navbar",
   data() {
     return {
       showNewNoteModal: false,
+      title: '',
+      description: '',
+      tags: []
     };
   },
   methods: {
+    updateTitle(value) {
+      this.title = value
+    },
+    updateDescription(value) {
+      this.description = value
+    },
+    updateTags(value) {
+      this.tags = value
+    },
     toggleNewNoteModal() {
       this.showNewNoteModal = !this.showNewNoteModal;
     },
+    generateNote() {
+       // eslint-disable-next-line no-debugger
+      service().post('posts', {
+        title: this.title,
+        message: this.description,
+        tags: this.tags
+      })
+      this.showNewNoteModal = false;
+    }
   },
 };
 </script>
@@ -224,7 +251,8 @@ export default {
   font-weight: bold;
 }
 
-.form-control, .form-control:focus {
+.form-control,
+.form-control:focus {
   background: transparent;
   border: none;
   border-bottom: 1px solid #8cadab;
@@ -232,7 +260,8 @@ export default {
   margin-bottom: 40px;
 }
 
-textarea.form-control, textarea.form-control:focus {
+textarea.form-control,
+textarea.form-control:focus {
   border: 1px solid #8cadab;
   border-radius: 10px;
   background: #e3e4e2;

@@ -28,18 +28,61 @@
         <div class="modal-wrapper">
           <div class="modal-container">
             <div class="modal-header">
-              <b-icon class="close-icon" icon="x" scale="2" @click="showNewNoteModal = false"/>
-                Modal Header
+              <b-icon
+                class="close-icon"
+                icon="x"
+                scale="2"
+                @click="showNewNoteModal = false"
+              />
+              New Note
             </div>
 
             <div class="modal-body">
-                Modal Body
+              <b-form>
+                <b-form-group
+                  id="input-group-1"
+                  label="Title *"
+                  label-for="input-1"
+                >
+                  <b-form-input
+                    id="input-1"
+                    required
+                  ></b-form-input>
+                </b-form-group>
+
+
+                <b-form-group
+                  id="input-group-2"
+                  label="Description"
+                  label-for="input-2"
+                >
+                  <b-form-textarea
+                    id="input-2"
+                    placeholder="Add more details ..." 
+                    rows="4"
+                    max-rows="6"
+                  ></b-form-textarea>
+                </b-form-group>
+
+                <b-form-group
+                  id="input-group-3"
+                  label="Tags"
+                  label-for="input-3"
+                >
+                  <b-form-tags
+                    id="input-3"
+                  ></b-form-tags>
+                </b-form-group>
+              </b-form>
             </div>
 
             <div class="modal-footer">
-                <b-button class="modal-default-button" @click="showNewNoteModal = false">
-                  Close
-                </b-button>
+              <b-button
+                class="modal-default-button"
+                @click="showNewNoteModal = false"
+              >
+                Create
+              </b-button>
             </div>
           </div>
         </div>
@@ -53,14 +96,14 @@ export default {
   name: "Navbar",
   data() {
     return {
-      showNewNoteModal: false
-    }
+      showNewNoteModal: false,
+    };
   },
   methods: {
     toggleNewNoteModal() {
-      this.showNewNoteModal = !this.showNewNoteModal
-    }
-  }
+      this.showNewNoteModal = !this.showNewNoteModal;
+    },
+  },
 };
 </script>
 
@@ -153,26 +196,50 @@ export default {
 }
 
 .modal-container {
-  width: 50%;
-  height: 30%;
+  width: 70%;
+  height: max-content;
   margin: 0px auto;
-  background-color: #fff;
+  padding: 25px;
+  background-color: #f3fcf0;
   border-radius: 2px;
   color: black;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
-    position: relative;
+  position: relative;
 }
 
 .modal-default-button {
-  color: #02252f;
+  padding: 10px 30px;
+  color: #3c6562;
+  border: 1px solid #3c6562;
 }
 
 .modal-header {
+  font-size: 18px;
   margin-top: 0;
-  color: black;
+  color: #3c6562;
   position: relative;
+  border: none;
+  font-weight: bold;
+}
+
+.form-control, .form-control:focus {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #8cadab;
+  border-radius: 0px;
+  margin-bottom: 40px;
+}
+
+textarea.form-control, textarea.form-control:focus {
+  border: 1px solid #8cadab;
+  border-radius: 10px;
+  background: #e3e4e2;
+}
+
+label {
+  color: #3c6562 !important;
 }
 
 .close-icon {
@@ -184,6 +251,13 @@ export default {
 
 .modal-body {
   margin: 20px 0;
+  border: none;
+}
+
+.modal-footer {
+  border: none;
+  text-align: center;
+  justify-content: center;
 }
 
 .modal-default-button {
@@ -203,5 +277,4 @@ export default {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
-
 </style>

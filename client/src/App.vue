@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div id="app">
     <Navbar />
     <Filterbar />
@@ -6,19 +7,30 @@
       <Card />
     </div>
   </div>
+    <Login />
+  </div>
 </template>
 
 <script>
 import Navbar from '@/components/Navbar.vue'
 import Filterbar from '@/components/FilterBar.vue'
 import Card from '@/components/Card.vue'
+import Login from '@/components/Login.vue'
 
 export default {
   name: 'App',
   components: {
     Navbar,
     Filterbar,
-    Card
+    Card, 
+    Login
+  },
+  mounted() {
+    if(localStorage.getItem('token')){
+      document.getElementById('app').classList.remove('blur');
+    } else {
+      document.getElementById('app').classList.add('blur')
+    }
   }
 }
 </script>
@@ -36,5 +48,8 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.blur {
+  filter: blur(5px);
 }
 </style>

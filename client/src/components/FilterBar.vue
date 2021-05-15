@@ -101,9 +101,8 @@ export default {
   left: 0px;
 }
 
-.sortby-dd > .btn-secondary{
-    border: none !important;
-    background-color: transparent;
+.sortby-dd > .btn-secondary {
+  border: none !important;
+  background-color: transparent;
 }
-
 </style>

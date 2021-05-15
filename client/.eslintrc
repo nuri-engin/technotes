@@ -1,6 +1,0 @@
-{
-    "rules": {
-        "no-debugger":"off"
-    },
-    "parser": "babel-eslint"
-}

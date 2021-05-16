@@ -223,7 +223,7 @@
 import service from "@/service"
 export default {
     name: 'Login',
-    props: [ 'getPosts'],
+    props: [ 'getPosts', 'getUserName'],
     data() {
     return {
       showLoginModal:true,
@@ -273,6 +273,7 @@ export default {
         password: this.password
       }).then(response => {
         if(response.status === 200) {
+          this.getUserName(response.data);
           localStorage.setItem('token', response.data.jwtToken)
           this.showLoginModal = !this.showLoginModal
           document.getElementById('app').classList.remove('blur'); 

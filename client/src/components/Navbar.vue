@@ -14,11 +14,11 @@
             <img width="60" src="@/assets/images/no-image.png" />
           </div>
           <div>
-            <span>Username</span>
+            <span>{{username}}</span>
           </div>
         </div>
         <div class="logout-btn-wrapper">
-          <b-button class="logout-btn">Logout</b-button>
+          <b-button @click="logoutUser()" class="logout-btn">Logout</b-button>
         </div>
       </div>
     </div>
@@ -100,15 +100,19 @@
 import service from "@/service";
 export default {
   name: "Navbar",
+  props: ['logout', 'username'],
   data() {
     return {
       showNewNoteModal: false,
       title: '',
       description: '',
-      tags: []
+      tags: [],
     };
   },
   methods: {
+    logoutUser() {
+      this.logout()
+    },
     updateTitle(value) {
       this.title = value
     },

@@ -1,7 +1,7 @@
 <template>
   <div>
   <div id="app">
-    <Navbar />
+    <Navbar :logout="logout" :username="username" />
     <Filterbar />
     <div class="card-area-wrapper">
       <div v-for="post in posts" :key="post">
@@ -9,7 +9,7 @@
       </div>
     </div>
   </div>
-    <Login :getPosts="getPosts" />
+    <Login :getPosts="getPosts" :getUserName="getUserName" />
   </div>
 </template>
 
@@ -30,7 +30,8 @@ export default {
   },
   data() {
     return { 
-        posts: []
+        posts: [],
+        username: ''
       }
   },
   mounted() {
@@ -42,17 +43,25 @@ export default {
     }
   },
   methods: {
-    getPosts() {
-      if(localStorage.getItem('token')){
-         service().get('posts', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }).then(response => {
-          this.posts = response.data
-        })
-      }
-  }
+      getUserName(data) {
+        this.username = data.firstName + ' ' + data.lastName
+      },
+      getPosts() {
+        if(localStorage.getItem('token')){
+          service().get('posts', {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          }).then(response => {
+            this.posts = response.data
+          })
+        }
+    },
+    logout() {
+      localStorage.removeItem('token');
+      document.getElementById('app').classList.add('blur');
+      this.showLoginModal=true;
+    }
   }
 }
 </script>

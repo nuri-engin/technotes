@@ -38,7 +38,7 @@
                     ></b-form-input>
                   </b-form-group>
                   <div class="forgot-pass-wrapper">
-                    <b-link class="link">I have forgot my password.</b-link>
+                    <b-link @click="goToForgotPass()" class="link">I have forgot my password.</b-link>
                   </div>
                 </b-form>
               </div>
@@ -63,6 +63,50 @@
                 </div>
               </div>
             </div>
+            <div v-if="forgotPassStep" class=modal-inner-container>
+               <div class="modal-header">
+                Forgot Password
+              </div>
+
+              <div class="modal-body">
+                <div class="forgot-pass-content">
+                  <span>
+                    Dont worry! Just enter your email address. and we
+                    will send you a link to rest your password.
+                  </span>
+                </div>
+                <b-form>
+                  <b-form-group
+                    id="input-group-1"
+                    label-for="input-email"
+                  >
+                    <b-form-input
+                      name="Email"
+                      id="input-email"
+                      @input="(value) => updateEmail(value)"
+                      placeholder="Email"
+                      required
+                    ></b-form-input>
+
+                  </b-form-group>
+                </b-form>
+              </div>
+
+              <div class="modal-footer">
+                <b-button
+                  class="modal-default-button login-btn"
+                  @click="login()"
+                >
+                  Send
+                </b-button>
+                <div class="bottom-wrapper">
+                    <b-link class="link" @click="backToLogin()">
+                          <b-icon icon="arrow-left"/>
+                          Back to Login
+                    </b-link>
+                </div>
+              </div>
+            </div>
             <div v-if="loginError" class="modal-inner-container msg-modal">
               <div class="error-icon-wrapper">
                 <b-icon class="error-icon" icon="exclamation-circle"/>
@@ -76,6 +120,21 @@
               </div>
               <div class="create-new-acc-btn-wrapper">
                 <b-button @click="goToRegister()" class="create-new-acc-btn">Create New Account</b-button>
+              </div>
+            </div>
+            <div v-if="registerSuccess" class="modal-inner-container msg-modal">
+               <div class="success-icon-wrapper">
+                <b-icon class="success-icon" icon="exclamation-circle"/>
+              </div>
+              <div class="success-content">
+                <div class="success-title">Good Job !<br/></div>
+                <div class="success-message">
+                  You have been successfully registered.<br/>
+                  Please check your e-mail, then press continue.
+                </div>
+              </div>
+              <div class="continue-btn-wrapper">
+                <b-button @click="closeModal()" class="continue-btn">Continue</b-button>
               </div>
             </div>
             <div v-if="registerStep" class="modal-inner-container">
@@ -174,9 +233,11 @@ export default {
       newUserPassword: '',
       newUserConfirmPassword: '',
       status: false,
-      loginStep: false,
+      loginStep: true,
       registerStep: false,
-      loginError: true
+      loginError: false,
+      registerSuccess:false,
+      forgotPassStep: false,
     }
   },
    mounted() {
@@ -219,8 +280,17 @@ export default {
       this.loginStep = false;
     },
     backToLogin() {
+      this.forgotPassStep=false;
       this.registerStep = false;
       this.loginStep = true;
+    },
+    goToForgotPass() {
+      this.loginStep=false;
+      this.forgotPassStep=true;
+    },
+    closeModal() {
+      this.showLoginModal = false;
+      document.getElementById('app').classList.remove('blur'); 
     },
     register() {
       service().post('accounts/register', {
@@ -377,28 +447,33 @@ export default {
     opacity: 0.6;
 }
 
-.error-icon{
+.error-icon, .success-icon{
   font-size: 75px;
   color: #d5d9d2;
   background-color: #CB4E44;
   border-radius: 50%;
 }
 
-.error-content{
+.success-icon {
+  background-color: #6DB478
+}
+
+.error-content, .success-content{
   margin-top: -20px;
   text-align: center;
 }
 
-.error-title{
+.error-title, .success-title{
   font-size:25px;
   text-align:center;
 }
-.error-message{
+.error-message, .success-message{
   margin-top: 20px;
   font-size: 16px;
+  font-weight: 200;
 }
 
-.create-new-acc-btn {
+.create-new-acc-btn, .continue-btn {
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -409,5 +484,17 @@ export default {
   border-color: #CB4E44;
   font-size: 19px;
   padding: 20px 0px;
+}
+
+.continue-btn{
+  background-color: #6DB478;
+  border-color: #6DB478;
+}
+
+.forgot-pass-content{
+  text-align: center;
+  font-weight: 200;
+  padding: 20px 0px;
+  margin-bottom: 30px;
 }
 </style>

@@ -4,10 +4,12 @@
     <Navbar />
     <Filterbar />
     <div class="card-area-wrapper">
-      <Card />
+      <div v-for="post in posts" :key="post">
+        <Card :post="post" />
+      </div>
     </div>
   </div>
-    <Login />
+    <Login :getPosts="getPosts" />
   </div>
 </template>
 
@@ -16,6 +18,7 @@ import Navbar from '@/components/Navbar.vue'
 import Filterbar from '@/components/FilterBar.vue'
 import Card from '@/components/Card.vue'
 import Login from '@/components/Login.vue'
+import service from "@/service"
 
 export default {
   name: 'App',
@@ -25,12 +28,31 @@ export default {
     Card, 
     Login
   },
+  data() {
+    return { 
+        posts: []
+      }
+  },
   mounted() {
     if(localStorage.getItem('token')){
       document.getElementById('app').classList.remove('blur');
+      this.getPosts()
     } else {
       document.getElementById('app').classList.add('blur')
     }
+  },
+  methods: {
+    getPosts() {
+      if(localStorage.getItem('token')){
+         service().get('posts', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        }).then(response => {
+          this.posts = response.data
+        })
+      }
+  }
   }
 }
 </script>
@@ -43,6 +65,10 @@ body {
 .card-area-wrapper {
   margin-top: 40px;
   padding: 20px 40px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 #app {

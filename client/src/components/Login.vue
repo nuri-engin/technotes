@@ -220,9 +220,10 @@
 </template>
 
 <script>
-import service from "@/service";
+import service from "@/service"
 export default {
     name: 'Login',
+    props: [ 'getPosts'],
     data() {
     return {
       showLoginModal:true,
@@ -241,7 +242,11 @@ export default {
     }
   },
    mounted() {
-    this.showLoginModal = true;
+      if(localStorage.getItem('token')){
+          this.showLoginModal = false;
+    } else {
+          this.showLoginModal = true;
+    }
   },
   methods: {
     updateEmail(value) {
@@ -272,7 +277,8 @@ export default {
           this.showLoginModal = !this.showLoginModal
           document.getElementById('app').classList.remove('blur'); 
         }
-      })
+      }).then(()=> {
+        this.getPosts()})
     },
     goToRegister() {
       this.loginError=false;

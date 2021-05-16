@@ -6,8 +6,8 @@
           <img width="40" src="@/assets/images/no-image.png" />
         </div>
         <div class="writer-name-date">
-          <span class="name">Username</span>
-          <span class="date">Today at 0:09</span>
+          <span class="name">{{post.name}}</span>
+          <span class="date">{{post.createdAt}}</span>
         </div>
       </div>
       <div class="more-dd">
@@ -21,14 +21,16 @@
       </div>
     </div>
     <div class="techcard-content">
-      <div class="techcard-content-title">Tech Major</div>
+      <div class="techcard-content-title">{{post.title}}</div>
       <div class="techcard-content-text">
-        Link <br />
-        Link <br />
-        Link
+        {{post.message}}
       </div>
     </div>
-    <div class="techcard-tags">#tag1 #tag2 #tag3 #tag4 #tag5</div>
+    <div class="techcard-tags">
+      <span v-for="tag in post.tags[0].split(',')" :key="tag">
+        #{{tag}}
+      </span>
+    </div>
     <div class="techcard-actions">
       <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
       <div class="comment-icon"><b-icon icon="chat-left-fill" /></div>
@@ -39,6 +41,7 @@
 <script>
 export default {
   name: "Card",
+  props: ['post'],
 };
 </script>
 
@@ -54,6 +57,7 @@ export default {
   flex-direction: column;
   position: relative;
   z-index: 1;
+  margin: 10px;
 }
 
 .techcard-header {

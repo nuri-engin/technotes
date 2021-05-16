@@ -44,8 +44,9 @@ body {
   margin-top: 40px;
   padding: 20px 40px;
 }
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Heiti-Medium', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

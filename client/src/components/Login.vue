@@ -4,7 +4,7 @@
       <div v-if="showLoginModal" class="modal-mask">
         <div class="modal-wrapper">
           <div class="modal-container">
-            <div v-if="loginStep">
+            <div v-if="loginStep" class="modal-inner-container">
               <div class="modal-header">
                 Login
               </div>
@@ -63,7 +63,22 @@
                 </div>
               </div>
             </div>
-            <div v-if="registerStep">
+            <div v-if="loginError" class="modal-inner-container msg-modal">
+              <div class="error-icon-wrapper">
+                <b-icon class="error-icon" icon="exclamation-circle"/>
+              </div>
+              <div class="error-content">
+                <div class="error-title">Oops !<br/></div>
+                <div class="error-message">
+                  We can not find an account with this e-mail. <br/>
+                  Please try again or create a new account.
+                </div>
+              </div>
+              <div class="create-new-acc-btn-wrapper">
+                <b-button @click="goToRegister()" class="create-new-acc-btn">Create New Account</b-button>
+              </div>
+            </div>
+            <div v-if="registerStep" class="modal-inner-container">
                <div class="modal-header">
                 Register
               </div>
@@ -159,8 +174,9 @@ export default {
       newUserPassword: '',
       newUserConfirmPassword: '',
       status: false,
-      loginStep: true,
-      registerStep: false
+      loginStep: false,
+      registerStep: false,
+      loginError: true
     }
   },
    mounted() {
@@ -198,6 +214,7 @@ export default {
       })
     },
     goToRegister() {
+      this.loginError=false;
       this.registerStep = true;
       this.loginStep = false;
     },
@@ -230,7 +247,7 @@ export default {
   border: none;
   border-bottom: 1px solid #8cadab;
   border-radius: 0px;
-  margin-bottom: 40px;
+  margin-bottom: 25px;
 }
 
 .modal-mask {
@@ -252,7 +269,7 @@ export default {
 
 .modal-container {
   width: 420px;
-  height: max-content;
+  height: 460px;
   margin: 0px auto;
   padding: 4px 15px;
   background-color: #d5d9d2;
@@ -260,8 +277,20 @@ export default {
   color: black;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
   position: relative;
+}
+
+.msg-modal {
+  justify-content: space-around;
+  align-items: center;
+  margin: 0 auto;
+  vertical-align: middle;
+}
+
+.modal-inner-container{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-default-button {
@@ -286,7 +315,6 @@ export default {
 }
 
 .modal-body {
-  margin: 20px 0;
   border: none;
 }
 
@@ -319,10 +347,14 @@ export default {
 .login-btn, .register-btn {
     background-color:transparent;
     border-radius: 15px;
-    border: 1px solid #02252f;
+    border: 2px solid #02252f;
     color: #02252f;
     font-size: 19px;
-    padding: 5px 20px
+    padding: 5px 20px;
+}
+
+.login-btn {
+    margin-bottom:20px;
 }
 
 .login-btn:hover, .register-btn:hover{
@@ -331,7 +363,8 @@ export default {
 
 .remember-me{
     color: #3c6562;
-    font-size: 13px;
+    font-size: 14px;
+    margin-left: 8px;
 }
 
 .bottom-wrapper{
@@ -340,7 +373,41 @@ export default {
 
 .forgot-pass-wrapper{
     text-align: right;
-    margin-top: -36px;
+    margin-top: -20px;
     opacity: 0.6;
+}
+
+.error-icon{
+  font-size: 75px;
+  color: #d5d9d2;
+  background-color: #CB4E44;
+  border-radius: 50%;
+}
+
+.error-content{
+  margin-top: -20px;
+  text-align: center;
+}
+
+.error-title{
+  font-size:25px;
+  text-align:center;
+}
+.error-message{
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.create-new-acc-btn {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  border-bottom-left-radius: 27px;
+  border-bottom-right-radius: 27px;
+  background-color: #CB4E44;
+  border-color: #CB4E44;
+  font-size: 19px;
+  padding: 20px 0px;
 }
 </style>

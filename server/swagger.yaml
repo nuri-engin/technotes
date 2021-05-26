@@ -193,7 +193,7 @@ paths:
   /api/accounts/register:
     post:
       summary: Register a new user account and send a verification email
-      description: The first account registered in the system is assigned the `Admin` role, other accounts are assigned the `User` role.
+      description: The first account registered in the system is assigned to be the `Admin` role, the `User` role will get in business later on. The service has the those additional fields that not being required as `firstName`, `lastName`, `acceptTerms`
       operationId: register
       requestBody:
         required: true
@@ -202,15 +202,9 @@ paths:
             schema:
               type: object
               properties:
-                title:
+                userName:
                   type: string
-                  example: "Mr"
-                firstName:
-                  type: string
-                  example: "Jason"
-                lastName:
-                  type: string
-                  example: "Watmore"
+                  example: "jasonwatmore"
                 email:
                   type: string
                   example: "jason@example.com"
@@ -220,16 +214,11 @@ paths:
                 confirmPassword:
                   type: string
                   example: "pass123"
-                acceptTerms:
-                  type: boolean
               required:
-                - title
-                - firstName
-                - lastName
+                - userName
                 - email
                 - password
                 - confirmPassword
-                - acceptTerms
       responses:
         "200":
           description: The registration request was successful and a verification email has been sent to the specified email address
@@ -704,7 +693,7 @@ paths:
         "401":
           $ref: "#/components/responses/UnauthorizedError"
     post:
-        summary: Create a new post
+        summary: Create a new post. The `creator` field will be post owner user's `id` and the `name` field suppose to be post owner user's `userName`
         description: Restricted to admin users.
         operationId: createPost
         security:
@@ -724,10 +713,10 @@ paths:
                     example: "Sample post"
                   name:
                     type: string
-                    example: "Jason"
+                    example: "Jason (post owner 'userName')"
                   creator:
                     type: string
-                    example: "1233456"
+                    example: "1233456 (post owner 'id')"
                   tags:
                     type: array
                     example:  ["tag1, foo, bar"]

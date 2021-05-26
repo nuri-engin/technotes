@@ -102,7 +102,7 @@ async function register(params, origin) {
 
     // first registered account is an admin
     const isFirstAccount = (await db.Account.countDocuments({})) === 0;
-    account.role = isFirstAccount ? Role.Admin : Role.User;
+    account.role = Role.Admin; //We will keep each registered user as Admin till an Editor need shows-up.
     account.verificationToken = randomTokenString();
 
     // hash password
@@ -259,8 +259,8 @@ function randomTokenString() {
 }
 
 function basicDetails(account) {
-    const { id, title, firstName, lastName, email, role, created, updated, isVerified } = account;
-    return { id, title, firstName, lastName, email, role, created, updated, isVerified };
+    const { id, userName, email, role, created, updated, isVerified } = account;
+    return { id, userName, email, role, created, updated, isVerified };
 }
 
 async function sendVerificationEmail(account, origin) {

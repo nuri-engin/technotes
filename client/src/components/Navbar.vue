@@ -66,6 +66,21 @@
                     max-rows="6"
                   ></b-form-textarea>
                 </b-form-group>
+
+                  <b-form-group
+                  id="input-group-3"
+                  label="Tags"
+                  label-for="input-3"
+                >
+                  <b-form-input
+                    name="tags"
+                    id="input-3"
+                    @input="(value) => updateTags(value)"
+                    required
+                    style="margin-bottom:0px;"
+                  ></b-form-input>
+                  <span style="opacity:0.4;font-size:12px;margin-top:0px;">(Please use comma to separate the tags)</span>
+                </b-form-group>
               </b-form>
             </div>
 
@@ -86,6 +101,8 @@
 
 <script>
 import service from "@/service";
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: "Navbar",
   props: ['logout', 'username'],
@@ -96,6 +113,9 @@ export default {
       description: '',
       tags: [],
     };
+  },
+  computed: {
+    ...mapGetters(['currUser'])
   },
   methods: {
     logoutUser() {
@@ -108,7 +128,7 @@ export default {
       this.description = value
     },
     updateTags(value) {
-      this.tags = value
+      this.tags = value.split(',')
     },
     toggleNewNoteModal() {
       this.showNewNoteModal = !this.showNewNoteModal;
@@ -119,9 +139,13 @@ export default {
         title: this.title,
         message: this.description,
         tags: this.tags,
-        name: 'Safa'
+        name: this.currUser.userName,
+        creator: this.currUser.id,
+      }).then(res => {
+        if(res.status === 200) {
+          this.showNewNoteModal = false;
+        }
       })
-      this.showNewNoteModal = false;
     }
   },
 };

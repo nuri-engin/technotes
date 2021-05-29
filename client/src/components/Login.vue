@@ -1,7 +1,7 @@
 <template>
         <!------------- Login Modal ---------------->
     <transition name="modal">
-      <div v-if="showLoginModal  || !loggedIn" class="modal-mask">
+      <div v-if="!loggedIn || showLoginModal" class="modal-mask">
         <div class="modal-wrapper">
           <div class="modal-container">
             <div v-if="loginStep" class="modal-inner-container">
@@ -291,7 +291,7 @@ export default {
         if(res.status === 200) {
           this.showLoginModal = false
         }
-        if(res.response.status === 400){
+        if(res.response && res.response.status === 400){
           this.showLoginModal = true
           this.loginStep= false;
           this.loginError = true;

@@ -83,7 +83,7 @@
                     <b-form-input
                       name="Email"
                       id="input-email"
-                      @input="(value) => updateEmail(value)"
+                      @input="(value) => updateForgotPassEmail(value)"
                       placeholder="Email"
                       required
                     ></b-form-input>
@@ -95,7 +95,7 @@
               <div class="modal-footer">
                 <b-button
                   class="modal-default-button login-btn"
-                  @click="login()"
+                  @click="sendPassword()"
                 >
                   Send
                 </b-button>
@@ -134,7 +134,7 @@
                 </div>
               </div>
               <div class="continue-btn-wrapper">
-                <b-button @click="closeModal()" class="continue-btn">Continue</b-button>
+                <b-button @click="loginRegisteredUser()" class="continue-btn">Continue</b-button>
               </div>
             </div>
             <div v-if="registerStep" class="modal-inner-container">
@@ -190,7 +190,7 @@
                     <b-form-input
                       name="password"
                       id="input-confirm-password"
-                      @input="(value) => updateNewUserConfirmPassword(value)"
+                      @input="(value) => updateNewConfirmPassword(value)"
                       placeholder="Confirm Password"
                       type="password"
                       required
@@ -202,7 +202,7 @@
               <div class="modal-footer">
                 <b-button
                   class="modal-default-button register-btn"
-                  @click="Register()"
+                  @click="register()"
                 >
                   Register
                 </b-button>
@@ -234,6 +234,7 @@ export default {
       newUserEmail: '',
       newUserPassword: '',
       newUserConfirmPassword: '',
+      forgotPassEmail: '',
       status: false,
       loginStep: true,
       registerStep: false,
@@ -272,10 +273,28 @@ export default {
     updateNewConfirmPassword(value) {
       this.newUserConfirmPassword = value
     },
+    updateForgotPassEmail(value) {
+      this.forgotPassEmail = value
+    },
+    sendPassword() {
+      service().post('accounts/forgot-password', {
+        email: this.forgotPassEmail
+      }).then(res => {
+        if(res.status === 200) {
+          this.forgotPassStep = false;
+          this.loginStep = true;
+        }
+      })
+    },
     login() {
       this.loginUser({email: this.email, password: this.password}).then(res => {
         if(res.status === 200) {
           this.showLoginModal = false
+        }
+        if(res.response.status === 400){
+          this.showLoginModal = true
+          this.loginStep= false;
+          this.loginError = true;
         }
       });
     },
@@ -299,16 +318,20 @@ export default {
     },
     register() {
       service().post('accounts/register', {
-        username: this.newUsername,
+        userName: this.newUsername,
         email: this.newUserEmail,
         password: this.newUserPassword,
         confirmPassword: this.newUserConfirmPassword,
       }).then((response) => {
         if(response.status === 200) {
-          this.showLoginModal = !this.showLoginModal;
-          document.getElementById('app').classList.remove('blur'); 
+          this.registerStep = false;
+          this.registerSuccess = true;
         }
       })
+    },
+    loginRegisteredUser() {
+        this.showLoginModal = !this.showLoginModal;
+        document.getElementById('app').classList.remove('blur'); 
     }
   }
 }

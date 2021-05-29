@@ -66,8 +66,8 @@ const store = new Vuex.Store({
                         resolve(response)
                     }
                 }).catch(error => {
-                    reject(error)
-                    dispatch('loginState', { login: true })
+                    resolve(error)
+                    dispatch('loginState', { login: false })
                 })
             })
         },

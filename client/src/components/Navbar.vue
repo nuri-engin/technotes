@@ -139,7 +139,7 @@ export default {
         title: this.title,
         message: this.description,
         tags: this.tags,
-        name: this.currUser.userName,
+        name: this.currUser.email,
         creator: this.currUser.id,
       }).then(res => {
         if(res.status === 200) {

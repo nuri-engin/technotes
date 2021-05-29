@@ -1,47 +1,148 @@
 <template>
-  <div class="techcard-wrapper">
-    <div class="techcard-header">
-      <div class="writer-data">
-        <div class="writer-img">
-          <img width="40" src="@/assets/images/no-image.png" />
+  <div>
+    <div class="techcard-wrapper">
+      <div class="techcard-header">
+        <div class="writer-data">
+          <div class="writer-img">
+            <img width="40" src="@/assets/images/no-image.png" />
+          </div>
+          <div class="writer-name-date">
+            <span class="name">{{ post.name }}</span>
+            <span class="date">{{ post.createdAt }}</span>
+          </div>
         </div>
-        <div class="writer-name-date">
-          <span class="name">{{post.name}}</span>
-          <span class="date">{{post.createdAt}}</span>
+        <div class="more-dd">
+          <b-dropdown class="more-dd-btn" no-caret>
+            <template #button-content>
+              <b-icon icon="three-dots-vertical" aria-hidden="true"></b-icon>
+            </template>
+            <b-dropdown-item-button @click="showEditModal = true"
+              >Edit</b-dropdown-item-button
+            >
+            <b-dropdown-item-button>Delete</b-dropdown-item-button>
+          </b-dropdown>
         </div>
       </div>
-      <div class="more-dd">
-        <b-dropdown class="more-dd-btn" no-caret>
-          <template #button-content>
-            <b-icon icon="three-dots-vertical" aria-hidden="true"></b-icon>
-          </template>
-          <b-dropdown-item-button>Edit</b-dropdown-item-button>
-          <b-dropdown-item-button>Delete</b-dropdown-item-button>
-        </b-dropdown>
+      <div class="techcard-content">
+        <div class="techcard-content-title">{{ post.title }}</div>
+        <div class="techcard-content-text">
+          {{ post.message }}
+        </div>
+      </div>
+      <div class="techcard-tags">
+        <span v-for="tag in post.tags[0].split(',')" :key="tag">
+          #{{ tag }}
+        </span>
+      </div>
+      <div class="techcard-actions">
+        <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
+        <div class="comment-icon"><b-icon icon="chat-left-fill" /></div>
       </div>
     </div>
-    <div class="techcard-content">
-      <div class="techcard-content-title">{{post.title}}</div>
-      <div class="techcard-content-text">
-        {{post.message}}
+    <!-------- Edit Modal --------------->
+    <transition name="modal">
+      <div v-if="showEditModal" class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-container">
+            <div class="modal-header">
+              <b-icon
+                class="close-icon"
+                icon="x"
+                scale="2"
+                @click="showEditModal = false"
+              />
+              <b-form>
+                <b-form-input
+                  v-if="descEditMode"
+                  name="title"
+                  id="input-1"
+                  @input="(value) => updateTitle(value)"
+                  required
+                  v-model="postTitle"
+                ></b-form-input>
+                <span v-else>{{ post.title }}</span>
+              </b-form>
+            </div>
+
+            <div class="modal-body">
+              <b-form>
+                <div style="display: flex;" class="label">
+                  <div>Description</div>
+                  <b-button v-if="!descEditMode" @click="descEditMode = !descEditMode"
+                    >Edit</b-button
+                  >
+                </div>
+                <b-form-textarea
+                  v-if="descEditMode"
+                  id="input-2"
+                  name="description"
+                  placeholder="Add more details ..."
+                  @input="(value) => updateDescription(value)"
+                  v-model="postDescription"
+                  rows="4"
+                  max-rows="6"
+                ></b-form-textarea>
+                <span v-else>{{ post.description }}</span>
+                <div v-if="descEditMode">
+                  <b-button  @click="descEditMode = !descEditMode"
+                      >X</b-button>
+                  <b-button @click="updateDesc()"
+                      >Save</b-button>
+                </div>
+               
+                <br />
+
+                <div style="display: flex;" class="label">
+                  <div>Tags</div>
+                  <b-button @click="tagsEditMode = !tagsEditMode"
+                    >Edit</b-button
+                  >
+                </div>
+                <b-form-input
+                  v-if="tagsEditMode"
+                  name="tags"
+                  id="input-3"
+                  @input="(value) => updateTags(value)"
+                  required
+                  v-model="postTags"
+                  style="margin-bottom:0px;"
+                ></b-form-input>
+                <span v-else>{{ post.tags.join(",") }}</span>
+              </b-form>
+            </div>
+
+            <div class="modal-footer">
+              <b-button class="modal-default-button" @click="generateNote()">
+                Comments >
+              </b-button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="techcard-tags">
-      <span v-for="tag in post.tags[0].split(',')" :key="tag">
-        #{{tag}}
-      </span>
-    </div>
-    <div class="techcard-actions">
-      <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
-      <div class="comment-icon"><b-icon icon="chat-left-fill" /></div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script>
 export default {
   name: "Card",
-  props: ['post'],
+  props: ["post"],
+  data() {
+    return {
+      showEditModal: false,
+      postTitle: this.post.title,
+      postDescription: this.post.description,
+      postTags: this.post.tags.join(","),
+      descEditMode: false,
+      tagsEditMode: false,
+    };
+  },
+  methods: {
+    updateDesc() {
+      this.descEditMode = false;
+      alert('hey saved')
+    }
+  }
 };
 </script>
 
@@ -164,5 +265,107 @@ export default {
   height: 8px;
   border-radius: 5px;
   right: -2px;
+}
+
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  width: 70%;
+  height: max-content;
+  margin: 0px auto;
+  padding: 25px;
+  background-color: #f3fcf0;
+  border-radius: 2px;
+  color: black;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+  position: relative;
+}
+
+.modal-default-button {
+  padding: 10px 30px;
+  color: #3c6562;
+  border: 1px solid #3c6562;
+}
+
+.modal-header {
+  font-size: 18px;
+  margin-top: 0;
+  color: #3c6562;
+  position: relative;
+  border: none;
+  font-weight: bold;
+}
+
+.form-control,
+.form-control:focus {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #8cadab;
+  border-radius: 0px;
+  margin-bottom: 40px;
+}
+
+textarea.form-control,
+textarea.form-control:focus {
+  border: 1px solid #8cadab;
+  border-radius: 10px;
+  background: #e3e4e2;
+}
+
+label {
+  color: #3c6562 !important;
+}
+
+.close-icon {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  cursor: pointer;
+}
+
+.modal-body {
+  margin: 20px 0;
+  border: none;
+}
+
+.modal-footer {
+  border: none;
+  text-align: center;
+  justify-content: center;
+}
+
+.modal-default-button {
+  float: right;
+}
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
 }
 </style>

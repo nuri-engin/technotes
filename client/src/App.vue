@@ -1,7 +1,7 @@
 <template>
   <div>
   <div id="app">
-    <Navbar :logout="logout" :username="username" />
+    <Navbar :logout="logout" :username="currUser && currUser.role" />
     <Filterbar />
     <div class="card-area-wrapper">
       <div v-for="post in posts" :key="post">
@@ -9,7 +9,7 @@
       </div>
     </div>
   </div>
-    <Login :getPosts="getPosts" :getUserName="getUserName" />
+    <Login />
   </div>
 </template>
 
@@ -18,7 +18,7 @@ import Navbar from '@/components/Navbar.vue'
 import Filterbar from '@/components/FilterBar.vue'
 import Card from '@/components/Card.vue'
 import Login from '@/components/Login.vue'
-import service from "@/service"
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'App',
@@ -30,43 +30,33 @@ export default {
   },
   data() {
     return { 
-        posts: [],
-        username: ''
       }
   },
   mounted() {
     if(localStorage.getItem('token')){
       document.getElementById('app').classList.remove('blur');
-      this.getPosts()
+      this.fetchPosts()
     } else {
       document.getElementById('app').classList.add('blur')
     }
   },
+  computed: {
+    ...mapGetters(['currUser', 'posts'])
+  },
   methods: {
-      getUserName(data) {
-        this.username = data.firstName + ' ' + data.lastName
-      },
-      getPosts() {
-        if(localStorage.getItem('token')){
-          service().get('posts', {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          }).then(response => {
-            this.posts = response.data
-          })
-        }
-    },
+    ...mapActions(['fetchPosts', 'loginState']),
     logout() {
       localStorage.removeItem('token');
+      localStorage.removeItem('user')
       document.getElementById('app').classList.add('blur');
-      this.showLoginModal=true;
+      this.loginState(false);
     }
   }
 }
 </script>
 
 <style>
+
 body {
   color: #fcf0f3 !important;
   background-color: #02252f !important;

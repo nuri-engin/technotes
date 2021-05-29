@@ -1,7 +1,7 @@
 <template>
         <!------------- Login Modal ---------------->
     <transition name="modal">
-      <div v-if="showLoginModal" class="modal-mask">
+      <div v-if="showLoginModal  || !loggedIn" class="modal-mask">
         <div class="modal-wrapper">
           <div class="modal-container">
             <div v-if="loginStep" class="modal-inner-container">
@@ -221,9 +221,10 @@
 
 <script>
 import service from "@/service"
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
     name: 'Login',
-    props: [ 'getPosts', 'getUserName'],
     data() {
     return {
       showLoginModal:true,
@@ -241,14 +242,18 @@ export default {
       forgotPassStep: false,
     }
   },
+  computed: {
+    ...mapGetters(['loggedIn'])
+  },
    mounted() {
-      if(localStorage.getItem('token')){
+      if(this.loggedIn || localStorage.getItem('token')){
           this.showLoginModal = false;
     } else {
           this.showLoginModal = true;
     }
   },
   methods: {
+    ...mapActions(['loginUser']),
     updateEmail(value) {
       this.email = value
     },
@@ -268,18 +273,11 @@ export default {
       this.newUserConfirmPassword = value
     },
     login() {
-      service().post('accounts/authenticate', {
-        email: this.email,
-        password: this.password
-      }).then(response => {
-        if(response.status === 200) {
-          this.getUserName(response.data);
-          localStorage.setItem('token', response.data.jwtToken)
-          this.showLoginModal = !this.showLoginModal
-          document.getElementById('app').classList.remove('blur'); 
+      this.loginUser({email: this.email, password: this.password}).then(res => {
+        if(res.status === 200) {
+          this.showLoginModal = false
         }
-      }).then(()=> {
-        this.getPosts()})
+      });
     },
     goToRegister() {
       this.loginError=false;

@@ -66,18 +66,6 @@
                     max-rows="6"
                   ></b-form-textarea>
                 </b-form-group>
-
-                <b-form-group
-                  id="input-group-3"
-                  label="Tags"
-                  label-for="input-3"
-                >
-                  <b-form-tags 
-                    id="input-3" 
-                    name="tags"
-                    @input="(value) => updateTags(value)"
-                  ></b-form-tags>
-                </b-form-group>
               </b-form>
             </div>
 
@@ -130,7 +118,8 @@ export default {
       service().post('posts', {
         title: this.title,
         message: this.description,
-        tags: this.tags
+        tags: this.tags,
+        name: 'Safa'
       })
       this.showNewNoteModal = false;
     }

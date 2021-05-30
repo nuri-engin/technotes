@@ -12,6 +12,7 @@ const router = express.Router();
 
 // routes
 router.get('/', authorize(Role.Admin), getAll);
+router.get('/:id', authorize(Role.Admin), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
 router.delete('/:id', authorize(), _delete);
@@ -30,11 +31,19 @@ function getAll(req, res, next) {
         .catch(next);
 }
 
+function getById(req, res, next) {
+    // users can get their own posts and admins can get any account
+    if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    postService.getById(req.params.id)
+        .then(post => post ? res.json(post) : res.sendStatus(404))
+        .catch(next);
+}
+
 function createSchema(req, res, next) {
     const schema = Joi.object(_getSchemaRules());
-
-    console.log("POST schema is: ", schema);
-
     validateRequest(req, next, schema);
 }
 

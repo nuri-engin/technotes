@@ -9,7 +9,7 @@
       </div>
     </div>
   </div>
-    <Login />
+    <Login :isLoggedIn="isLoggedIn" />
   </div>
 </template>
 
@@ -30,14 +30,17 @@ export default {
   },
   data() {
     return { 
+        isLoggedIn: false
       }
   },
   mounted() {
     if(localStorage.getItem('token')){
       document.getElementById('app').classList.remove('blur');
+      this.isLoggedIn = true
       this.fetchPosts()
     } else {
       document.getElementById('app').classList.add('blur')
+      this.isLoggedIn = false
     }
   },
   computed: {
@@ -50,6 +53,7 @@ export default {
       localStorage.removeItem('user')
       document.getElementById('app').classList.add('blur');
       this.loginState(false);
+      this.isLoggedIn = false
     }
   }
 }
@@ -67,7 +71,7 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 #app {

@@ -19,7 +19,9 @@
             <b-dropdown-item-button @click="showEditModal = true"
               >Edit</b-dropdown-item-button
             >
-            <b-dropdown-item-button>Delete</b-dropdown-item-button>
+            <b-dropdown-item-button @click="deletePost()"
+              >Delete</b-dropdown-item-button
+            >
           </b-dropdown>
         </div>
       </div>
@@ -66,9 +68,11 @@
 
             <div class="modal-body">
               <b-form>
-                <div style="display: flex;" class="label">
-                  <div>Description</div>
-                  <b-button v-if="!descEditMode" @click="descEditMode = !descEditMode"
+                <div style="display: flex" class="label">
+                  <div>Description</div> <br />
+                  <b-button
+                    v-if="!descEditMode"
+                    @click="descEditMode = !descEditMode"
                     >Edit</b-button
                   >
                 </div>
@@ -84,18 +88,19 @@
                 ></b-form-textarea>
                 <span v-else>{{ post.description }}</span>
                 <div v-if="descEditMode">
-                  <b-button  @click="descEditMode = !descEditMode"
-                      >X</b-button>
-                  <b-button @click="updateDesc()"
-                      >Save</b-button>
+                  <b-button @click="descEditMode = !descEditMode">X</b-button>
+                  <b-button @click="updateDesc()">Save</b-button>
                 </div>
-               
+
                 <br />
 
-                <div style="display: flex;" class="label">
+                <div style="display: flex" class="label">
                   <div>Tags</div>
-                  <b-button @click="tagsEditMode = !tagsEditMode"
+                  <b-button v-if="!tagsEditMode" @click="tagsEditMode = !tagsEditMode"
                     >Edit</b-button
+                  >
+                  <b-button v-else @click="tagsEditMode = !tagsEditMode"
+                    >Save</b-button
                   >
                 </div>
                 <b-form-input
@@ -105,7 +110,7 @@
                   @input="(value) => updateTags(value)"
                   required
                   v-model="postTags"
-                  style="margin-bottom:0px;"
+                  style="margin-bottom: 0px"
                 ></b-form-input>
                 <span v-else>{{ post.tags.join(",") }}</span>
               </b-form>
@@ -124,6 +129,9 @@
 </template>
 
 <script>
+import service from "@/service";
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: "Card",
   props: ["post"],
@@ -131,18 +139,44 @@ export default {
     return {
       showEditModal: false,
       postTitle: this.post.title,
-      postDescription: this.post.description,
+      postDescription: this.post.message,
       postTags: this.post.tags.join(","),
       descEditMode: false,
       tagsEditMode: false,
     };
   },
+  computed: {
+    ...mapGetters(['currUser'])
+  },
   methods: {
+    ...mapActions(['fetchPosts']),
     updateDesc() {
       this.descEditMode = false;
-      alert('hey saved')
-    }
-  }
+      let {id} = this.post;
+      service().put(`posts/${id}`, {
+        title: this.postTitle,
+        message: this.postDescription,
+        tags: this.postTags.split(','),
+        name: this.currUser.userName,
+        creator: this.currUser.id,
+      }).then((res) => {
+        if(res.status === 200) {
+          this.fetchPosts()
+        }
+      })
+    },
+    deletePost() {
+      let { id } = this.post;
+      service()
+        .delete(`posts/${id}`)
+        .then((res) => {
+          if(res.status === 200) {
+            this.fetchPosts()
+            console.log(res)
+          }
+        });
+    },
+  },
 };
 </script>
 
@@ -217,6 +251,7 @@ export default {
 .techcard-content {
   height: 190px;
   padding: 15px 20px;
+  overflow-y: scroll;
 }
 
 .techcard-content-title {

@@ -118,6 +118,7 @@ export default {
     ...mapGetters(['currUser'])
   },
   methods: {
+    ...mapActions(['fetchPosts']),
     logoutUser() {
       this.logout()
     },
@@ -135,17 +136,22 @@ export default {
     },
     generateNote() {
        // eslint-disable-next-line no-debugger
-      service().post('posts', {
-        title: this.title,
-        message: this.description,
-        tags: this.tags,
-        name: this.currUser.email,
-        creator: this.currUser.id,
-      }).then(res => {
-        if(res.status === 200) {
-          this.showNewNoteModal = false;
-        }
-      })
+      if([this.title, this.description].includes('')) {
+        alert('Please fill all the fields.')
+      } else {
+        service().post('posts', {
+          title: this.title,
+          message: this.description,
+          tags: this.tags,
+          name: this.currUser.userName,
+          creator: this.currUser.id,
+        }).then(res => {
+          if(res.status === 200) {
+            this.showNewNoteModal = false
+            this.fetchPosts()
+          }
+        })
+      }
     }
   },
 };

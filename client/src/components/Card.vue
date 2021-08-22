@@ -38,7 +38,9 @@
       </div>
       <div class="techcard-actions">
         <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
-        <div class="comment-icon"><b-icon icon="chat-left-fill" /></div>
+        <div class="comment-icon"><b-button @click="openCommentModal()">
+            <b-icon icon="chat-left-fill" />
+          </b-button></div>
       </div>
     </div>
     <!-------- Edit Modal --------------->
@@ -64,7 +66,7 @@
                 ></b-form-input>
                 <span v-else>
                     <span v-if="!commentMode">{{ post.title }}</span>
-                    <span v-else>Comments</span>
+                    <span v-else><b-icon icon="chat-left-fill" />Comments</span>
                 </span>
               </b-form>
             </div>
@@ -120,7 +122,28 @@
             </div>
 
             <div v-else>
-              <span>Comments here</span>
+              <div class="comments-header">
+                 <b-form class="comments-form">
+                  <div class="writer-img">
+                    <img width="40" src="@/assets/images/no-image.png" />
+                  </div>
+                  <b-form-input
+                    name="comment"
+                    id="input-comment"
+                    @input="(value) => updateComment(value)"
+                    placeholder="text..."
+                    required
+                  ></b-form-input>
+                </b-form>
+              </div>
+              <b-button @click="sendComment()">
+                Send
+              </b-button>
+              <div class="comments-content">
+                <div v-for="(comment, index) in comments" :key="index">
+                  {{comment.message}}
+                </div>
+              </div>
             </div>
             <div class="modal-footer">
               <b-button class="modal-default-button" @click="checkEditCommentStatus()">
@@ -184,7 +207,9 @@ export default {
       postTags: this.post.tags.join(","),
       descEditMode: false,
       tagsEditMode: false,
+      comments: [],
       commentMode: false,
+      newComment: '',
       showDeleteModal: false,
     };
   },
@@ -219,8 +244,42 @@ export default {
           }
         });
     },
+    async fetchComments() {
+      try { 
+        const { data } = await service().get(`comments/${this.post.id}`);
+        this.comments = data;
+      }
+      catch (e) {
+        console.error(e.message)
+      }
+    },
+    sendComment() {
+      if(this.newComment !== "") {
+        service()
+          .post(`comments/`, {
+            postmessage_id: this.post.id,
+            message: this.newComment,
+            creator: this.currUser.id
+          })
+          .then((res) => {
+            if(res.status === 200) {
+              console.log(res)
+            }
+          });
+      }
+    },
+    openCommentModal() {
+      this.showEditModal = true;
+      this.checkEditCommentStatus();
+    },
     checkEditCommentStatus() {
       this.commentMode = !this.commentMode;
+      if(this.commentMode) {
+        this.fetchComments();
+      }
+    },
+    updateComment(value) {
+      this.newComment = value;
     }
   },
 };
@@ -338,6 +397,13 @@ export default {
   cursor: pointer;
 }
 
+.comment-icon > button {
+  padding: 0px;
+  color: #02252f !important;
+  border: none !important;
+  font-size: 13px;
+}
+
 .comment-icon:after {
   position: absolute;
   content: "";
@@ -346,6 +412,9 @@ export default {
   height: 8px;
   border-radius: 5px;
   right: -2px;
+}
+
+.comments-form {
 }
 
 .modal-mask {

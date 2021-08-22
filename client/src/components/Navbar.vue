@@ -50,6 +50,10 @@
                     @input="(value) => updateTitle(value)"
                     required
                   ></b-form-input>
+                  <div v-if="displayError" class="error-content">
+                    <b-icon icon="exclamation-circle" aria-hidden="true"></b-icon>
+                    Required
+                  </div>  
                 </b-form-group>
 
                 <b-form-group
@@ -112,6 +116,7 @@ export default {
       title: '',
       description: '',
       tags: [],
+      displayError:false
     };
   },
   computed: {
@@ -132,13 +137,15 @@ export default {
       this.tags = value.split(',')
     },
     toggleNewNoteModal() {
+      this.displayError = false;
       this.showNewNoteModal = !this.showNewNoteModal;
     },
     generateNote() {
        // eslint-disable-next-line no-debugger
       if([this.title, this.description].includes('')) {
-        alert('Please fill all the fields.')
+        this.displayError = true;
       } else {
+        this.displayError = false;
         service().post('posts', {
           title: this.title,
           message: this.description,
@@ -226,6 +233,15 @@ export default {
   position: absolute;
   left: -64px;
   top: -15px;
+}
+
+.error-content {
+  color: red;
+
+  position: absolute;
+  top: 80px;
+  right: 10px;
+  font-size: 14px;
 }
 
 .modal-mask {

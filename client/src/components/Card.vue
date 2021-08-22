@@ -19,7 +19,7 @@
             <b-dropdown-item-button @click="showEditModal = true"
               >Edit</b-dropdown-item-button
             >
-            <b-dropdown-item-button @click="deletePost()"
+            <b-dropdown-item-button @click="showDeleteModal = true"
               >Delete</b-dropdown-item-button
             >
           </b-dropdown>
@@ -62,11 +62,14 @@
                   required
                   v-model="postTitle"
                 ></b-form-input>
-                <span v-else>{{ post.title }}</span>
+                <span v-else>
+                    <span v-if="!commentMode">{{ post.title }}</span>
+                    <span v-else>Comments</span>
+                </span>
               </b-form>
             </div>
 
-            <div class="modal-body">
+            <div v-if="!commentMode" class="modal-body">
               <b-form>
                 <div style="display: flex" class="label">
                   <div>Description</div> <br />
@@ -116,9 +119,47 @@
               </b-form>
             </div>
 
+            <div v-else>
+              <span>Comments here</span>
+            </div>
             <div class="modal-footer">
-              <b-button class="modal-default-button" @click="generateNote()">
-                Comments >
+              <b-button class="modal-default-button" @click="checkEditCommentStatus()">
+                <div v-if="commentMode"> - Description </div>
+                <div v-else>Comments > </div>
+              </b-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!---------- Delete Modal -------------->
+      <transition name="modal">
+      <div v-if="showDeleteModal" class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-container">
+            <div class="modal-header">
+              <b-icon
+                class="close-icon"
+                icon="x"
+                scale="2"
+                @click="showDeleteModal = false"
+              />
+              Delete
+            </div>
+
+            <div class="modal-body">
+              <span>
+                Are you sure to delete this card?
+              </span>
+            </div>
+
+            <div class="modal-footer">
+              <b-button class="modal-default-button" @click="deletePost()">
+                Yes
+              </b-button>
+               <b-button class="modal-default-button" @click="showDeleteModal = false">
+                No
               </b-button>
             </div>
           </div>
@@ -143,6 +184,8 @@ export default {
       postTags: this.post.tags.join(","),
       descEditMode: false,
       tagsEditMode: false,
+      commentMode: false,
+      showDeleteModal: false,
     };
   },
   computed: {
@@ -176,6 +219,9 @@ export default {
           }
         });
     },
+    checkEditCommentStatus() {
+      this.commentMode = !this.commentMode;
+    }
   },
 };
 </script>

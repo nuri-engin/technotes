@@ -5,8 +5,8 @@ info:
   version: 1.0.0
 
 servers:
-  - url: https://technotes-api-dev.herokuapp.com/
-    description: Development server
+  - url: https://technotes-api-main.herokuapp.com/
+    description: Production server
 
 paths:
   /api/accounts/authenticate:

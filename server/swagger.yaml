@@ -6,7 +6,7 @@ info:
 
 servers:
   - url: https://technotes-api-dev.herokuapp.com/
-    description: Development server
+    description: Dev. server
 
 paths:
   /api/accounts/authenticate:

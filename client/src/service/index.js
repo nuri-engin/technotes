@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export default () => {
   const options = {};
-  options.baseURL = 'https://technotes-api-dev.herokuapp.com/api/';
+  options.baseURL = 'https://technotes-api-main.herokuapp.com/api/';
   options.headers = {'Content-Type': 'application/json'};
   const instance = axios.create(options);
 

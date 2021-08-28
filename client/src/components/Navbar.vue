@@ -49,6 +49,7 @@
                     id="input-1"
                     @input="(value) => updateTitle(value)"
                     required
+                    style="background: #F3FCF0;border-radius: 5px;"
                   ></b-form-input>
                   <div v-if="displayError" class="error-content">
                     <b-icon icon="exclamation-circle" aria-hidden="true"></b-icon>
@@ -68,6 +69,7 @@
                     @input="(value) => updateDescription(value)"
                     rows="4"
                     max-rows="6"
+                    style="background: #F3FCF0;border-radius: 5px;height:160px;overflow: hidden;"
                   ></b-form-textarea>
                 </b-form-group>
 
@@ -81,7 +83,7 @@
                     id="input-3"
                     @input="(value) => updateTags(value)"
                     required
-                    style="margin-bottom:0px;"
+                    style="margin-bottom:0px;background: #F3FCF0;border-radius: 5px;"
                   ></b-form-input>
                   <span style="opacity:0.4;font-size:12px;margin-top:0px;">(Please use comma to separate the tags)</span>
                 </b-form-group>
@@ -92,6 +94,7 @@
               <b-button
                 class="modal-default-button"
                 @click="generateNote()"
+                style="border-radius:8px;"
               >
                 Create
               </b-button>
@@ -262,12 +265,12 @@ export default {
 }
 
 .modal-container {
-  width: 70%;
+  width: 32%;
   height: max-content;
   margin: 0px auto;
-  padding: 25px;
-  background-color: #f3fcf0;
-  border-radius: 2px;
+  padding: 10px;
+  background-color: #CDD9D1;
+  border-radius: 10px;
   color: black;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
@@ -302,7 +305,7 @@ export default {
 textarea.form-control,
 textarea.form-control:focus {
   border: 1px solid #8cadab;
-  border-radius: 10px;
+  border-radius: 5px;
   background: #e3e4e2;
 }
 
@@ -318,7 +321,7 @@ label {
 }
 
 .modal-body {
-  margin: 20px 0;
+  margin: -30px 0;
   border: none;
 }
 

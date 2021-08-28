@@ -401,6 +401,7 @@ export default {
   padding: 0px;
   color: #02252f !important;
   border: none !important;
+  background-color: transparent !important;
   font-size: 13px;
 }
 

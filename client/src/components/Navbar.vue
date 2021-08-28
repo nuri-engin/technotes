@@ -134,7 +134,7 @@ export default {
       this.description = value
     },
     updateTags(value) {
-      this.tags = value.split(',')
+      this.tags = value && value.split(',')
     },
     toggleNewNoteModal() {
       this.displayError = false;

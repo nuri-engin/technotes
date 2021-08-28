@@ -1,0 +1,1182 @@
+openapi: 3.0.0
+info:
+  title: Tech Notes API
+  description: Node.js + MongoDB - API with email sign-up, verification, authentication and forgot password
+  version: 1.0.0
+
+servers:
+  - url: https://technotes-api-dev.herokuapp.com/
+    description: Development server
+
+paths:
+  /api/accounts/authenticate:
+    post:
+      summary: Authenticate account credentials and return a JWT token and a cookie with a refresh token
+      description: Accounts must be verified before authenticating.
+      operationId: authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "jason@example.com"
+                password:
+                  type: string
+                  example: "pass123"
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: Account details, a JWT access token and a refresh token cookie
+          headers:
+            Set-Cookie:
+              description: "`refreshToken`"
+              schema:
+                type: string
+                example: refreshToken=51872eca5efedcf424db4cf5afd16a9d00ad25b743a034c9c221afc85d18dcd5e4ad6e3f08607550; Path=/; Expires=Tue, 16 Jun 2020 09:14:17 GMT; HttpOnly
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "5eb12e197e06a76ccdefc121"
+                  title:
+                    type: string
+                    example: "Mr"
+                  firstName:
+                    type: string
+                    example: "Jason"
+                  lastName:
+                    type: string
+                    example: "Watmore"
+                  email:
+                    type: string
+                    example: "jason@example.com"
+                  role:
+                    type: string
+                    example: "Admin"
+                  created:
+                    type: string
+                    example: "2020-05-05T09:12:57.848Z"
+                  isVerified:
+                    type: boolean
+                    example: true
+                  jwtToken:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWIxMmUxOTdlMDZhNzZjY2RlZmMxMjEiLCJpZCI6IjVlYjEyZTE5N2UwNmE3NmNjZGVmYzEyMSIsImlhdCI6MTU4ODc1ODE1N30.xR9H0STbFOpSkuGA9jHNZOJ6eS7umHHqKRhI807YT1Y"
+        "400":
+          description: The email or password is incorrect
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Email or password is incorrect"
+  /api/accounts/refresh-token:
+    post:
+      summary: Use a refresh token to generate a new JWT token and a new refresh token
+      description: The refresh token is sent and returned via cookies.
+      operationId: refreshToken
+      parameters:
+        - in: cookie
+          name: refreshToken
+          description: The `refreshToken` cookie
+          schema:
+            type: string
+            example: 51872eca5efedcf424db4cf5afd16a9d00ad25b743a034c9c221afc85d18dcd5e4ad6e3f08607550
+      responses:
+        "200":
+          description: Account details, a JWT access token and a new refresh token cookie
+          headers:
+            Set-Cookie:
+              description: "`refreshToken`"
+              schema:
+                type: string
+                example: refreshToken=51872eca5efedcf424db4cf5afd16a9d00ad25b743a034c9c221afc85d18dcd5e4ad6e3f08607550; Path=/; Expires=Tue, 16 Jun 2020 09:14:17 GMT; HttpOnly
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "5eb12e197e06a76ccdefc121"
+                  title:
+                    type: string
+                    example: "Mr"
+                  firstName:
+                    type: string
+                    example: "Jason"
+                  lastName:
+                    type: string
+                    example: "Watmore"
+                  email:
+                    type: string
+                    example: "jason@example.com"
+                  role:
+                    type: string
+                    example: "Admin"
+                  created:
+                    type: string
+                    example: "2020-05-05T09:12:57.848Z"
+                  isVerified:
+                    type: boolean
+                    example: true
+                  jwtToken:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWIxMmUxOTdlMDZhNzZjY2RlZmMxMjEiLCJpZCI6IjVlYjEyZTE5N2UwNmE3NmNjZGVmYzEyMSIsImlhdCI6MTU4ODc1ODE1N30.xR9H0STbFOpSkuGA9jHNZOJ6eS7umHHqKRhI807YT1Y"
+        "400":
+          description: The refresh token is invalid, revoked or expired
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid token"
+  /api/accounts/revoke-token:
+    post:
+      summary: Revoke a refresh token
+      description: Admin users can revoke the tokens of any account, regular users can only revoke their own tokens.
+      operationId: revokeToken
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: cookie
+          name: refreshToken
+          description: The refresh token can be sent in a cookie or the post body, if both are sent the token in the body is used.
+          schema:
+            type: string
+            example: 51872eca5efedcf424db4cf5afd16a9d00ad25b743a034c9c221afc85d18dcd5e4ad6e3f08607550
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: "51872eca5efedcf424db4cf5afd16a9d00ad25b743a034c9c221afc85d18dcd5e4ad6e3f08607550"
+      responses:
+        "200":
+          description: The refresh token was successfully revoked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Token revoked"
+        "400":
+          description: The refresh token is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid token"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /api/accounts/register:
+    post:
+      summary: Register a new user account and send a verification email
+      description: The first account registered in the system is assigned to be the `Admin` role, the `User` role will get in business later on. The service has the those additional fields that not being required as `firstName`, `lastName`, `acceptTerms`
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userName:
+                  type: string
+                  example: "jasonwatmore"
+                email:
+                  type: string
+                  example: "jason@example.com"
+                password:
+                  type: string
+                  example: "pass123"
+                confirmPassword:
+                  type: string
+                  example: "pass123"
+              required:
+                - userName
+                - email
+                - password
+                - confirmPassword
+      responses:
+        "200":
+          description: The registration request was successful and a verification email has been sent to the specified email address
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Registration successful, please check your email for verification instructions"
+  /api/accounts/verify-email:
+    post:
+      summary: Verify a new account with a verification token received by email after registration
+      operationId: verifyEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: "3c7f8d9c4cb348ff95a0b74a1452aa24fc9611bb76768bb9eafeeb826ddae2935f1880bc7713318f"
+              required:
+                - token
+      responses:
+        "200":
+          description: Verification was successful so you can now login to the account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Verification successful, you can now login"
+        "400":
+          description: Verification failed due to an invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Verification failed"
+  /api/accounts/forgot-password:
+    post:
+      summary: Submit email address to reset the password on an account
+      operationId: forgotPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "jason@example.com"
+              required:
+                - email
+      responses:
+        "200":
+          description: The request was received and an email has been sent to the specified address with password reset instructions (if the email address is associated with an account)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Please check your email for password reset instructions"
+  /api/accounts/validate-reset-token:
+    post:
+      summary: Validate the reset password token received by email after submitting to the /accounts/forgot-password route
+      operationId: validateResetToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: "3c7f8d9c4cb348ff95a0b74a1452aa24fc9611bb76768bb9eafeeb826ddae2935f1880bc7713318f"
+              required:
+                - token
+      responses:
+        "200":
+          description: Token is valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Token is valid"
+        "400":
+          description: Token is invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid token"
+  /api/accounts/reset-password:
+    post:
+      summary: Reset the password for an account
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  example: "3c7f8d9c4cb348ff95a0b74a1452aa24fc9611bb76768bb9eafeeb826ddae2935f1880bc7713318f"
+                password:
+                  type: string
+                  example: "newPass123"
+                confirmPassword:
+                  type: string
+                  example: "newPass123"
+              required:
+                - token
+                - password
+                - confirmPassword
+      responses:
+        "200":
+          description: Password reset was successful so you can now login to the account with the new password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password reset successful, you can now login"
+        "400":
+          description: Password reset failed due to an invalid token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid token"
+  /api/accounts:
+    get:
+      summary: Get a list of all accounts
+      description: Restricted to admin users.
+      operationId: getAllAccounts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: An array of all accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: "5eb12e197e06a76ccdefc121"
+                    title:
+                      type: string
+                      example: "Mr"
+                    firstName:
+                      type: string
+                      example: "Jason"
+                    lastName:
+                      type: string
+                      example: "Watmore"
+                    email:
+                      type: string
+                      example: "jason@example.com"
+                    role:
+                      type: string
+                      example: "Admin"
+                    created:
+                      type: string
+                      example: "2020-05-05T09:12:57.848Z"
+                    updated:
+                      type: string
+                      example: "2020-05-08T03:11:21.553Z"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+      summary: Create a new account
+      description: Restricted to admin users.
+      operationId: createAccount
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Mr"
+                firstName:
+                  type: string
+                  example: "Jason"
+                lastName:
+                  type: string
+                  example: "Watmore"
+                email:
+                  type: string
+                  example: "jason@example.com"
+                password:
+                  type: string
+                  example: "pass123"
+                confirmPassword:
+                  type: string
+                  example: "pass123"
+                role:
+                  type: string
+                  enum: [Admin, User]
+              required:
+                - title
+                - firstName
+                - lastName
+                - email
+                - password
+                - confirmPassword
+                - role
+      responses:
+        "200":
+          description: Account created successfully, verification is not required for accounts created with this endpoint. The details of the new account are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "5eb12e197e06a76ccdefc121"
+                  title:
+                    type: string
+                    example: "Mr"
+                  firstName:
+                    type: string
+                    example: "Jason"
+                  lastName:
+                    type: string
+                    example: "Watmore"
+                  email:
+                    type: string
+                    example: "jason@example.com"
+                  role:
+                    type: string
+                    example: "Admin"
+                  created:
+                    type: string
+                    example: "2020-05-05T09:12:57.848Z"
+        "400":
+          description: Email is already registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Email 'jason@example.com' is already registered"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /api/accounts/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Account id
+        required: true
+        example: "5eb12e197e06a76ccdefc121"
+        schema:
+          type: string
+    get:
+      summary: Get a single account by id
+      description: Admin users can access any account, regular users are restricted to their own account.
+      operationId: getAccountById
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Details of the specified account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "5eb12e197e06a76ccdefc121"
+                  title:
+                    type: string
+                    example: "Mr"
+                  firstName:
+                    type: string
+                    example: "Jason"
+                  lastName:
+                    type: string
+                    example: "Watmore"
+                  email:
+                    type: string
+                    example: "jason@example.com"
+                  role:
+                    type: string
+                    example: "Admin"
+                  created:
+                    type: string
+                    example: "2020-05-05T09:12:57.848Z"
+                  updated:
+                    type: string
+                    example: "2020-05-08T03:11:21.553Z"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      summary: Update an account
+      description: Admin users can update any account including role, regular users are restricted to their own account and cannot update role.
+      operationId: updateAccount
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Mr"
+                firstName:
+                  type: string
+                  example: "Jason"
+                lastName:
+                  type: string
+                  example: "Watmore"
+                email:
+                  type: string
+                  example: "jason@example.com"
+                password:
+                  type: string
+                  example: "pass123"
+                confirmPassword:
+                  type: string
+                  example: "pass123"
+                role:
+                  type: string
+                  enum: [Admin, User]
+      responses:
+        "200":
+          description: Account updated successfully. The details of the updated account are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "5eb12e197e06a76ccdefc121"
+                  title:
+                    type: string
+                    example: "Mr"
+                  firstName:
+                    type: string
+                    example: "Jason"
+                  lastName:
+                    type: string
+                    example: "Watmore"
+                  email:
+                    type: string
+                    example: "jason@example.com"
+                  role:
+                    type: string
+                    example: "Admin"
+                  created:
+                    type: string
+                    example: "2020-05-05T09:12:57.848Z"
+                  updated:
+                    type: string
+                    example: "2020-05-08T03:11:21.553Z"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      summary: Delete an account
+      description: Admin users can delete any account, regular users are restricted to their own account.
+      operationId: deleteAccount
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Account deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Account deleted successfully"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/posts:
+    get:
+      summary: Get a list of all post messages
+      description: Restricted to admin users.
+      operationId: getAllPosts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: An array of all post messsages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: "60845f68f84d58892f0bd3bf"
+                    title:
+                      type: string
+                      example: "Sample post title"
+                    message:
+                      type: string
+                      example: "Sample post message"
+                    name:
+                      type: string
+                      example: "Jason"
+                    creator:
+                      type: string
+                      example: "1233456"
+                    createdAt:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+                    updated:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+                    tags:
+                      type: array
+                      example:  ["tag1, foo, bar"]
+                    likes:
+                      type: array
+                      example:  ["1233456"]
+
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+        summary: Create a new post. The `creator` field will be post owner user's `id` and the `name` field suppose to be post owner user's `userName`
+        description: Restricted to admin users.
+        operationId: createPost
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    example: "Sample post"
+                  message:
+                    type: string
+                    example: "Sample post"
+                  name:
+                    type: string
+                    example: "Jason (post owner 'userName')"
+                  creator:
+                    type: string
+                    example: "1233456 (post owner 'id')"
+                  tags:
+                    type: array
+                    example:  ["tag1, foo, bar"]
+                required:
+                  - name
+                  - creator
+                  - title
+                  - message
+        responses:
+          "200":
+            description: Post created successfully. The details of the new post are returned.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                      id:
+                        type: string
+                        example: "60845f68f84d58892f0bd3bf"
+                      title:
+                        type: string
+                        example: "Sample post title"
+                      message:
+                        type: string
+                        example: "Sample post message"
+                      name:
+                        type: string
+                        example: "Jason"
+                      creator:
+                        type: string
+                        example: "1233456"
+                      createdAt:
+                        type: string
+                        example: "2021-04-24T18:11:52.600Z"
+                      updated:
+                        type: string
+                        example: "2021-04-24T18:11:52.600Z"
+                      tags:
+                        type: array
+                        example:  ["tag1, foo, bar"]
+                      likes:
+                        type: array
+                        example:  []
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+  /api/posts/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Post id
+        required: true
+        example: "5eb12e197e06a76ccdefc121"
+        schema:
+          type: string
+    get:
+      summary: Get a single post by id
+      description: See a specific poss.
+      operationId: getPostById
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Details of the specified post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "60845f68f84d58892f0bd3bf"
+                  title:
+                    type: string
+                    example: "Sample post title"
+                  message:
+                    type: string
+                    example: "Sample post message"
+                  name:
+                    type: string
+                    example: "Jason"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  createdAt:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  updated:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  tags:
+                    type: array
+                    example:  ["tag1, foo, bar"]
+                  likes:
+                    type: array
+                    example:  ["1233456"]
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      summary: Update a post
+      description: Admin users can update any post including role, regular users are restricted to their own post.
+      operationId: updatePost
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  title:
+                    type: string
+                    example: "Sample post"
+                  message:
+                    type: string
+                    example: "Sample post"
+                  name:
+                    type: string
+                    example: "Jason"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  tags:
+                    type: array
+                    example:  ["tag1, foo, bar"]
+      responses:
+        "200":
+          description: Post updated successfully. The details of the updated post are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "60845f68f84d58892f0bd3bf"
+                  title:
+                    type: string
+                    example: "Sample post title"
+                  message:
+                    type: string
+                    example: "Sample post message"
+                  name:
+                    type: string
+                    example: "Jason"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  createdAt:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  updated:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  tags:
+                    type: array
+                    example:  ["tag1, foo, bar"]
+                  likes:
+                    type: array
+                    example:  ["1233456"]
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      summary: Delete a post
+      description: Admin users can delete any post, regular users are restricted to their own posts.
+      operationId: deletePost
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Post deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Post deleted successfully"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/comments:
+    get:
+      summary: Get a list of all comments
+      description: Anyone can get the comments.
+      operationId: getAllComments
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: An array of all comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: "60845f68f84d58892f0bd3bf"
+                    postmessage_id:
+                      type: string
+                      example: "60850f4ef86468349cf40b81"
+                    message:
+                      type: string
+                      example: "Sample post message"
+                    creator:
+                      type: string
+                      example: "1233456"
+                    createdAt:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+                    updated:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+        summary: Create a new comment
+        description: Any user can post a new comment.
+        operationId: createComment
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  postmessage_id:
+                    type: string
+                    example: "60850f4ef86468349cf40b81"
+                  message:
+                    type: string
+                    example: "Sample comment text"
+                  creator:
+                    type: string
+                    example: "1233456"
+                required:
+                  - postmessage_id
+                  - creator
+                  - message
+        responses:
+          "200":
+            description: Comment created successfully. The details of the new comment are returned.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: "60845f68f84d58892f0bd3bf"
+                    postmessage_id:
+                      type: string
+                      example: "60850f4ef86468349cf40b81"
+                    message:
+                      type: string
+                      example: "Sample comment message"
+                    creator:
+                      type: string
+                      example: "1233456"
+                    createdAt:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+                    updated:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+  /api/comments/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Comment id
+        required: true
+        example: "5eb12e197e06a76ccdefc121"
+        schema:
+          type: string
+    get:
+      summary: Get a single comment by id
+      description: See a specific comment.
+      operationId: getCommentById
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Details of the specified comment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "60845f68f84d58892f0bd3bf"
+                  postmessage_id:
+                    type: string
+                    example: "60850f4ef86468349cf40b81"
+                  message:
+                    type: string
+                    example: "Sample comment message"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  createdAt:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  updated:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      summary: Update a comment
+      description: Admin users can update any comment including role, regular users are restricted to their own comment.
+      operationId: updateComment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postmessage_id:
+                  type: string
+                  example: "60850f4ef86468349cf40b81"
+                message:
+                  type: string
+                  example: "Sample comment text"
+                creator:
+                  type: string
+                  example: "1233456"
+      responses:
+        "200":
+          description: Comment updated successfully. The details of the updated comment are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "60845f68f84d58892f0bd3bf"
+                  postmessage_id:
+                    type: string
+                    example: "60850f4ef86468349cf40b81"
+                  message:
+                    type: string
+                    example: "Sample comment message"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  createdAt:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  updated:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      summary: Delete a comment
+      description: Admin users can delete any comment, regular users are restricted to their own comment.
+      operationId: deleteComment
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Comment deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Comment deleted successfully"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /api/comments/{postmessage_id}:
+    get:
+      summary: Get whole comments of a specific post
+      description: See whole comments.
+      operationId: getCommentByPostMessageId
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: An array of the specified post message id comments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "60845f68f84d58892f0bd3bf"
+                  postmessage_id:
+                    type: string
+                    example: "60850f4ef86468349cf40b81"
+                  message:
+                    type: string
+                    example: "Sample comment message"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  createdAt:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  updated:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid, or the user does not have access to perform the action
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Unauthorized"
+    NotFoundError:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Not Found"

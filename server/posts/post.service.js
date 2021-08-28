@@ -5,6 +5,7 @@
  */
 module.exports = {
     getAll,
+    getById,
     create,
     update,
     delete: _delete
@@ -13,6 +14,18 @@ module.exports = {
 async function getAll() {
     const posts = await db.PostMessage.find();
     return posts.map(x => basicDetails(x));
+}
+
+async function getById(id) {
+    const post = await getPost(id);
+    return basicDetails(post);
+}
+
+async function getPost(id) {
+    if (!db.isValidId(id)) throw 'Post not found';
+    const post = await db.Post.findById(id);
+    if (!post) throw 'Post not found';
+    return post;
 }
 
 async function create(params) {
@@ -53,6 +66,6 @@ async function getPost(id) {
 }
 
 function basicDetails(post) {
-    const { id, title, name, messsage, creator, selectedFile, createdAt, updated, tags, likes, comments } = post;
-    return { id, title, name, messsage, creator, selectedFile, createdAt, updated, tags, likes, comments };
+    const { id, title, name, message, creator, selectedFile, createdAt, updated, tags, likes, comments } = post;
+    return { id, title, name, message, creator, selectedFile, createdAt, updated, tags, likes, comments };
 }

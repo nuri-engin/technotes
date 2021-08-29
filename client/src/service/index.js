@@ -3,7 +3,6 @@ import axios from 'axios';
 export default () => {
   const options = {};
   options.baseURL = process.env.VUE_APP_BASE_URL;
-  debugger
   options.headers = {'Content-Type': 'application/json'};
   const instance = axios.create(options);
 

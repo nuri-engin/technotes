@@ -130,12 +130,12 @@
                 <div class="success-title">Good Job !<br/></div>
                 <div class="success-message">
                   You have been successfully registered.<br/>
-                  Please check your e-mail, then press continue.
+                  Please check your e-mail and verify your account with the verification link.
                 </div>
               </div>
-              <div class="continue-btn-wrapper">
+              <!-- <div class="continue-btn-wrapper">
                 <b-button @click="loginRegisteredUser()" class="continue-btn">Continue</b-button>
-              </div>
+              </div> -->
             </div>
             <div v-if="registerStep" class="modal-inner-container">
                <div class="modal-header">
@@ -331,10 +331,10 @@ export default {
         }
       })
     },
-    loginRegisteredUser() {
-        this.showLoginModal = !this.showLoginModal;
-        document.getElementById('app').classList.remove('blur'); 
-    }
+    // loginRegisteredUser() {
+    //     this.showLoginModal = !this.showLoginModal;
+    //     document.getElementById('app').classList.remove('blur'); 
+    // }
   }
 }
 </script>

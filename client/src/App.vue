@@ -4,7 +4,11 @@
       <Navbar :logout="logout" :username="currUser && currUser.role" />
       <Filterbar />
       <div class="card-area-wrapper">
-        <div v-for="(post, index) in posts" :key="index">
+        <div v-if="posts.length === 0" class="spinner-container">
+          <b-spinner variant="light"></b-spinner>
+          <div class="loading-text">Loading posts</div>
+        </div>
+        <div v-else v-for="(post, index) in posts" :key="index">
           <Card :post="post" />
         </div>
       </div>
@@ -93,6 +97,24 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner-container .spinner-border {
+  width: 5rem;
+  height: 5rem;
+}
+
+.spinner-container .loading-text {
+  margin-top: 20px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 #app {

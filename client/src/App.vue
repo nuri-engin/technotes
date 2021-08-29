@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <Login :isLoggedIn="isLoggedIn" />
+    <Login :loggedIn="loggedIn" />
   </div>
 </template>
 
@@ -49,15 +49,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["currUser", "posts"]),
+    ...mapGetters(["currUser", "posts", "loggedIn"]),
   },
   methods: {
-    ...mapActions(["fetchPosts", "loginState"]),
+    ...mapActions(["fetchPosts", "loginState", "logoutUser"]),
     logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
       document.getElementById("app").classList.add("blur");
-      this.loginState(false);
+      this.logoutUser();
       this.isLoggedIn = false;
     },
     checkVerification() {

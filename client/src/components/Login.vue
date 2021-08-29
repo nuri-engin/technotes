@@ -1,7 +1,7 @@
 <template>
         <!------------- Login Modal ---------------->
     <transition name="modal">
-      <div v-if="!isLoggedIn && showLoginModal" class="modal-mask">
+      <div v-if="loggedIn && !loggedIn.login && showLoginModal" class="modal-mask">
         <div class="modal-wrapper">
           <div class="modal-container">
             <div v-if="loginStep" class="modal-inner-container">
@@ -225,7 +225,6 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
     name: 'Login',
-    props: ['isLoggedIn'],
     data() {
     return {
       showLoginModal:true,
@@ -248,10 +247,10 @@ export default {
     ...mapGetters(['loggedIn'])
   },
    mounted() {
-      if(this.isLoggedIn){
-          this.showLoginModal = false;
-    } else {
-          this.showLoginModal = true;
+  },
+  updated() {
+    if(this.loggedIn && !this.loggedIn.login) {
+      this.showLoginModal = true;
     }
   },
   methods: {

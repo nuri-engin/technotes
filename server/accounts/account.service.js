@@ -265,22 +265,20 @@ function basicDetails(account) {
 }
 
 async function sendVerificationEmail(account, origin) {
-    let message;
-    if (origin) {
-        const verifyUrl = `${origin}/account/verify-email?token=${account.verificationToken}`;
-        message = `<p>Please click the below link to verify your email address:</p>
-                   <p><a href="${verifyUrl}">${verifyUrl}</a></p>`;
-    } else {
-        message = `<p>Please use the below token to verify your email address with the <code>/account/verify-email</code> api route:</p>
-                   <p><code>${account.verificationToken}</code></p>`;
-    }
+    let message = `<p>Please use the token below to verify your email address with the <code>Verify email modal</code>. </p>
+    <p>Copy and paste the token into the modal and finalize the registration process.</p>
+    <br />
+    <p>Your token: <code>${account.verificationToken}</code></p>`
 
     await sendEmail({
         to: account.email,
         subject: 'Sign-up Verification API - Verify Email',
-        html: `<h4>Verify Email</h4>
-               <p>Thanks for registering!</p>
-               ${message}`
+        html: `<h4>Verify Email</h4> 
+               <small>Please do not reply to this email!</small>
+               <br /><br />
+               <p>Thanks for registering!</p> 
+               ${message}
+               <small> `
     });
 }
 

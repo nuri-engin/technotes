@@ -94,7 +94,8 @@ async function register(params, origin) {
     // validate
     if (await db.Account.findOne({ email: params.email })) {
         // send already registered error in email to prevent account enumeration
-        return await sendAlreadyRegisteredEmail(params.email, origin);
+        // const isRegistered = await sendAlreadyRegisteredEmail(params.email, origin);
+        return 'already-registered-email'
     }
 
     // create account object

@@ -73,6 +73,11 @@ const store = new Vuex.Store({
         },
         loginState({ commit }, login) {
             commit('loggedIn', { loggedIn: login })
+        },
+        logoutUser({commit, dispatch}) {
+            dispatch('loginState', { login: false })
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
         }
     }
 })

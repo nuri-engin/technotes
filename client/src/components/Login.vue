@@ -1,7 +1,7 @@
 <template>
         <!------------- Login Modal ---------------->
     <transition name="modal">
-      <div v-if="!isLoggedIn && showLoginModal" class="modal-mask">
+      <div v-if="loggedIn && !loggedIn.login && showLoginModal" class="modal-mask">
         <div class="modal-wrapper">
           <div class="modal-container">
             <div v-if="loginStep" class="modal-inner-container">
@@ -130,12 +130,12 @@
                 <div class="success-title">Good Job !<br/></div>
                 <div class="success-message">
                   You have been successfully registered.<br/>
-                  Please check your e-mail, then press continue.
+                  Please check your e-mail and verify your account with the verification link.
                 </div>
               </div>
-              <div class="continue-btn-wrapper">
+              <!-- <div class="continue-btn-wrapper">
                 <b-button @click="loginRegisteredUser()" class="continue-btn">Continue</b-button>
-              </div>
+              </div> -->
             </div>
             <div v-if="registerStep" class="modal-inner-container">
                <div class="modal-header">
@@ -225,7 +225,6 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
     name: 'Login',
-    props: ['isLoggedIn'],
     data() {
     return {
       showLoginModal:true,
@@ -248,10 +247,10 @@ export default {
     ...mapGetters(['loggedIn'])
   },
    mounted() {
-      if(this.isLoggedIn){
-          this.showLoginModal = false;
-    } else {
-          this.showLoginModal = true;
+  },
+  updated() {
+    if(this.loggedIn && !this.loggedIn.login) {
+      this.showLoginModal = true;
     }
   },
   methods: {
@@ -331,10 +330,10 @@ export default {
         }
       })
     },
-    loginRegisteredUser() {
-        this.showLoginModal = !this.showLoginModal;
-        document.getElementById('app').classList.remove('blur'); 
-    }
+    // loginRegisteredUser() {
+    //     this.showLoginModal = !this.showLoginModal;
+    //     document.getElementById('app').classList.remove('blur'); 
+    // }
   }
 }
 </script>

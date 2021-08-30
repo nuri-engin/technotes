@@ -8,7 +8,7 @@
           </div>
           <div class="writer-name-date">
             <span class="name">{{ post.name }}</span>
-            <span class="date">{{ post.createdAt }}</span>
+            <span class="date">{{setTimeFormat(post.createdAt)}}</span>
           </div>
         </div>
         <div class="more-dd">
@@ -280,6 +280,10 @@ export default {
     },
     updateComment(value) {
       this.newComment = value;
+    },
+    setTimeFormat(date) {
+      let dateObject = new Date(date);
+      return `${dateObject.toLocaleDateString()} ${dateObject.toLocaleTimeString()}`
     }
   },
 };
@@ -401,6 +405,7 @@ export default {
   padding: 0px;
   color: #02252f !important;
   border: none !important;
+  background-color: transparent !important;
   font-size: 13px;
 }
 

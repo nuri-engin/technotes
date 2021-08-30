@@ -116,7 +116,17 @@ function registerSchema(req, res, next) {
 
 function register(req, res, next) {
     accountService.register(req.body, req.get('origin'))
-        .then(() => res.json({ message: 'Registration successful, please check your email for verification instructions' }))
+        .then((result) => {
+            if (result && result.includes('already-registered-email')) {
+                return res.status(409).json({
+                    message: `This email address (${req.body.email}) has been already registered!`
+                })
+            }
+
+            return res.json({ 
+                message: 'Registration successful, please check your email for verification instructions' 
+            });
+        })
         .catch(next);
 }
 

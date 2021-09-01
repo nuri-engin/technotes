@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="app">
-      <Navbar :logout="logout" :username="currUser && currUser.role" />
+      <Navbar :logout="logout" :username="currUser && currUser.userName" />
       <Filterbar />
       <div class="card-area-wrapper">
         <div v-if="posts.length === 0" class="spinner-container">
@@ -39,6 +39,7 @@ export default {
     };
   },
   mounted() {
+    debugger
     if (this.currUser && !this.currUser.isVerified) {
       this.checkVerification();
     } else {

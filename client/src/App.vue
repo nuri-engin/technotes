@@ -35,7 +35,6 @@ export default {
   },
   data() {
     return {
-      isLoggedIn: false,
     };
   },
   mounted() {
@@ -45,11 +44,10 @@ export default {
     } else {
       if (localStorage.getItem("token")) {
         document.getElementById("app").classList.remove("blur");
-        this.isLoggedIn = true;
         this.fetchPosts();
       } else {
         document.getElementById("app").classList.add("blur");
-        this.isLoggedIn = false;
+        this.loginState(true)
       }
     }
   },
@@ -61,7 +59,6 @@ export default {
     logout() {
       document.getElementById("app").classList.add("blur");
       this.logoutUser();
-      this.isLoggedIn = false;
     },
     checkVerification() {
       let pathname = document.location.href;

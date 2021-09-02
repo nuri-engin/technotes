@@ -19,7 +19,9 @@
             <b-dropdown-item-button @click="showEditModal = true"
               >Edit</b-dropdown-item-button
             >
-            <b-dropdown-item-button>Delete</b-dropdown-item-button>
+            <b-dropdown-item-button @click="showDeleteModal = true"
+              >Delete</b-dropdown-item-button
+            >
           </b-dropdown>
         </div>
       </div>
@@ -36,7 +38,11 @@
       </div>
       <div class="techcard-actions">
         <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
-        <div class="comment-icon"><b-icon icon="chat-left-fill" /></div>
+        <div class="comment-icon">
+          <b-button @click="openCommentModal()">
+            <b-icon icon="chat-left-fill" />
+          </b-button>
+        </div>
       </div>
     </div>
     <!-------- Edit Modal --------------->
@@ -44,7 +50,7 @@
       <div v-if="showEditModal" class="modal-mask">
         <div class="modal-wrapper">
           <div class="modal-container">
-            <div class="modal-header">
+            <div class="modal-header" style="border: 0">
               <b-icon
                 class="close-icon"
                 icon="x"
@@ -53,6 +59,7 @@
               />
               <b-form>
                 <b-form-input
+                  class="title-modal"
                   v-if="descEditMode"
                   name="title"
                   id="input-1"
@@ -60,19 +67,26 @@
                   required
                   v-model="postTitle"
                 ></b-form-input>
-                <span v-else>{{ post.title }}</span>
+                <span v-else>
+                  <span v-if="!commentMode">{{ post.title }}</span>
+                  <span v-else><b-icon icon="chat-left-fill" />Comments</span>
+                </span>
               </b-form>
             </div>
 
-            <div class="modal-body">
+            <div v-if="!commentMode" class="modal-body">
               <b-form>
-                <div style="display: flex;" class="label">
+                <div style="display: flex" class="label">
                   <div>Description</div>
-                  <b-button v-if="!descEditMode" @click="descEditMode = !descEditMode"
+                  <br />
+                  <b-button
+                    v-if="!descEditMode"
+                    @click="descEditMode = !descEditMode"
                     >Edit</b-button
                   >
                 </div>
                 <b-form-textarea
+                  class="description-input"
                   v-if="descEditMode"
                   id="input-2"
                   name="description"
@@ -83,19 +97,22 @@
                   max-rows="6"
                 ></b-form-textarea>
                 <span v-else>{{ post.description }}</span>
-                <div v-if="descEditMode">
-                  <b-button  @click="descEditMode = !descEditMode"
-                      >X</b-button>
-                  <b-button @click="updateDesc()"
-                      >Save</b-button>
+                <div v-if="descEditMode" class="edit-save-close">
+                  <b-button class="edit-close" @click="descEditMode = !descEditMode">X</b-button>
+                  <b-button class="edit-save" @click="updateDesc()">Save</b-button>
                 </div>
-               
+
                 <br />
 
-                <div style="display: flex;" class="label">
+                <div style="display: flex" class="tags">
                   <div>Tags</div>
-                  <b-button @click="tagsEditMode = !tagsEditMode"
+                  <b-button
+                    v-if="!tagsEditMode"
+                    @click="tagsEditMode = !tagsEditMode"
                     >Edit</b-button
+                  >
+                  <b-button v-else @click="tagsEditMode = !tagsEditMode"
+                    >Save</b-button
                   >
                 </div>
                 <b-form-input
@@ -105,15 +122,76 @@
                   @input="(value) => updateTags(value)"
                   required
                   v-model="postTags"
-                  style="margin-bottom:0px;"
+                  style="margin-bottom: 0px"
                 ></b-form-input>
                 <span v-else>{{ post.tags.join(",") }}</span>
               </b-form>
             </div>
 
+            <div v-else>
+              <div class="comments-header">
+                <b-form class="comments-form">
+                  <div class="writer-img">
+                    <img width="40" src="@/assets/images/no-image.png" />
+                  </div>
+                  <b-form-input
+                    name="comment"
+                    id="input-comment"
+                    @input="(value) => updateComment(value)"
+                    placeholder="text..."
+                    required
+                  ></b-form-input>
+                </b-form>
+              </div>
+              <b-button @click="sendComment()"> Send </b-button>
+              <div class="comments-content">
+                <div v-for="(comment, index) in comments" :key="index">
+                  {{ comment.message }}
+                </div>
+              </div>
+            </div>
             <div class="modal-footer">
-              <b-button class="modal-default-button" @click="generateNote()">
-                Comments >
+              <b-button
+                class="modal-default-button"
+                @click="checkEditCommentStatus()"
+              >
+                <div v-if="commentMode">- Description</div>
+                <div v-else>Comments ></div>
+              </b-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!---------- Delete Modal -------------->
+    <transition name="modal">
+      <div v-if="showDeleteModal" class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="delete-modal-container">
+            <div class="delete-modal-header">
+              <b-icon
+                class="close-icon"
+                icon=""
+                scale="2"
+                @click="showDeleteModal = false"
+              />
+              Delete
+            </div>
+
+            <div class="delete-modal-body">
+              <span> Are you sure to delete this card? </span>
+            </div>
+
+            <div class="modal-footer" style="border: 0">
+              <b-button id="delete-modal-default-button" @click="deletePost()">
+                Yes
+              </b-button>
+              <b-button
+                id="delete-modal-default-button"
+                @click="showDeleteModal = false"
+              >
+                No
               </b-button>
             </div>
           </div>
@@ -124,6 +202,9 @@
 </template>
 
 <script>
+import service from "@/service";
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   name: "Card",
   props: ["post"],
@@ -131,22 +212,98 @@ export default {
     return {
       showEditModal: false,
       postTitle: this.post.title,
-      postDescription: this.post.description,
+      postDescription: this.post.message,
       postTags: this.post.tags.join(","),
       descEditMode: false,
       tagsEditMode: false,
+      comments: [],
+      commentMode: false,
+      newComment: "",
+      showDeleteModal: false,
     };
   },
+  computed: {
+    ...mapGetters(["currUser"]),
+  },
   methods: {
+    ...mapActions(["fetchPosts"]),
     updateDesc() {
       this.descEditMode = false;
-      alert('hey saved')
-    }
-  }
+      let { id } = this.post;
+      service()
+        .put(`posts/${id}`, {
+          title: this.postTitle,
+          message: this.postDescription,
+          tags: this.postTags.split(","),
+          name: this.currUser.userName,
+          creator: this.currUser.id,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.fetchPosts();
+          }
+        });
+    },
+    deletePost() {
+      let { id } = this.post;
+      service()
+        .delete(`posts/${id}`)
+        .then((res) => {
+          if (res.status === 200) {
+            this.fetchPosts();
+            console.log(res);
+          }
+        });
+    },
+    async fetchComments() {
+      try {
+        const { data } = await service().get(`comments/${this.post.id}`);
+        this.comments = data;
+      } catch (e) {
+        console.error(e.message);
+      }
+    },
+    sendComment() {
+      if (this.newComment !== "") {
+        service()
+          .post(`comments/`, {
+            postmessage_id: this.post.id,
+            message: this.newComment,
+            creator: this.currUser.id,
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res);
+            }
+          });
+      }
+    },
+    openCommentModal() {
+      this.showEditModal = true;
+      this.checkEditCommentStatus();
+    },
+    checkEditCommentStatus() {
+      this.commentMode = !this.commentMode;
+      if (this.commentMode) {
+        this.fetchComments();
+      }
+    },
+    updateComment(value) {
+      this.newComment = value;
+    },
+  },
 };
 </script>
 
 <style>
+.description-input{
+  overflow-y: hidden !important;
+  height: 180px !important;
+  background: #f3fcf0 !important;
+  border: 1px solid #3c6562 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+}
+
 .techcard-wrapper {
   border-radius: 15px;
   background-color: #f3fcf0;
@@ -217,6 +374,7 @@ export default {
 .techcard-content {
   height: 190px;
   padding: 15px 20px;
+  overflow-y: scroll;
 }
 
 .techcard-content-title {
@@ -257,6 +415,13 @@ export default {
   cursor: pointer;
 }
 
+.comment-icon > button {
+  padding: 0px;
+  color: #02252f !important;
+  border: none !important;
+  font-size: 13px;
+}
+
 .comment-icon:after {
   position: absolute;
   content: "";
@@ -265,6 +430,9 @@ export default {
   height: 8px;
   border-radius: 5px;
   right: -2px;
+}
+
+.comments-form {
 }
 
 .modal-mask {
@@ -285,12 +453,12 @@ export default {
 }
 
 .modal-container {
-  width: 70%;
+  width: 34%;
   height: max-content;
   margin: 0px auto;
-  padding: 25px;
-  background-color: #f3fcf0;
-  border-radius: 2px;
+  padding: 15px;
+  background-color: #d6e5db;
+  border-radius: 10px;
   color: black;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
@@ -299,9 +467,10 @@ export default {
 }
 
 .modal-default-button {
-  padding: 10px 30px;
-  color: #3c6562;
-  border: 1px solid #3c6562;
+  color: #3c6562 !important;
+  border: 0 !important;
+  background: #d6e5db !important;
+  margin-bottom: -15px !important;
 }
 
 .modal-header {
@@ -309,7 +478,7 @@ export default {
   margin-top: 0;
   color: #3c6562;
   position: relative;
-  border: none;
+  border: 0;
   font-weight: bold;
 }
 
@@ -335,13 +504,42 @@ label {
 
 .close-icon {
   position: absolute;
-  right: 20px;
-  top: 20px;
+  right: 8px;
+  top: 8px;
   cursor: pointer;
 }
 
+.edit-save-close{
+  float: right;
+  margin-top: -35px;
+}
+
+.edit-close{
+  background: #d6e5db !important;
+  border: 0 !important;
+  margin-right: 9px;
+  color: #3c6562 !important;
+}
+
+.edit-save{
+  border-radius: 5px !important;
+  width: 75px;
+  height: 30px;
+  border: 1px solid #3c6562 !important;
+  background: #d6e5db !important;
+  color: #3c6562 !important;
+  margin-right: 9px;
+}
+.title-modal{
+  border-radius: 8px !important;
+  background: #f3fcf0 !important;
+  border: 1px solid #3c6562 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  width: 350px !important;
+}
+
 .modal-body {
-  margin: 20px 0;
+  margin: -25px 0;
   border: none;
 }
 
@@ -367,5 +565,50 @@ label {
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+
+.delete-modal-container {
+  width: 32%;
+  height: max-content;
+  margin: 0px auto;
+  padding: 25px;
+  background-color: #cdd9d1;
+  border-radius: 3px;
+  color: #3c6562;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+  position: relative;
+}
+
+.delete-modal-header {
+  font-size: 18px;
+  margin-top: 0;
+  padding-bottom: 5px;
+  color: #3c6562;
+  position: relative;
+  border: none;
+  font-weight: bold;
+}
+
+.delete-modal-body {
+  margin: 15px 10px;
+  border: none;
+  margin-bottom: 7px;
+}
+
+#delete-modal-default-button {
+  color: #3c6562;
+  background: #cdd9d1;
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-bottom: -20px;
+  padding: 1%;
+  width: 75px;
+  margin-right: 10px;
+}
+
+#delete-modal-default-button {
+  float: right;
 }
 </style>

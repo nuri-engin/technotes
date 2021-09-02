@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="app">
-      <Navbar :logout="logout" :username="currUser && currUser.role" />
+      <Navbar :logout="logout" :username="currUser && currUser.userName" />
       <Filterbar />
       <div class="card-area-wrapper">
         <div v-if="posts.length === 0" class="spinner-container">
@@ -35,20 +35,19 @@ export default {
   },
   data() {
     return {
-      isLoggedIn: false,
     };
   },
   mounted() {
+    debugger
     if (this.currUser && !this.currUser.isVerified) {
       this.checkVerification();
     } else {
       if (localStorage.getItem("token")) {
         document.getElementById("app").classList.remove("blur");
-        this.isLoggedIn = true;
         this.fetchPosts();
       } else {
         document.getElementById("app").classList.add("blur");
-        this.isLoggedIn = false;
+        this.loginState(true)
       }
     }
   },
@@ -60,7 +59,6 @@ export default {
     logout() {
       document.getElementById("app").classList.add("blur");
       this.logoutUser();
-      this.isLoggedIn = false;
     },
     checkVerification() {
       let pathname = document.location.href;

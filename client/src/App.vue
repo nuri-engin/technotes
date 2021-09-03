@@ -38,7 +38,6 @@ export default {
     };
   },
   mounted() {
-    debugger
     if (this.currUser && !this.currUser.isVerified) {
       this.checkVerification();
     } else {

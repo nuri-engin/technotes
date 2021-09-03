@@ -38,9 +38,6 @@ export default {
     };
   },
   mounted() {
-    if (this.currUser && !this.currUser.isVerified) {
-      this.checkVerification();
-    } else {
       if (localStorage.getItem("token")) {
         document.getElementById("app").classList.remove("blur");
         this.fetchPosts();
@@ -48,7 +45,6 @@ export default {
         document.getElementById("app").classList.add("blur");
         this.loginState(true)
       }
-    }
   },
   computed: {
     ...mapGetters(["currUser", "posts", "loggedIn"]),
@@ -58,23 +54,6 @@ export default {
     logout() {
       document.getElementById("app").classList.add("blur");
       this.logoutUser();
-    },
-    checkVerification() {
-      let pathname = document.location.href;
-      if (pathname.includes("verify-email")) {
-        let token = pathname.slice(pathname.lastIndexOf("=") + 1);
-        service()
-          .post("accounts/verify-email", {
-            token: token,
-          })
-          .then((response) => {
-            if (response.status == 200) {
-              alert("verification successful");
-            } else {
-              alert("verification failed");
-            }
-          });
-      }
     },
   },
 };

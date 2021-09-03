@@ -256,7 +256,7 @@ export default {
   methods: {
     ...mapActions(['loginUser']),
     updateEmail(value) {
-      this.email = value
+      this.email = value.toLowerCase();
     },
     updatePassword(value) {
       this.password = value
@@ -265,7 +265,7 @@ export default {
       this.newUsername = value
     },
     updateNewUserEmail(value) {
-      this.newUserEmail = value
+      this.newUserEmail = value.toLowerCase();
     },
     updateNewUserPassword(value) {
       this.newUserPassword = value
@@ -274,7 +274,7 @@ export default {
       this.newUserConfirmPassword = value
     },
     updateForgotPassEmail(value) {
-      this.forgotPassEmail = value
+      this.forgotPassEmail = value.toLowerCase();
     },
     sendPassword() {
       service().post('accounts/forgot-password', {

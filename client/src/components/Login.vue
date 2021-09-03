@@ -201,7 +201,7 @@
 
               <div class="modal-footer">
                 <b-button
-                  class="modal-default-button register-btn"
+                  class="modal-default-button-register-btn"
                   @click="register()"
                 >
                   Register
@@ -387,9 +387,26 @@ export default {
 }
 
 .modal-inner-container{
+  padding-left: 15px;
+  padding-right: 15px;
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.modal-default-button-register-btn{
+  margin-bottom: 20px;
+  padding: 6px;
+  border: 1px solid black;
+  border-radius: 8px;
+  width: 90px;
+  height: 40px;
+  color: black;
+  background: #d5d9d2;
+}
+
+.modal-default-button-register-btn:hover{
+  background-color: #02252f
 }
 
 .modal-default-button {
@@ -401,6 +418,7 @@ export default {
 .modal-header {
   font-size: 30px;
   margin-top: 0;
+  margin-bottom: -20px;
   color: #3c6562;
   border: none;
   justify-content: center !important;
@@ -409,7 +427,7 @@ export default {
 .link {
     text-decoration: none;
     color: #3c6562;
-    font-size: 14px;
+    font-size: 13px;
     opacity: 0.7
 }
 
@@ -423,6 +441,7 @@ export default {
     border: none;
     text-align: center;
     justify-content: center;
+    margin-top: -40px !important;
 }
 
 .modal-default-button {

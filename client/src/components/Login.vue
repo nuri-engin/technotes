@@ -60,6 +60,9 @@
                      <span class="remember-me"> Remember me.</span>
                     </b-form-checkbox>
                     <b-link class="link" @click="goToRegister()">Not a member? Register</b-link>
+                    <div>
+                      <b-link class="link" @click="goToVerify()">Verify your email</b-link>
+                    </div>
                 </div>
               </div>
             </div>
@@ -256,10 +259,10 @@ export default {
       forgotPassEmail: '',
       verificationError: false,
       status: false,
-      loginStep: false,
+      loginStep: true,
       registerStep: false,
       loginError: false,
-      registerSuccess:true,
+      registerSuccess:false,
       forgotPassStep: false,
     }
   },
@@ -327,9 +330,14 @@ export default {
       this.registerStep = true;
       this.loginStep = false;
     },
+    goToVerify() {
+      this.loginStep = false;
+      this.registerSuccess=true;
+    },
     backToLogin() {
       this.forgotPassStep=false;
       this.registerStep = false;
+      this.registerSuccess=false;
       this.loginStep = true;
     },
     goToForgotPass() {
@@ -507,7 +515,7 @@ export default {
 }
 
 .bottom-wrapper{
-    margin-top: 30px
+    margin-top: 10px
 }
 
 .forgot-pass-wrapper{

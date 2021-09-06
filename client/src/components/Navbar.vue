@@ -144,7 +144,6 @@ export default {
       this.showNewNoteModal = !this.showNewNoteModal;
     },
     generateNote() {
-       // eslint-disable-next-line no-debugger
       if([this.title, this.description].includes('')) {
         this.displayError = true;
       } else {

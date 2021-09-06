@@ -60,6 +60,9 @@
                      <span class="remember-me"> Remember me.</span>
                     </b-form-checkbox>
                     <b-link class="link" @click="goToRegister()">Not a member? Register</b-link>
+                    <div>
+                      <b-link class="link" @click="goToVerify()">Verify your email</b-link>
+                    </div>
                 </div>
               </div>
             </div>
@@ -127,15 +130,33 @@
                 <b-icon class="success-icon" icon="exclamation-circle"/>
               </div>
               <div class="success-content">
-                <div class="success-title">Good Job !<br/></div>
+                <div class="success-title">Verify Email Address<br/></div>
                 <div class="success-message">
-                  You have been successfully registered.<br/>
-                  Please check your e-mail and verify your account with the verification link.
+                  Please enter the verification code we sent you through your email.
+                </div>
+                 <b-form>
+                  <b-form-group
+                    label-for="input-verification-code"
+                  >
+                    <b-form-input
+                      name="Verification Code"
+                      id="input-email"
+                      @input="(value) => updateVerificationCode(value)"
+                      placeholder="Verification Code"
+                      required
+                    ></b-form-input>
+                  </b-form-group>
+                 </b-form>
+                <b-button @click="verifyEmail()" class="register-btn">Submit</b-button>
+                <div v-if="verificationError" class="verification-error">
+                  Verification Failed.
+                </div>
+                <div style="margin-top: 20px;">
+                    <b-link class="link"  @click="backToLogin()">
+                        <b-icon icon="arrow-left"/>
+                        Back to Login</b-link>
                 </div>
               </div>
-              <!-- <div class="continue-btn-wrapper">
-                <b-button @click="loginRegisteredUser()" class="continue-btn">Continue</b-button>
-              </div> -->
             </div>
             <div v-if="registerStep" class="modal-inner-container">
                <div class="modal-header">
@@ -234,7 +255,9 @@ export default {
       newUserEmail: '',
       newUserPassword: '',
       newUserConfirmPassword: '',
+      verificationCode: '',
       forgotPassEmail: '',
+      verificationError: false,
       status: false,
       loginStep: true,
       registerStep: false,
@@ -256,7 +279,7 @@ export default {
   methods: {
     ...mapActions(['loginUser']),
     updateEmail(value) {
-      this.email = value
+      this.email = value.toLowerCase();
     },
     updatePassword(value) {
       this.password = value
@@ -265,7 +288,7 @@ export default {
       this.newUsername = value
     },
     updateNewUserEmail(value) {
-      this.newUserEmail = value
+      this.newUserEmail = value.toLowerCase();
     },
     updateNewUserPassword(value) {
       this.newUserPassword = value
@@ -274,7 +297,10 @@ export default {
       this.newUserConfirmPassword = value
     },
     updateForgotPassEmail(value) {
-      this.forgotPassEmail = value
+      this.forgotPassEmail = value.toLowerCase();
+    },
+    updateVerificationCode(value) {
+      this.verificationCode = value
     },
     sendPassword() {
       service().post('accounts/forgot-password', {
@@ -304,9 +330,14 @@ export default {
       this.registerStep = true;
       this.loginStep = false;
     },
+    goToVerify() {
+      this.loginStep = false;
+      this.registerSuccess=true;
+    },
     backToLogin() {
       this.forgotPassStep=false;
       this.registerStep = false;
+      this.registerSuccess=false;
       this.loginStep = true;
     },
     goToForgotPass() {
@@ -330,10 +361,27 @@ export default {
         }
       })
     },
-    // loginRegisteredUser() {
-    //     this.showLoginModal = !this.showLoginModal;
-    //     document.getElementById('app').classList.remove('blur'); 
-    // }
+    verifyEmail() {
+      let verificationCode = this.verificationCode;
+
+      if(verificationCode !== '') {
+         service()
+          .post("accounts/verify-email", {
+            token: verificationCode,
+          })
+          .then((response) => {
+            if (response.status == 200) {
+              alert("verification successful");
+              this.registerSuccess = false;
+              this.showLoginModal = false;
+            } else {
+              alert("verification failed");
+            }
+          }).catch((error) => {
+            this.verificationError=true;
+          });
+      }
+    }
   }
 }
 </script>
@@ -486,13 +534,19 @@ export default {
 }
 
 .bottom-wrapper{
-    margin-top: 30px
+    margin-top: 10px
 }
 
 .forgot-pass-wrapper{
     text-align: right;
     margin-top: -20px;
     opacity: 0.6;
+}
+
+.verification-error{
+  color:#CB4E44;
+  font-size: 13px;
+  margin-top: 15px;
 }
 
 .error-icon, .success-icon{

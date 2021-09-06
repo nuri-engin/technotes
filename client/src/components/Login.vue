@@ -277,7 +277,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['loginUser']),
+    ...mapActions(['loginUser', 'loginState', 'fetchPosts']),
     updateEmail(value) {
       this.email = value.toLowerCase();
     },
@@ -373,7 +373,10 @@ export default {
             if (response.status == 200) {
               alert("verification successful");
               this.registerSuccess = false;
+              this.loginState(false);
               this.showLoginModal = false;
+               document.getElementById("app").classList.remove("blur");
+              this.fetchPosts();
             } else {
               alert("verification failed");
             }

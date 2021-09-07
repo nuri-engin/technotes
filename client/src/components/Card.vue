@@ -529,7 +529,7 @@ label {
   background: #d6e5db !important;
   color: #3c6562 !important;
   margin-right: 9px;
-  padding: 4px !important;
+  padding: 5px !important;
 }
 .title-modal{
   border-radius: 8px !important;

@@ -47,15 +47,9 @@ paths:
                   id:
                     type: string
                     example: "5eb12e197e06a76ccdefc121"
-                  title:
+                  userName:
                     type: string
-                    example: "Mr"
-                  firstName:
-                    type: string
-                    example: "Jason"
-                  lastName:
-                    type: string
-                    example: "Watmore"
+                    example: "Foo bar"
                   email:
                     type: string
                     example: "jason@example.com"
@@ -71,6 +65,9 @@ paths:
                   jwtToken:
                     type: string
                     example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWIxMmUxOTdlMDZhNzZjY2RlZmMxMjEiLCJpZCI6IjVlYjEyZTE5N2UwNmE3NmNjZGVmYzEyMSIsImlhdCI6MTU4ODc1ODE1N30.xR9H0STbFOpSkuGA9jHNZOJ6eS7umHHqKRhI807YT1Y"
+                  exp:
+                    type: date
+                    example: "2021-09-11T12:22:29.000Z"
         "400":
           description: The email or password is incorrect
           content:

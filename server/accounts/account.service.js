@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
 const sendEmail = require('_helpers/send-email');
 const db = require('_helpers/db');
+const calculateJwtExp = require('_helpers/calculateJwtExp');
 const Role = require('_helpers/role');
 
 /**
@@ -32,6 +33,12 @@ module.exports = {
     delete: _delete
 };
 
+/**
+ * JWT authentication with refresh tokens
+ * Authentication is implemented with JWT access tokens and refresh tokens. On successful authentication the boilerplate api returns a short lived JWT access token that expires after 15 minutes, 
+ * and a refresh token that expires after 7 days in a HTTP Only cookie. The JWT is used for accessing secure routes on the api and the refresh token is used for generating new JWT access tokens when (or just before) they expire. 
+ * HTTP Only cookies are used for increased security because they are not accessible to client-side javascript which prevents XSS (cross site scripting), and the refresh token can only be used to fetch a new JWT token from the /accounts/refresh-token route which prevents CSRF (cross site request forgery).
+ */
 async function authenticate({ email, password, ipAddress }) {
     const account = await db.Account.findOne({ email });
 
@@ -54,6 +61,7 @@ async function authenticate({ email, password, ipAddress }) {
     return {
         ...basicDetails(account),
         jwtToken,
+        exp: calculateJwtExp(jwtToken),
         refreshToken: refreshToken.token
     };
 }

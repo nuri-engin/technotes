@@ -8,7 +8,7 @@
           <b-spinner variant="light"></b-spinner>
           <div class="loading-text">Loading posts</div>
         </div>
-        <div v-else v-for="(post, index) in posts" :key="index">
+        <div v-else v-for="(post, index) in orderedPosts" :key="index">
           <Card :post="post" />
         </div>
       </div>
@@ -47,6 +47,9 @@ export default {
   },
   computed: {
     ...mapGetters(["currUser", "posts", "loggedIn"]),
+    orderedPosts() {
+      return this.posts.reverse();
+    }
   },
   methods: {
     ...mapActions(["fetchPosts", "loginState", "logoutUser"]),

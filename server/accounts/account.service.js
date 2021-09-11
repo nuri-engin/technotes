@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
 const sendEmail = require('_helpers/send-email');
 const db = require('_helpers/db');
+const calculateJwtExp = require('_helpers/calculateJwtExp');
 const Role = require('_helpers/role');
 
 /**
@@ -60,6 +61,7 @@ async function authenticate({ email, password, ipAddress }) {
     return {
         ...basicDetails(account),
         jwtToken,
+        exp: calculateJwtExp(jwtToken),
         refreshToken: refreshToken.token
     };
 }

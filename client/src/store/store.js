@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import service from "@/service"
+import axios from 'axios';
 
 Vue.use(Vuex)
 
@@ -68,6 +69,7 @@ const store = new Vuex.Store({
                 }).catch(error => {
                     resolve(error)
                     dispatch('loginState', { login: false })
+                    localStorage.removeItem('token')
                 })
             })
         },
@@ -78,6 +80,7 @@ const store = new Vuex.Store({
             dispatch('loginState', { login: false })
             localStorage.removeItem("token");
             localStorage.removeItem("user");
+            delete axios.defaults.headers.common['Authorization'];
         }
     }
 })

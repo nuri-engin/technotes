@@ -19,7 +19,6 @@
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-import service from "@/service";
 import Filterbar from "@/components/FilterBar.vue";
 import Card from "@/components/Card.vue";
 import Login from "@/components/Login.vue";
@@ -36,6 +35,17 @@ export default {
   data() {
     return {
     };
+  },
+   created: function () {
+     debugger
+    this.$http.interceptors.response.use(undefined, function (err) {
+      return new Promise(function (resolve, reject) {
+        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+          this.$store.dispatch(this.logoutUser())
+        }
+        throw err;
+      });
+    });
   },
   mounted() {
       if (localStorage.getItem("token")) {

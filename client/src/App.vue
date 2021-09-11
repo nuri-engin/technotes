@@ -19,7 +19,6 @@
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-import service from "@/service";
 import Filterbar from "@/components/FilterBar.vue";
 import Card from "@/components/Card.vue";
 import Login from "@/components/Login.vue";

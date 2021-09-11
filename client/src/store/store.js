@@ -40,7 +40,7 @@ const store = new Vuex.Store({
         },
     },
     actions: {
-        async fetchPosts({ commit }) {
+        async fetchPosts({ commit, dispatch }) {
             try {
                 const { data } = await service().get('posts', {
                     headers: {
@@ -50,6 +50,9 @@ const store = new Vuex.Store({
                 commit('fetchPosts', { posts: data })
             } catch (e) {
                 console.error(e.message)
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                dispatch('logoutUser')
             }
         },
         loginUser({ commit, dispatch }, { email, password }) {

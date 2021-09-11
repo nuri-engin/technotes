@@ -12,13 +12,7 @@ export default () => {
     config.headers.Authorization = token ? `Bearer ${token}` : '';
     return config;
   }, function (error) {
-    const originalRequest = error.config;
-
-    if (error.response.status === 401 && !originalRequest._retry) {
-
-      originalRequest._retry = true;
-    }
-    return Promise.reject(error);
+    console.log(error.message);
   })
 
   return instance;

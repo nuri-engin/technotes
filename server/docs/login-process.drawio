@@ -1,0 +1,25 @@
+<mxfile host="65bd71144e">
+    <diagram id="sFNusDNnQ1Bx87vMDNIv" name="Page-1">
+        <mxGraphModel dx="592" dy="605" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="291" pageHeight="413" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="2" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="&lt;u&gt;server.js&amp;nbsp;&lt;/u&gt;&lt;br&gt;&lt;br&gt;Trigger app.use to call controller." style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="486" y="60" width="195" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="3" target="5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;span&gt;&lt;u&gt;accounts.controller&amp;nbsp;&lt;br&gt;&lt;/u&gt;&lt;br&gt;Grap 'email, password, ipadress' from request.&lt;br&gt;Call 'account service &amp;gt; authenticate' with those values.&lt;br&gt;&lt;br&gt;If everything is fine;&amp;nbsp;&lt;/span&gt;Set token cookies with refresh-token.&lt;span&gt;&lt;br&gt;&amp;nbsp;Finally return account object retrived from service.&amp;nbsp;&lt;br&gt;&lt;/span&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="423" y="267" width="320" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&lt;span&gt;&lt;u&gt;accountService.authenticate&lt;br&gt;&lt;/u&gt;&lt;br&gt;Ask DB if account exist w/ this email.&lt;br&gt;If yes but not verified: Inform on response.&lt;br&gt;If no but pass is correct: Inform on response.&lt;br&gt;Otherwise, generate the JWT token. (Token will have expire-token for 15 mins.)&lt;br&gt;Meanwhile generate and save the refresh token.&amp;nbsp;&amp;nbsp;&lt;br&gt;Create an object which holds account information and return it with JWT token.&lt;br&gt;&lt;/span&gt;" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="423" y="534" width="320" height="190" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

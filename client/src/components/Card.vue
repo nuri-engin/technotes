@@ -48,7 +48,7 @@
       <div v-if="showEditModal" class="modal-mask">
         <div class="modal-wrapper">
           <div class="modal-container">
-            <div class="modal-header">
+            <div class="modal-header" style="border: 0">
               <b-icon
                 class="close-icon"
                 icon="x"
@@ -57,6 +57,7 @@
               />
               <b-form>
                 <b-form-input
+                  class="title-modal"
                   v-if="descEditMode"
                   name="title"
                   id="input-1"
@@ -82,6 +83,7 @@
                   >
                 </div>
                 <b-form-textarea
+                  class="description-input"
                   v-if="descEditMode"
                   id="input-2"
                   name="description"
@@ -92,9 +94,9 @@
                   max-rows="6"
                 ></b-form-textarea>
                 <span v-else>{{ post.description }}</span>
-                <div v-if="descEditMode">
-                  <b-button @click="descEditMode = !descEditMode">X</b-button>
-                  <b-button @click="updateDesc()">Save</b-button>
+                <div v-if="descEditMode" class="edit-save-close">
+                  <b-button class="edit-close" @click="descEditMode = !descEditMode">X</b-button>
+                  <b-button class="edit-save" @click="updateDesc()">Save</b-button>
                 </div>
 
                 <br />
@@ -124,6 +126,7 @@
             <div v-else>
               <div class="comments-header">
                  <b-form class="comments-form">
+
                   <div class="writer-img">
                     <img width="40" src="@/assets/images/no-image.png" />
                   </div>
@@ -157,6 +160,7 @@
     </transition>
 
     <!---------- Delete Modal -------------->
+
       <transition name="modal">
       <div v-if="showDeleteModal" class="modal-mask">
         <div class="modal-wrapper">
@@ -171,17 +175,19 @@
               Delete
             </div>
 
-            <div class="modal-body">
-              <span>
-                Are you sure to delete this card?
-              </span>
+
+            <div class="delete-modal-body">
+              <span> Are you sure to delete this card? </span>
             </div>
 
-            <div class="modal-footer">
-              <b-button class="modal-default-button" @click="deletePost()">
+            <div class="modal-footer" style="border: 0">
+              <b-button id="delete-modal-default-button" @click="deletePost()">
                 Yes
               </b-button>
-               <b-button class="modal-default-button" @click="showDeleteModal = false">
+              <b-button
+                id="delete-modal-default-button"
+                @click="showDeleteModal = false"
+              >
                 No
               </b-button>
             </div>
@@ -241,10 +247,12 @@ export default {
           if(res.status === 200) {
             this.fetchPosts()
             console.log(res)
+
           }
         });
     },
     async fetchComments() {
+
       try { 
         const { data } = await service().get(`comments/${this.post.id}`);
         this.comments = data;
@@ -255,6 +263,7 @@ export default {
     },
     sendComment() {
       if(this.newComment !== "") {
+
         service()
           .post(`comments/`, {
             postmessage_id: this.post.id,
@@ -264,6 +273,7 @@ export default {
           .then((res) => {
             if(res.status === 200) {
               console.log(res)
+
             }
           });
       }
@@ -274,7 +284,9 @@ export default {
     },
     checkEditCommentStatus() {
       this.commentMode = !this.commentMode;
+
       if(this.commentMode) {
+
         this.fetchComments();
       }
     },
@@ -285,11 +297,20 @@ export default {
       let dateObject = new Date(date);
       return `${dateObject.toLocaleDateString()} ${dateObject.toLocaleTimeString()}`
     }
+
   },
 };
 </script>
 
 <style>
+.description-input{
+  overflow-y: hidden !important;
+  height: 180px !important;
+  background: #f3fcf0 !important;
+  border: 1px solid #3c6562 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+}
+
 .techcard-wrapper {
   border-radius: 15px;
   background-color: #f3fcf0;
@@ -361,7 +382,9 @@ export default {
   height: 190px;
   padding: 15px 20px;
   overflow-y: scroll;
+
   word-break: break-word;
+
 }
 
 .techcard-content-title {
@@ -406,7 +429,9 @@ export default {
   padding: 0px;
   color: #02252f !important;
   border: none !important;
+
   background-color: transparent !important;
+
   font-size: 13px;
 }
 
@@ -441,12 +466,12 @@ export default {
 }
 
 .modal-container {
-  width: 70%;
+  width: 34%;
   height: max-content;
   margin: 0px auto;
-  padding: 25px;
-  background-color: #f3fcf0;
-  border-radius: 2px;
+  padding: 15px;
+  background-color: #d6e5db;
+  border-radius: 10px;
   color: black;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
@@ -455,9 +480,10 @@ export default {
 }
 
 .modal-default-button {
-  padding: 10px 30px;
-  color: #3c6562;
-  border: 1px solid #3c6562;
+  color: #3c6562 !important;
+  border: 0 !important;
+  background: #d6e5db !important;
+  margin-bottom: -15px !important;
 }
 
 .modal-header {
@@ -465,7 +491,7 @@ export default {
   margin-top: 0;
   color: #3c6562;
   position: relative;
-  border: none;
+  border: 0;
   font-weight: bold;
 }
 
@@ -491,13 +517,42 @@ label {
 
 .close-icon {
   position: absolute;
-  right: 20px;
-  top: 20px;
+  right: 8px;
+  top: 8px;
   cursor: pointer;
 }
 
+.edit-save-close{
+  float: right;
+  margin-top: -35px;
+}
+
+.edit-close{
+  background: #d6e5db !important;
+  border: 0 !important;
+  margin-right: 9px;
+  color: #3c6562 !important;
+}
+
+.edit-save{
+  border-radius: 5px !important;
+  width: 75px;
+  height: 30px;
+  border: 1px solid #3c6562 !important;
+  background: #d6e5db !important;
+  color: #3c6562 !important;
+  margin-right: 9px;
+}
+.title-modal{
+  border-radius: 8px !important;
+  background: #f3fcf0 !important;
+  border: 1px solid #3c6562 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  width: 350px !important;
+}
+
 .modal-body {
-  margin: 20px 0;
+  margin: -25px 0;
   border: none;
 }
 
@@ -523,5 +578,50 @@ label {
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+
+.delete-modal-container {
+  width: 32%;
+  height: max-content;
+  margin: 0px auto;
+  padding: 25px;
+  background-color: #cdd9d1;
+  border-radius: 3px;
+  color: #3c6562;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+  position: relative;
+}
+
+.delete-modal-header {
+  font-size: 18px;
+  margin-top: 0;
+  padding-bottom: 5px;
+  color: #3c6562;
+  position: relative;
+  border: none;
+  font-weight: bold;
+}
+
+.delete-modal-body {
+  margin: 15px 10px;
+  border: none;
+  margin-bottom: 7px;
+}
+
+#delete-modal-default-button {
+  color: #3c6562;
+  background: #cdd9d1;
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-bottom: -20px;
+  padding: 1%;
+  width: 75px;
+  margin-right: 10px;
+}
+
+#delete-modal-default-button {
+  float: right;
 }
 </style>

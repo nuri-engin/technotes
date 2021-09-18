@@ -490,6 +490,18 @@ export default {
   position: relative;
 }
 
+@media (max-width: 600px){
+  .modal-container {
+    width: 90%;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1400px) {
+  .modal-container {
+    width: 65%;
+  }
+}
+
 .modal-default-button {
   color: #3c6562 !important;
   border: 0 !important;
@@ -504,6 +516,7 @@ export default {
   position: relative;
   border: 0;
   font-weight: bold;
+  z-index: 10;
 }
 
 .form-control,
@@ -606,6 +619,18 @@ label {
   position: relative;
 }
 
+@media (max-width: 600px){
+    .delete-modal-container {
+    width: 90%;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1400px) {
+     .delete-modal-container {
+    width: 65%;
+  }
+}
+
 .delete-modal-header {
   font-size: 18px;
   margin-top: 0;
@@ -614,6 +639,7 @@ label {
   position: relative;
   border: none;
   font-weight: bold;
+  z-index: 10;
 }
 
 .delete-modal-body {

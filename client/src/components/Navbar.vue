@@ -277,6 +277,47 @@ export default {
   position: relative;
 }
 
+@media (max-width: 600px){
+  .modal-container {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .navbar-wrapper {
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .navbar-left-side, .navbar-right-side {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .navbar-right-side {
+    margin: 10px;
+  }
+
+  .navbar-left-side {
+    margin: 15px 0px;
+  }
+
+  .user {
+    margin-left: 50px;
+  }
+
+  .user-img img{
+    width:45px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1400px) {
+  .modal-container {
+    width: 65%;
+  }
+}
+
 .modal-default-button {
   padding: 10px 30px;
   color: #3c6562;
@@ -290,6 +331,7 @@ export default {
   position: relative;
   border: none;
   font-weight: bold;
+  z-index: 10;
 }
 
 .form-control,

@@ -4,6 +4,7 @@ const Joi = require('joi');
 
 const authorize = require('_middleware/authorize')
 const Role = require('_helpers/role');
+const isEmptyObject = require('_helpers/isEmptyObject');
 const postService = require('./post.service');
 
 const validateRequest = require('_middleware/validate-request');
@@ -24,7 +25,15 @@ module.exports = router;
 
 
 function getAll(req, res, next) {
-    postService.getAll()
+    if (!isEmptyObject(req.query)) {
+        return postService.handleQuery(req.query)
+        .then(posts => {
+            res.json(posts);
+        })
+        .catch(next);
+    }
+
+    return postService.getAll()
         .then(posts => {
             res.json(posts);
         })

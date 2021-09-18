@@ -482,6 +482,7 @@ export default {
   color: #3c6562;
   border: none;
   justify-content: center !important;
+  z-index: 10;
 }
 
 .link {
@@ -540,6 +541,7 @@ export default {
 .login-btn:hover,
 .register-btn:hover {
   background-color: #02252f;
+  color: #fff;
 }
 
 .remember-me {

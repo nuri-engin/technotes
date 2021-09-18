@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="z-index: 1 !important;">
     <div class="techcard-wrapper">
       <div class="techcard-header">
         <div class="writer-data">
@@ -8,18 +8,18 @@
           </div>
           <div class="writer-name-date">
             <span class="name">{{ post.name }}</span>
-            <span class="date">{{setTimeFormat(post.createdAt)}}</span>
+            <span class="date">{{ setTimeFormat(post.createdAt)}}</span>
           </div>
         </div>
         <div class="more-dd">
-          <b-dropdown class="more-dd-btn" no-caret>
+          <b-dropdown size="sm" variant="link" toggle-class="text-decoration-none" class="more-dd-btn more-menu" no-caret>
             <template #button-content>
               <b-icon icon="three-dots-vertical" aria-hidden="true"></b-icon>
             </template>
-            <b-dropdown-item-button @click="showEditModal = true"
+            <b-dropdown-item-button style="width: 100px; left: -78px;" @click="showEditModal = true"
               >Edit</b-dropdown-item-button
             >
-            <b-dropdown-item-button @click="showDeleteModal = true"
+            <b-dropdown-item-button style="width: 100px; left: -78px;" @click="showDeleteModal = true"
               >Delete</b-dropdown-item-button
             >
           </b-dropdown>
@@ -38,9 +38,11 @@
       </div>
       <div class="techcard-actions">
         <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
-        <div class="comment-icon"><b-button @click="openCommentModal()">
+        <div class="comment-icon">
+          <b-button @click="openCommentModal()">
             <b-icon icon="chat-left-fill" />
-          </b-button></div>
+          </b-button>
+        </div>
       </div>
     </div>
     <!-------- Edit Modal --------------->
@@ -66,8 +68,8 @@
                   v-model="postTitle"
                 ></b-form-input>
                 <span v-else>
-                    <span v-if="!commentMode">{{ post.title }}</span>
-                    <span v-else><b-icon icon="chat-left-fill" />Comments</span>
+                  <span v-if="!commentMode">{{ post.title }}</span>
+                  <span v-else><b-icon icon="chat-left-fill" />Comments</span>
                 </span>
               </b-form>
             </div>
@@ -75,7 +77,8 @@
             <div v-if="!commentMode" class="modal-body">
               <b-form>
                 <div style="display: flex" class="label">
-                  <div>Description</div> <br />
+                  <div>Description</div>
+                  <br />
                   <b-button
                     v-if="!descEditMode"
                     @click="descEditMode = !descEditMode"
@@ -101,9 +104,11 @@
 
                 <br />
 
-                <div style="display: flex" class="label">
+                <div style="display: flex" class="tags">
                   <div>Tags</div>
-                  <b-button v-if="!tagsEditMode" @click="tagsEditMode = !tagsEditMode"
+                  <b-button
+                    v-if="!tagsEditMode"
+                    @click="tagsEditMode = !tagsEditMode"
                     >Edit</b-button
                   >
                   <b-button v-else @click="tagsEditMode = !tagsEditMode"
@@ -139,19 +144,20 @@
                   ></b-form-input>
                 </b-form>
               </div>
-              <b-button @click="sendComment()">
-                Send
-              </b-button>
+              <b-button @click="sendComment()"> Send </b-button>
               <div class="comments-content">
                 <div v-for="(comment, index) in comments" :key="index">
-                  {{comment.message}}
+                  {{ comment.message }}
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <b-button class="modal-default-button" @click="checkEditCommentStatus()">
-                <div v-if="commentMode"> - Description </div>
-                <div v-else>Comments > </div>
+              <b-button
+                class="modal-default-button"
+                @click="checkEditCommentStatus()"
+              >
+                <div v-if="commentMode">- Description</div>
+                <div v-else>Comments ></div>
               </b-button>
             </div>
           </div>
@@ -160,21 +166,19 @@
     </transition>
 
     <!---------- Delete Modal -------------->
-
-      <transition name="modal">
+    <transition name="modal">
       <div v-if="showDeleteModal" class="modal-mask">
         <div class="modal-wrapper">
-          <div class="modal-container">
-            <div class="modal-header">
+          <div class="delete-modal-container">
+            <div class="delete-modal-header">
               <b-icon
                 class="close-icon"
-                icon="x"
+                icon=""
                 scale="2"
                 @click="showDeleteModal = false"
               />
               Delete
             </div>
-
 
             <div class="delete-modal-body">
               <span> Are you sure to delete this card? </span>
@@ -200,7 +204,7 @@
 
 <script>
 import service from "@/service";
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Card",
@@ -215,65 +219,62 @@ export default {
       tagsEditMode: false,
       comments: [],
       commentMode: false,
-      newComment: '',
+      newComment: "",
       showDeleteModal: false,
     };
   },
   computed: {
-    ...mapGetters(['currUser'])
+    ...mapGetters(["currUser"]),
   },
   methods: {
-    ...mapActions(['fetchPosts']),
+    ...mapActions(["fetchPosts"]),
     updateDesc() {
       this.descEditMode = false;
-      let {id} = this.post;
-      service().put(`posts/${id}`, {
-        title: this.postTitle,
-        message: this.postDescription,
-        tags: this.postTags.split(','),
-        name: this.currUser.userName,
-        creator: this.currUser.id,
-      }).then((res) => {
-        if(res.status === 200) {
-          this.fetchPosts()
-        }
-      })
+      let { id } = this.post;
+      service()
+        .put(`posts/${id}`, {
+          title: this.postTitle,
+          message: this.postDescription,
+          tags: this.postTags.split(","),
+          name: this.currUser.userName,
+          creator: this.currUser.id,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.fetchPosts();
+          }
+        });
     },
     deletePost() {
       let { id } = this.post;
       service()
         .delete(`posts/${id}`)
         .then((res) => {
-          if(res.status === 200) {
-            this.fetchPosts()
-            console.log(res)
-
+          if (res.status === 200) {
+            this.fetchPosts();
+            console.log(res);
           }
         });
     },
     async fetchComments() {
-
-      try { 
+      try {
         const { data } = await service().get(`comments/${this.post.id}`);
         this.comments = data;
-      }
-      catch (e) {
-        console.error(e.message)
+      } catch (e) {
+        console.error(e.message);
       }
     },
     sendComment() {
-      if(this.newComment !== "") {
-
+      if (this.newComment !== "") {
         service()
           .post(`comments/`, {
             postmessage_id: this.post.id,
             message: this.newComment,
-            creator: this.currUser.id
+            creator: this.currUser.id,
           })
           .then((res) => {
-            if(res.status === 200) {
-              console.log(res)
-
+            if (res.status === 200) {
+              console.log(res);
             }
           });
       }
@@ -284,9 +285,7 @@ export default {
     },
     checkEditCommentStatus() {
       this.commentMode = !this.commentMode;
-
-      if(this.commentMode) {
-
+      if (this.commentMode) {
         this.fetchComments();
       }
     },
@@ -302,7 +301,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .description-input{
   overflow-y: hidden !important;
   height: 180px !important;
@@ -341,6 +340,11 @@ export default {
   position: absolute;
   right: 15px;
   top: 10px;
+  z-index: 10;
+}
+
+.more-dd-btn svg {
+  color: black !important;
 }
 
 .more-dd-btn > .btn-secondary,
@@ -351,6 +355,12 @@ export default {
   border: none;
   color: black;
   font-size: 18px;
+}
+
+/deep/ .dropdown-menu {
+    left: -65px !important;
+    min-width: 1rem !important;
+    box-shadow: -5px 6px 10px -7px rgb(0 0 0 / 49%);
 }
 
 .writer-img {
@@ -433,6 +443,7 @@ export default {
   background-color: transparent !important;
 
   font-size: 13px;
+  background-color: transparent;
 }
 
 .comment-icon:after {
@@ -537,11 +548,12 @@ label {
 .edit-save{
   border-radius: 5px !important;
   width: 75px;
-  height: 30px;
+  height: 32px;
   border: 1px solid #3c6562 !important;
   background: #d6e5db !important;
   color: #3c6562 !important;
   margin-right: 9px;
+  padding: 5px !important;
 }
 .title-modal{
   border-radius: 8px !important;

@@ -23,7 +23,9 @@ async function handleQuery(query) {
         if (!query.search) throw `No any 'search' value provided!`;
 
         const posts = await db.PostMessage.find({
-            [query.searchBy] : query.search
+            [query.searchBy]: {
+                $regex: '.*' + query.search + '.*' 
+            } 
         });
 
         if (!posts) throw 'Posts not found';

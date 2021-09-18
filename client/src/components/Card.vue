@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="techcard-tags">
-        <span v-for="tag in post.tags[0].split(',')" :key="tag">
+        <span v-for="(tag, index) in post.tags" :key="index">
           #{{ tag }}
         </span>
       </div>
@@ -375,6 +375,7 @@ export default {
   height: 190px;
   padding: 15px 20px;
   overflow-y: scroll;
+  word-break: break-word;
 }
 
 .techcard-content-title {
@@ -386,10 +387,10 @@ export default {
 }
 
 .techcard-tags {
-  background-color: #3c6562;
+  background-color: #5C7A79;
   vertical-align: middle;
   padding: 5px;
-  opacity: 0.5;
+  opacity: 1;
   height: 32px;
   font-size: 14px;
 }

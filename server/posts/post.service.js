@@ -6,6 +6,7 @@
 module.exports = {
     getAll,
     getById,
+    handleQuery,
     create,
     update,
     delete: _delete
@@ -19,6 +20,18 @@ async function getAll() {
 async function getById(id) {
     const post = await getPost(id);
     return basicDetails(post);
+}
+
+async function handleQuery(query) {
+    if (!!query.searchBy || !!query.search) {
+        const posts = await db.Post.findById(id);
+
+        if (!posts) throw 'Posts not found';
+        return posts.map(x => basicDetails(x));
+    }
+
+    throw 'No query provided!'
+
 }
 
 async function getPost(id) {

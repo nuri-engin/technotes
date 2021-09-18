@@ -17,12 +17,12 @@
       </div>
     </div>
     <div class="filterbar-right-side">
-      <div class="filterbar-sortmenu">
+      <!-- <div class="filterbar-sortmenu">
         <b-dropdown class="sortby-dd" text="Sort By">
           <b-dropdown-item href="#">Date</b-dropdown-item>
           <b-dropdown-item href="#">Tag</b-dropdown-item>
         </b-dropdown>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

@@ -10,7 +10,7 @@
           <div v-if="loginStep" class="modal-inner-container">
             <div class="modal-header">Login</div>
 
-            <div class="modal-body">
+            <div class="modal-body" style="margin-top: 20px;">
               <b-form>
                 <b-form-group id="input-group-1" label-for="input-email">
                   <b-form-input
@@ -530,6 +530,7 @@ export default {
   color: #02252f;
   font-size: 19px;
   padding: 5px 20px;
+  z-index: 10;
 }
 
 .login-btn {

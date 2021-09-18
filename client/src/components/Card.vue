@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="z-index: 1 !important;">
     <div class="techcard-wrapper">
       <div class="techcard-header">
         <div class="writer-data">
@@ -12,14 +12,14 @@
           </div>
         </div>
         <div class="more-dd">
-          <b-dropdown class="more-dd-btn" no-caret>
+          <b-dropdown size="sm" variant="link" toggle-class="text-decoration-none" class="more-dd-btn more-menu" no-caret>
             <template #button-content>
               <b-icon icon="three-dots-vertical" aria-hidden="true"></b-icon>
             </template>
-            <b-dropdown-item-button @click="showEditModal = true"
+            <b-dropdown-item-button style="width: 100px; left: -78px;" @click="showEditModal = true"
               >Edit</b-dropdown-item-button
             >
-            <b-dropdown-item-button @click="showDeleteModal = true"
+            <b-dropdown-item-button style="width: 100px; left: -78px;" @click="showDeleteModal = true"
               >Delete</b-dropdown-item-button
             >
           </b-dropdown>
@@ -295,7 +295,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .description-input{
   overflow-y: hidden !important;
   height: 180px !important;
@@ -334,6 +334,11 @@ export default {
   position: absolute;
   right: 15px;
   top: 10px;
+  z-index: 10;
+}
+
+.more-dd-btn svg {
+  color: black !important;
 }
 
 .more-dd-btn > .btn-secondary,
@@ -344,6 +349,12 @@ export default {
   border: none;
   color: black;
   font-size: 18px;
+}
+
+/deep/ .dropdown-menu {
+    left: -65px !important;
+    min-width: 1rem !important;
+    box-shadow: -5px 6px 10px -7px rgb(0 0 0 / 49%);
 }
 
 .writer-img {
@@ -421,6 +432,7 @@ export default {
   color: #02252f !important;
   border: none !important;
   font-size: 13px;
+  background-color: transparent;
 }
 
 .comment-icon:after {

@@ -686,7 +686,6 @@ paths:
                     likes:
                       type: array
                       example:  ["1233456"]
-
         "401":
           $ref: "#/components/responses/UnauthorizedError"
     post:
@@ -901,6 +900,69 @@ paths:
           $ref: "#/components/responses/NotFoundError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+  /api/posts/{searchBy}:
+    parameters:
+      - in: path
+        name: searchBy
+        description: Any post field (id, title, name, message, etc.)
+        required: true
+        example: "title"
+        schema:
+          type: string
+      - in: path
+        name: search
+        description: Any value for searching value.
+        required: true
+        example: "Foo"
+        schema:
+          type: string
+    get:
+      summary: Search for all matches with a specific post field.
+      description: Search all posts.
+      operationId: getPostBySearch
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: An array of all post messsages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: "60845f68f84d58892f0bd3bf"
+                    title:
+                      type: string
+                      example: "Sample post title"
+                    message:
+                      type: string
+                      example: "Sample post message"
+                    name:
+                      type: string
+                      example: "Jason"
+                    creator:
+                      type: string
+                      example: "1233456"
+                    createdAt:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+                    updated:
+                      type: string
+                      example: "2021-04-24T18:11:52.600Z"
+                    tags:
+                      type: array
+                      example:  ["tag1, foo, bar"]
+                    likes:
+                      type: array
+                      example:  ["1233456"]
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
 
   /api/comments:
     get:
@@ -1111,7 +1173,6 @@ paths:
           $ref: "#/components/responses/NotFoundError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
-
   /api/comments/post/{postmessage_id}:
     get:
       summary: Get whole comments of a specific post

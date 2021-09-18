@@ -17,21 +17,26 @@ async function getAll() {
     return posts.map(x => basicDetails(x));
 }
 
-async function getById(id) {
-    const post = await getPost(id);
-    return basicDetails(post);
-}
-
 async function handleQuery(query) {
     if (!!query.searchBy || !!query.search) {
-        const posts = await db.Post.findById(id);
+        if (!query.searchBy) throw `No any 'searchBy' value provided!`
+        if (!query.search) throw `No any 'search' value provided!`;
+
+        const posts = await db.PostMessage.find({
+            [query.searchBy] : query.search
+        });
 
         if (!posts) throw 'Posts not found';
+
         return posts.map(x => basicDetails(x));
     }
 
-    throw 'No query provided!'
+    throw 'No any search query provided!'
+}
 
+async function getById(id) {
+    const post = await getPost(id);
+    return basicDetails(post);
 }
 
 async function getPost(id) {

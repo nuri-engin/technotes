@@ -130,7 +130,8 @@
 
             <div v-else>
               <div class="comments-header">
-                <b-form class="comments-form">
+                 <b-form class="comments-form">
+
                   <div class="writer-img">
                     <img width="40" src="@/assets/images/no-image.png" />
                   </div>
@@ -251,7 +252,7 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             this.fetchPosts();
-            console.log(res);
+            this.showDeleteModal = false;
           }
         });
     },
@@ -295,6 +296,7 @@ export default {
       let dateObject = new Date(date);
       return `${dateObject.toLocaleDateString()} ${dateObject.toLocaleTimeString()}`
     }
+
   },
 };
 </script>
@@ -390,7 +392,9 @@ export default {
   height: 190px;
   padding: 15px 20px;
   overflow-y: scroll;
+
   word-break: break-word;
+
 }
 
 .techcard-content-title {
@@ -435,6 +439,9 @@ export default {
   padding: 0px;
   color: #02252f !important;
   border: none !important;
+
+  background-color: transparent !important;
+
   font-size: 13px;
   background-color: transparent;
 }

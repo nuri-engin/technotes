@@ -34,7 +34,7 @@
       <div class="techcard-footer">
          <div class="techcard-tags">
         <span v-for="(tag, index) in post.tags" :key="index">
-          #{{ tag }}
+          #{{ tag.trim() }}
         </span>
       </div>
       <div class="techcard-actions">

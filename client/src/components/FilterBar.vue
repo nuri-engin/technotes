@@ -6,15 +6,6 @@
         <span>|</span>
         <div class="big-scale"></div>
       </div>
-      <div class="search-input-wrapper">
-        <b-form-input
-          class="search-input"
-          v-model="searchStr"
-          placeholder="Search"
-        >
-        </b-form-input>
-        <b-icon class="search-icon" icon="search" />
-      </div>
     </div>
     <div class="filterbar-right-side">
       <!-- <div class="filterbar-sortmenu">
@@ -23,17 +14,62 @@
           <b-dropdown-item href="#">Tag</b-dropdown-item>
         </b-dropdown>
       </div> -->
+      <div class="search-input-wrapper">
+        <b-form-input
+          class="search-input posts-search-input "
+          v-model="searchStr"
+          placeholder="Search"
+          @change="updateSearchStr"
+          @keydown="enterSearch"
+          @keyup="clearSearch"
+        >
+        </b-form-input>
+        <b-button class="search-btn" pill @click="searchData"
+          ><b-icon class="search-icon" icon="search"
+        /></b-button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 export default {
   name: "Filterbar",
   data() {
     return {
       searchStr: "",
     };
+  },
+  methods: {
+    ...mapActions(["fetchPosts", "clearPosts"]),
+    updateSearchStr(value) {
+      this.searchStr = value.toLowerCase();
+    },
+    enterSearch(e) {
+      if (e.keyCode === 13) {
+        this.searchData();
+      }
+    },
+    clearSearch() {
+      if (this.searchStr === '') {
+        this.clearPosts();
+        this.fetchPosts();
+      }
+    },
+    searchData() {
+      if (this.searchStr) {
+        this.clearPosts();
+        this.fetchPosts({
+          search: this.searchStr,
+          searchBy: "title",
+        });
+      } else {
+        this.clearPosts();
+        this.fetchPosts();
+      }
+    },
   },
 };
 </script>
@@ -83,6 +119,7 @@ export default {
 }
 
 .search-input-wrapper {
+  display: flex;
   margin-left: 100px;
   position: relative;
 }
@@ -92,17 +129,39 @@ export default {
   background-color: transparent !important;
   border: none !important;
   color: white !important;
-  padding-left: 30px !important;
+  padding-left: 5px !important;
+}
+
+.posts-search-input {
+    border: 1px solid #f3fcf0 !important;
+    z-index: 1;
+    border-top-left-radius: 22px !important;
+    border-bottom-left-radius: 22px !important;
+    position: absolute;
+    right: 17px;
+    width: 200px !important;
+    padding-left: 15px !important;
+    height: 38px;
 }
 
 .search-icon {
-  position: absolute;
-  top: 12px;
-  left: 0px;
+  font-size: 15px !important;
+  color: #3c6562;
+}
+
+.search-btn {
+  background-color: #f3fcf0 !important;
+  z-index: 2;
 }
 
 .sortby-dd > .btn-secondary {
   border: none !important;
   background-color: transparent;
+}
+
+.search-spinner .spinner-border {
+  width: 1.2rem !important;
+  height: 1.2rem !important;
+  margin-right: 16px !important;
 }
 </style>

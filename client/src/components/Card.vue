@@ -31,7 +31,8 @@
           {{ post.message }}
         </div>
       </div>
-      <div class="techcard-tags">
+      <div class="techcard-footer">
+         <div class="techcard-tags">
         <span v-for="(tag, index) in post.tags" :key="index">
           #{{ tag }}
         </span>
@@ -43,6 +44,7 @@
             <b-icon icon="chat-left-fill" />
           </b-button>
         </div>
+      </div>
       </div>
     </div>
     <!-------- Edit Modal --------------->
@@ -322,6 +324,8 @@ export default {
   position: relative;
   z-index: 1;
   margin: 10px;
+  transition-property: width, height;
+  transition-duration: 1s;
 }
 
 .techcard-header {

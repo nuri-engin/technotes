@@ -72,6 +72,9 @@ const store = new Vuex.Store({
         dispatch("logoutUser");
       }
     },
+    clearPosts({commit}) {
+        commit("fetchPosts", { posts: [] });
+    },
     loginUser({ commit, dispatch }, { email, password }) {
       return new Promise((resolve, reject) => {
         service()

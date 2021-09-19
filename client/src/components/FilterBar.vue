@@ -21,6 +21,7 @@
           placeholder="Search"
           @change="updateSearchStr"
           @keydown="enterSearch"
+          @keyup="clearSearch"
         >
         </b-form-input>
         <b-button class="search-btn" pill @click="searchData"
@@ -42,25 +43,30 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["fetchPosts"]),
+    ...mapActions(["fetchPosts", "clearPosts"]),
     updateSearchStr(value) {
       this.searchStr = value.toLowerCase();
-      if (value === '') {
-        this.fetchPosts();
-      }
     },
     enterSearch(e) {
       if (e.keyCode === 13) {
         this.searchData();
       }
     },
+    clearSearch() {
+      if (this.searchStr === '') {
+        this.clearPosts();
+        this.fetchPosts();
+      }
+    },
     searchData() {
       if (this.searchStr) {
+        this.clearPosts();
         this.fetchPosts({
           search: this.searchStr,
           searchBy: "title",
         });
       } else {
+        this.clearPosts();
         this.fetchPosts();
       }
     },

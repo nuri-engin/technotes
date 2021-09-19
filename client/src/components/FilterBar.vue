@@ -16,7 +16,7 @@
       </div> -->
       <div class="search-input-wrapper">
         <b-form-input
-          class="search-input"
+          class="search-input posts-search-input "
           v-model="searchStr"
           placeholder="Search"
           @change="updateSearchStr"
@@ -132,6 +132,18 @@ export default {
   padding-left: 5px !important;
 }
 
+.posts-search-input {
+    border: 1px solid #f3fcf0 !important;
+    z-index: 1;
+    border-top-left-radius: 22px !important;
+    border-bottom-left-radius: 22px !important;
+    position: absolute;
+    right: 17px;
+    width: 200px !important;
+    padding-left: 15px !important;
+    height: 38px;
+}
+
 .search-icon {
   font-size: 15px !important;
   color: #3c6562;
@@ -139,6 +151,7 @@ export default {
 
 .search-btn {
   background-color: #f3fcf0 !important;
+  z-index: 2;
 }
 
 .sortby-dd > .btn-secondary {

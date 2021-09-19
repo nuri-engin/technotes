@@ -2,9 +2,9 @@
   <div class="filterbar-wrapper">
     <div class="filterbar-left-side">
       <div class="view-options">
-        <div class="small-scale"></div>
+        <div @click="smallView()" class="small-scale" :class="[{'active-view' : smallCards}]"></div>
         <span>|</span>
-        <div class="big-scale"></div>
+        <div @click="largeView()" class="big-scale" :class="[{'active-view' : largeCards}]"></div>
       </div>
     </div>
     <div class="filterbar-right-side">
@@ -40,6 +40,8 @@ export default {
   data() {
     return {
       searchStr: "",
+      smallCards: true,
+      largeCards: false
     };
   },
   methods: {
@@ -70,11 +72,36 @@ export default {
         this.fetchPosts();
       }
     },
+    smallView(e) {
+      this.smallCards = true;
+      this.largeCards = false;
+      const cards = document.querySelectorAll('.techcard-wrapper')
+      cards.forEach(card => {
+        card.classList.remove('large-view')
+      })
+    },
+    largeView(e){
+      this.smallCards = false;
+      this.largeCards = true;
+      const cards = document.querySelectorAll('.techcard-wrapper')
+      cards.forEach(card => {
+        card.classList.add('large-view');
+      })
+    }
   },
 };
 </script>
 
 <style>
+.large-view {
+  width: 380px !important;
+  max-height: 400px !important;
+  height: 400px !important;
+  justify-content: space-between !important;
+  transition-property: width, height;
+  transition-duration: 1s;
+}
+
 .filterbar-wrapper {
   margin-top: 20px;
   display: flex;
@@ -102,7 +129,7 @@ export default {
   width: 15px;
   height: 15px;
   border-radius: 3px;
-  background-color: #bef992;
+  background-color: #3c6562;
   margin-right: 5px;
   margin-top: 3px;
   cursor: pointer;
@@ -116,6 +143,10 @@ export default {
   margin-left: 5px;
   margin-top: 0px;
   cursor: pointer;
+}
+
+.active-view {
+  background-color: #bef992;
 }
 
 .search-input-wrapper {

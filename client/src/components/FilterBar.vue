@@ -47,7 +47,7 @@ export default {
   methods: {
     ...mapActions(["fetchPosts", "clearPosts"]),
     updateSearchStr(value) {
-      this.searchStr = value.toLowerCase();
+      this.searchStr = value;
     },
     enterSearch(e) {
       if (e.keyCode === 13) {

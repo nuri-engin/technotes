@@ -42,9 +42,13 @@ const store = new Vuex.Store({
         state.user = JSON.parse(localStorage.getItem("user"));
       }
     },
+    setLoadData(state, isLoading) {
+      state.loadData = isLoading
+    }
   },
   actions: {
     async fetchPosts({ commit, dispatch }, params) {
+      commit('setLoadData', true)
       try {
         if (params) {
           const { data } = await service().get(
@@ -57,6 +61,7 @@ const store = new Vuex.Store({
             }
           );
           commit("fetchPosts", { posts: data });
+          commit('setLoadData', false)
         } else {
           const { data } = await service().get("posts", {
             headers: {
@@ -64,6 +69,7 @@ const store = new Vuex.Store({
             },
           });
           commit("fetchPosts", { posts: data });
+          commit('setLoadData', false)
         }
       } catch (e) {
         console.error(e.message);

@@ -4,9 +4,13 @@
       <Navbar :logout="logout" :username="currUser && currUser.userName" />
       <Filterbar />
       <div class="card-area-wrapper">
-        <div v-if="posts.length === 0" class="spinner-container">
+        <div v-if="loadData" class="spinner-container">
           <b-spinner variant="light"></b-spinner>
           <div class="loading-text">Loading posts</div>
+        </div>
+        <div v-if="posts.length === 0 && !loadData" class="no-data">
+            <b-icon class="no-data-icon" icon="exclamation-triangle"></b-icon>
+            <span>No Card Found</span>
         </div>
         <div v-else v-for="(post, index) in orderedPosts" :key="index">
           <Card :post="post" />
@@ -46,7 +50,7 @@ export default {
       }
   },
   computed: {
-    ...mapGetters(["currUser", "posts", "loggedIn"]),
+    ...mapGetters(["currUser", "posts", "loggedIn", "loadData"]),
     orderedPosts() {
       return this.posts.reverse();
     }
@@ -100,5 +104,23 @@ body {
 }
 .blur {
   filter: blur(5px);
+}
+
+.no-data{
+ display: flex;
+    text-align: center;
+    font-size: 22px;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    color: #f3fcf0;
+    font-weight: bold;
+}
+
+.no-data svg {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    color: greenyellow;
 }
 </style>

@@ -900,7 +900,7 @@ paths:
           $ref: "#/components/responses/NotFoundError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
-  /api/posts/{searchBy}:
+  /api/posts?{searchBy}&{search}:
     parameters:
       - in: path
         name: searchBy

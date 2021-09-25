@@ -17,6 +17,14 @@ async function getAll() {
     return posts.map(x => basicDetails(x));
 }
 
+/**
+ * Providing 'searchBy' functionality;
+ * 
+ * Here we apply a regex based search logic to let the query
+ * to match all records with ignoring case-sensitive aspect.
+ * 
+ * @param {Object} query The native express-query object.
+ */
 async function handleQuery(query) {
     if (!!query.searchBy || !!query.search) {
         if (!query.searchBy) throw `No any 'searchBy' value provided!`
@@ -24,7 +32,8 @@ async function handleQuery(query) {
 
         const posts = await db.PostMessage.find({
             [query.searchBy]: {
-                $regex: '.*' + query.search + '.*' 
+                $regex: query.search,
+                $options: 'i' 
             } 
         });
 

@@ -9,6 +9,7 @@ module.exports = {
     handleQuery,
     create,
     update,
+    handleLikeRequest,
     delete: _delete
 };
 
@@ -79,6 +80,44 @@ async function update(id, params) {
     await post.save();
 
     return basicDetails(post);
+}
+
+async function handleLikeRequest (postId, body) {
+    const post = await getPost(postId);
+    const userHasLike = post.likes.includes(body.user_id);
+
+    if (body.action === 'inc') {
+        if (!userHasLike) {
+            
+            post.likes.push(body.user_id);
+
+            await db.PostMessage.findByIdAndUpdate(postId, post, {
+                new: true
+            })
+
+            return basicDetails(post);
+        }
+
+        throw 'User already has a like!'
+    }
+
+    if (body.action === 'dec') {
+        if (userHasLike) {
+            const filteredLikes = post.likes.filter(like => like !== body.user_id);
+
+            post.likes = filteredLikes;
+
+            await db.PostMessage.findByIdAndUpdate(postId, post, {
+                new: true
+            })
+    
+            return basicDetails(post);
+        }
+
+        throw 'User already has not any like!'
+    }
+
+    throw 'There is an error with Patch request to handle LIKE query!';
 }
 
 async function _delete(id) {

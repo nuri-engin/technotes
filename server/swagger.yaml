@@ -879,6 +879,64 @@ paths:
           $ref: "#/components/responses/NotFoundError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+    patch:
+      summary: Patch to a post (only for LIKES for now!)
+      description: Users can LIKES or DISLIKES any specific post.
+      operationId: patchPost
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                  user_id:
+                    type: string
+                    example: "Current user id"
+                  action:
+                    type: string
+                    example: "inc (insert) OR dec (remove)"
+      responses:
+        "200":
+          description: Patch updated successfully. The details of the updated post are returned.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "60845f68f84d58892f0bd3bf"
+                  title:
+                    type: string
+                    example: "Sample post title"
+                  message:
+                    type: string
+                    example: "Sample post message"
+                  name:
+                    type: string
+                    example: "Jason"
+                  creator:
+                    type: string
+                    example: "1233456"
+                  createdAt:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  updated:
+                    type: string
+                    example: "2021-04-24T18:11:52.600Z"
+                  tags:
+                    type: array
+                    example:  ["tag1, foo, bar"]
+                  likes:
+                    type: array
+                    example:  ["1233456"]
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
     delete:
       summary: Delete a post
       description: Admin users can delete any post, regular users are restricted to their own posts.

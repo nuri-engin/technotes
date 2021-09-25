@@ -16,7 +16,7 @@ router.get('/', authorize(Role.Admin), getAll);
 router.get('/:id', authorize(Role.Admin), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
-router.patch('/:id', authorize(Role.Admin), handleLikeRequest);
+router.patch('/:id', authorize(Role.Admin), handlePatchRequest);
 router.delete('/:id', authorize(), _delete);
 
 /**
@@ -80,8 +80,8 @@ function update(req, res, next) {
         .catch(next);
 }
 
-function handleLikeRequest (req, res, next) {
-    postService.handleLikeRequest(req.params.id, req.body)
+function handlePatchRequest (req, res, next) {
+    postService.handlePatchRequest(req.params.id, req.body)
     .then(post => res.json(post))
     .catch(next);
 }

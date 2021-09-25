@@ -8,7 +8,7 @@
           </div>
           <div class="writer-name-date">
             <span class="name">{{ post.name }}</span>
-            <span class="date">{{ setTimeFormat(post.createdAt)}}</span>
+            <span class="date">{{ setDateTimeFormat(post.createdAt)}}</span>
           </div>
         </div>
         <div class="more-dd">
@@ -78,12 +78,12 @@
 
             <div v-if="!commentMode" class="modal-body">
               <b-form>
-                <div style="display: flex" class="label">
-                  <div>Description</div>
-                  <br />
+                <div style="display: flex;flex-direction:column;word-break:break-all;" class="label">
+                  <div v-if="!descEditMode">{{ post.message }}</div>
                   <b-button
                     v-if="!descEditMode"
                     @click="descEditMode = !descEditMode"
+                    style="width: 70px;"
                     >Edit</b-button
                   >
                 </div>
@@ -139,17 +139,32 @@
                   </div>
                   <b-form-input
                     name="comment"
+                    :value="newComment"
                     id="input-comment"
                     @input="(value) => updateComment(value)"
                     placeholder="text..."
                     required
-                  ></b-form-input>
+                  >
+                  </b-form-input>
+                  <b-button @click="sendComment()" :disabled="newComment === ''"> <b-icon icon="cursor-fill" ></b-icon> </b-button>
                 </b-form>
               </div>
-              <b-button @click="sendComment()"> Send </b-button>
               <div class="comments-content">
-                <div v-for="(comment, index) in comments" :key="index">
-                  {{ comment.message }}
+                <div v-if="!commentsLoaded" class="spinner-container">
+                  <b-spinner variant="secondary"></b-spinner>
+                  <div class="loading-text">Loading comments</div>
+                </div>
+                <div v-else v-for="(comment, index) in comments" :key="index">
+                  <div class="comment-wrapper">
+                    <div class="comment-header d-flex justify-content-start align-items-center">
+                       <span class="comment-line"></span>
+                       <span class="comment-time">{{setTimeFormat(comment.createdAt)}}</span>
+                    </div>
+                    <div class="comment-content d-flex flex-column my-2">
+                      <div class="comment-user-name">@{{comment.creator}}</div>
+                      <div class="comment-msg">{{ comment.message }}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -158,7 +173,7 @@
                 class="modal-default-button"
                 @click="checkEditCommentStatus()"
               >
-                <div v-if="commentMode">- Description</div>
+                <div v-if="commentMode"> Description </div>
                 <div v-else>Comments ></div>
               </b-button>
             </div>
@@ -223,6 +238,7 @@ export default {
       commentMode: false,
       newComment: "",
       showDeleteModal: false,
+      commentsLoaded: false
     };
   },
   computed: {
@@ -260,8 +276,9 @@ export default {
     },
     async fetchComments() {
       try {
-        const { data } = await service().get(`comments/${this.post.id}`);
+        const { data } = await service().get(`comments/post/${this.post.id}`);
         this.comments = data;
+        this.commentsLoaded = true;
       } catch (e) {
         console.error(e.message);
       }
@@ -277,6 +294,8 @@ export default {
           .then((res) => {
             if (res.status === 200) {
               console.log(res);
+              this.fetchComments();
+              this.newComment = '';
             }
           });
       }
@@ -294,11 +313,14 @@ export default {
     updateComment(value) {
       this.newComment = value;
     },
-    setTimeFormat(date) {
+    setDateTimeFormat(date) {
       let dateObject = new Date(date);
       return `${dateObject.toLocaleDateString()} ${dateObject.toLocaleTimeString()}`
+    },
+    setTimeFormat(date) {
+      let dateObject = new Date(date);
+      return dateObject.toLocaleTimeString()
     }
-
   },
 };
 </script>
@@ -461,6 +483,75 @@ export default {
 }
 
 .comments-form {
+  position:relative;
+  display: flex;
+  height: 48px;
+  max-height: 48px;
+}
+
+.comments-form .form-control{
+  width: 90%;
+  margin-bottom: 0px;
+  height: 48px;
+}
+
+.comments-form button {
+  position: absolute;
+  border: none !important;
+  right: 15px;
+  bottom: 5px;
+}
+
+.comments-content {
+  max-height: 280px;
+  overflow-y: scroll;
+  word-break: break-all;
+  margin-top:  30px;
+  padding: 0px 15px;
+}
+
+.comments-content .loading-text{
+  font-weight: normal !important;
+  font-size: 13px;
+}
+
+.comments-content .spinner-container .spinner-border{
+  width: 2rem;
+  height: 2rem;
+}
+
+.comment-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-line {
+  width: 50%;
+  height: 1px;
+  box-sizing: border-box;
+  background-color: #bbbbbb;
+}
+
+.comment-time {
+  margin-left: 5px;
+  font-size: 12px;
+  color: #7d7474;
+}
+
+.comment-user-name{
+  font-size: 14px;
+  font-weight: 200;
+}
+
+.comment-content {
+  font-size: 13px;
+}
+
+.comment-msg {
+  padding: 8px;
+  border: 1px solid #bbbbbb;
+  border-radius: 10px;
+  width: max-content;
 }
 
 .modal-mask {
@@ -588,7 +679,7 @@ label {
 .modal-footer {
   border: none;
   text-align: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .modal-default-button {

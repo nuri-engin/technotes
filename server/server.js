@@ -29,13 +29,13 @@ app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: 
 // Welcome the visitors...
 app.get('/', (req, res) => {
     res.send(`
-        Hello to TechNotes API... 
-        
+        <h1> Hello to TechNotes API... </h1> 
+        <br />
         Please ensure to request to deployed API!...
-        @ https://technotes-api-main.herokuapp.com/
-
+        @ <a href="https://technotes-api-main.herokuapp.com/"> https://technotes-api-main.herokuapp.com/ </a>
+        <br /> <hr />
         API doc enabled!
-        @ https://technotes-api-main.herokuapp.com/api-docs/
+        @ <a href="https://technotes-api-main.herokuapp.com/api-docs/"> https://technotes-api-main.herokuapp.com/api-docs/ </a>
     `);
 });
 

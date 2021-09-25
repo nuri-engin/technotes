@@ -160,9 +160,13 @@
                        <span class="comment-line"></span>
                        <span class="comment-time">{{setTimeFormat(comment.createdAt)}}</span>
                     </div>
-                    <div class="comment-content d-flex flex-column my-2">
+                    <div class="comment-content d-flex flex-column my-2 mb-3">
                       <div class="comment-user-name">@{{comment.creator}}</div>
-                      <div class="comment-msg">{{ comment.message }}</div>
+                      <div class="comment-msg">{{ comment.message }}
+                          <div class="comment-action d-flex justify-content-end">
+                           <div class="comment-delete-action" @click="deleteComment(comment.id)">Delete</div>
+                          </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -284,6 +288,7 @@ export default {
       }
     },
     sendComment() {
+      this.commentsLoaded = false;
       if (this.newComment !== "") {
         service()
           .post(`comments/`, {
@@ -299,6 +304,17 @@ export default {
             }
           });
       }
+    },
+    deleteComment(commentId) {
+      this.commentsLoaded = false;
+      service()
+          .delete(`comments/${commentId}`)
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res);
+              this.fetchComments();
+            }
+          });  
     },
     openCommentModal() {
       this.showEditModal = true;
@@ -548,10 +564,20 @@ export default {
 }
 
 .comment-msg {
+  position: relative;
   padding: 8px;
   border: 1px solid #bbbbbb;
   border-radius: 10px;
   width: max-content;
+}
+
+.comment-delete-action {
+  cursor: pointer;
+  position: absolute;
+  right: 7px;
+  top: 35px;
+  text-decoration: underline;
+  font-size: 10px;
 }
 
 .modal-mask {

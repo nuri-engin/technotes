@@ -63,7 +63,7 @@ export default {
     },
   },
 };
-</script>
+</script> 
 
 <style>
 body {

@@ -294,7 +294,7 @@ export default {
           .post(`comments/`, {
             postmessage_id: this.post.id,
             message: this.newComment,
-            creator: this.currUser.id,
+            creator_id: this.currUser.id,
           })
           .then((res) => {
             if (res.status === 200) {

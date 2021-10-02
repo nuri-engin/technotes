@@ -161,7 +161,7 @@
                        <span class="comment-time">{{setTimeFormat(comment.createdAt)}}</span>
                     </div>
                     <div class="comment-content d-flex flex-column my-2 mb-3">
-                      <div class="comment-user-name">@{{comment.creator}}</div>
+                      <div class="comment-user-name">@{{comment.creator_name}}</div>
                       <div class="comment-msg">{{ comment.message }}
                           <div class="comment-action d-flex justify-content-end">
                            <div class="comment-delete-action" @click="deleteComment(comment.id)">Delete</div>
@@ -294,7 +294,7 @@ export default {
           .post(`comments/`, {
             postmessage_id: this.post.id,
             message: this.newComment,
-            creator: this.currUser.id,
+            creator_id: this.currUser.id,
           })
           .then((res) => {
             if (res.status === 200) {

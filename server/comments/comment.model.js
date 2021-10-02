@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema({
     postmessage_id: String,
-    creator: String,
+    creator_id: String,
+    creator_name: String,
     message: String,
     updated: Date,
     createdAt: {

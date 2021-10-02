@@ -1,4 +1,5 @@
 ﻿const db = require('_helpers/db');
+const accountService = require('../accounts/account.service');
 
 /**
  * Post Service
@@ -36,14 +37,23 @@ async function getPostmessageComments(postmessage_id) {
 }
 
 async function create(params) {
-    const comment = new db.Comments(params);
+    if (params && params.postmessage_id && params.message && params.creator_id) {
+        const account = await accountService.getById(params.creator_id);
+        
+        if (!account) throw 'Could not find the user with provided creator_id';
 
-    comment.createdAt = Date.now();
+        const comment = new db.Comments(params);
 
-    // save comment
-    await comment.save();
+        comment.creator_name = account.userName;
+        comment.createdAt = Date.now();
+    
+        // save comment
+        await comment.save();
+    
+        return comment;
+}
 
-    return comment;
+    throw 'There is missing information!'
 }
 
 async function update(id, params) {

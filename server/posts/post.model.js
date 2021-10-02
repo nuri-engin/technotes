@@ -6,6 +6,7 @@ const schema = new Schema({
     message: String,
     creator: String,
     name: String,
+    category: String,
     tags: [String],
     selectedFile: String,
     likes: {

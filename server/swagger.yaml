@@ -680,6 +680,9 @@ paths:
                     updated:
                       type: string
                       example: "2021-04-24T18:11:52.600Z"
+                    category:
+                      type: string
+                      example: "javascript"
                     tags:
                       type: array
                       example:  ["tag1, foo, bar"]
@@ -713,6 +716,9 @@ paths:
                   creator:
                     type: string
                     example: "1233456 (post owner 'id')"
+                  category:
+                    type: string
+                    example: "javascript"
                   tags:
                     type: array
                     example:  ["tag1, foo, bar"]
@@ -750,6 +756,9 @@ paths:
                       updated:
                         type: string
                         example: "2021-04-24T18:11:52.600Z"
+                      category:
+                        type: string
+                        example: "javascript"
                       tags:
                         type: array
                         example:  ["tag1, foo, bar"]
@@ -802,6 +811,9 @@ paths:
                   updated:
                     type: string
                     example: "2021-04-24T18:11:52.600Z"
+                  category:
+                    type: string
+                    example: "javascript"
                   tags:
                     type: array
                     example:  ["tag1, foo, bar"]
@@ -837,6 +849,9 @@ paths:
                   creator:
                     type: string
                     example: "1233456"
+                  category:
+                    type: string
+                    example: "javascript"
                   tags:
                     type: array
                     example:  ["tag1, foo, bar"]
@@ -869,6 +884,9 @@ paths:
                   updated:
                     type: string
                     example: "2021-04-24T18:11:52.600Z"
+                  category:
+                    type: string
+                    example: "javascript"
                   tags:
                     type: array
                     example:  ["tag1, foo, bar"]
@@ -927,9 +945,12 @@ paths:
                   updated:
                     type: string
                     example: "2021-04-24T18:11:52.600Z"
+                  category:
+                    type: string
+                    example: "javascript"
                   tags:
-                    type: array
-                    example:  ["tag1, foo, bar"]
+                      type: array
+                      example:  ["tag1, foo, bar"]
                   likes:
                     type: array
                     example:  ["1233456"]
@@ -1011,6 +1032,9 @@ paths:
                     updated:
                       type: string
                       example: "2021-04-24T18:11:52.600Z"
+                    category:
+                      type: string
+                      example: "javascript"
                     tags:
                       type: array
                       example:  ["tag1, foo, bar"]
@@ -1081,6 +1105,9 @@ paths:
                       updated:
                         type: string
                         example: "2021-04-24T18:11:52.600Z"
+                      category:
+                        type: string
+                        example: "javascript"
                       tags:
                         type: array
                         example:  ["tag1, foo, bar"]

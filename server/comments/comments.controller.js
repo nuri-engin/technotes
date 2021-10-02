@@ -96,7 +96,7 @@ function _delete(req, res, next) {
 function _getSchemaRules() {
     const schemaRules = {
         postmessage_id: Joi.string().empty(''),
-        creator: Joi.string().empty(''),
+        creator_id: Joi.string().empty(''),
         message: Joi.string().empty(''),
         updated: Joi.date().empty(''),
         created: Joi.date().empty('')

@@ -1048,9 +1048,12 @@ paths:
                     message:
                       type: string
                       example: "Sample post message"
-                    creator:
+                    creator_id:
                       type: string
                       example: "1233456"
+                    creator_name:
+                      type: string
+                      example: "Foo bar"
                     createdAt:
                       type: string
                       example: "2021-04-24T18:11:52.600Z"
@@ -1078,7 +1081,7 @@ paths:
                   message:
                     type: string
                     example: "Sample comment text"
-                  creator:
+                  creator_id:
                     type: string
                     example: "1233456"
                 required:
@@ -1102,9 +1105,12 @@ paths:
                     message:
                       type: string
                       example: "Sample comment message"
-                    creator:
+                    creator_id:
                       type: string
                       example: "1233456"
+                    creator_name:
+                      type: string
+                      example: "Foo bar"
                     createdAt:
                       type: string
                       example: "2021-04-24T18:11:52.600Z"
@@ -1145,9 +1151,12 @@ paths:
                   message:
                     type: string
                     example: "Sample comment message"
-                  creator:
+                  creator_id:
                     type: string
                     example: "1233456"
+                  creator_name:
+                    type: string
+                    example: "Foo bar"
                   createdAt:
                     type: string
                     example: "2021-04-24T18:11:52.600Z"
@@ -1171,15 +1180,9 @@ paths:
             schema:
               type: object
               properties:
-                postmessage_id:
-                  type: string
-                  example: "60850f4ef86468349cf40b81"
                 message:
                   type: string
                   example: "Sample comment text"
-                creator:
-                  type: string
-                  example: "1233456"
       responses:
         "200":
           description: Comment updated successfully. The details of the updated comment are returned.
@@ -1197,9 +1200,12 @@ paths:
                   message:
                     type: string
                     example: "Sample comment message"
-                  creator:
+                  creator_id:
                     type: string
                     example: "1233456"
+                  creator_name:
+                    type: string
+                    example: "Foo bar"
                   createdAt:
                     type: string
                     example: "2021-04-24T18:11:52.600Z"
@@ -1255,9 +1261,12 @@ paths:
                   message:
                     type: string
                     example: "Sample comment message"
-                  creator:
-                    type: string
-                    example: "1233456"
+                    creator_id:
+                      type: string
+                      example: "1233456"
+                    creator_name:
+                      type: string
+                      example: "Foo bar"
                   createdAt:
                     type: string
                     example: "2021-04-24T18:11:52.600Z"

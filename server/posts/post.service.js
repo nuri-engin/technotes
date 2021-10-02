@@ -1,5 +1,6 @@
 ﻿const { func } = require('joi');
 const db = require('_helpers/db');
+const CONSTANTS = require('_helpers/constants');
 
 /**
  * Post Service
@@ -104,7 +105,7 @@ async function removeLike(postId, user_id, post) {
         } 
         
         // Query the rest of the fields
-        if (query.searchBy !== 'createdAt') {
+        if (query.searchBy !== CONSTANTS.FIELD_NAMES.createdAt) {
             posts = await db.PostMessage.find({
                 [query.searchBy]: {
                     $regex: query.search,
@@ -133,12 +134,12 @@ async function handleLikeRequest (postId, body) {
     const post = await getPost(postId);
     const userHasLike = post.likes.includes(body.user_id);
 
-    if (body.action === 'inc') {
+    if (body.action === CONSTANTS.FIELD_NAMES.inc) {
         if (!userHasLike) return insertLike(postId, body.user_id, post);
         throw 'User already has a like!'
     }
 
-    if (body.action === 'dec') {
+    if (body.action === CONSTANTS.FIELD_NAMES.dec) {
         if (userHasLike) return removeLike(postId, body.user_id, post) 
         throw 'User already has not any like!'
     }
@@ -164,7 +165,7 @@ function basicDetails(post) {
 
 function confirmCreatedAtQuery(searchBy, startDate, endDate) {
     return (
-        searchBy === 'createdAt' &&
+        searchBy === CONSTANTS.FIELD_NAMES.createdAt &&
         !!startDate &&
         !!endDate
     )

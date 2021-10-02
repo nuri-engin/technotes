@@ -87,7 +87,6 @@ async function removeLike(postId, user_id, post) {
  * @param {Object} query The native express-query object.
  */
  async function handleQuery(query) {
-     debugger;
      if (!!query.searchBy || !!query.search) {        
         let posts;
 

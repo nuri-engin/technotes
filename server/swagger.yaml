@@ -1021,6 +1021,76 @@ paths:
           $ref: "#/components/responses/NotFoundError"
         "401":
           $ref: "#/components/responses/UnauthorizedError"
+  /api/posts?searchBy:createdAt:
+      parameters:
+        - in: path
+          name: searchBy
+          description: createdAt
+          required: true
+          example: "createdAt"
+          schema:
+            type: string
+        - in: path
+          name: startDate
+          description: ISO format date.
+          required: true
+          example: "2021-11-20"
+          schema:
+            type: string
+        - in: path
+          name: endDate
+          description: ISO format date.
+          required: true
+          example: "2021-11-31"
+          schema:
+            type: string
+      get:
+        summary: Search for all matches with post's createdAt field..
+        description: Search all posts.
+        operationId: getPostBySearchCreatedAt
+        security:
+          - bearerAuth: []
+        responses:
+          "200":
+            description: An array of all post messsages
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "60845f68f84d58892f0bd3bf"
+                      title:
+                        type: string
+                        example: "Sample post title"
+                      message:
+                        type: string
+                        example: "Sample post message"
+                      name:
+                        type: string
+                        example: "Jason"
+                      creator:
+                        type: string
+                        example: "1233456"
+                      createdAt:
+                        type: string
+                        example: "2021-04-24T18:11:52.600Z"
+                      updated:
+                        type: string
+                        example: "2021-04-24T18:11:52.600Z"
+                      tags:
+                        type: array
+                        example:  ["tag1, foo, bar"]
+                      likes:
+                        type: array
+                        example:  ["1233456"]
+          "404":
+            $ref: "#/components/responses/NotFoundError"
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
 
   /api/comments:
     get:

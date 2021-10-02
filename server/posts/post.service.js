@@ -1,5 +1,6 @@
 ﻿const { func } = require('joi');
 const db = require('_helpers/db');
+const CONSTANTS = require('_helpers/constants');
 
 /**
  * Post Service
@@ -87,16 +88,31 @@ async function removeLike(postId, user_id, post) {
  * @param {Object} query The native express-query object.
  */
  async function handleQuery(query) {
-    if (!!query.searchBy || !!query.search) {
-        if (!query.searchBy) throw `No any 'searchBy' value provided!`
-        if (!query.search) throw `No any 'search' value provided!`;
+     if (!!query.searchBy || !!query.search) {        
+        let posts;
 
-        const posts = await db.PostMessage.find({
-            [query.searchBy]: {
-                $regex: query.search,
-                $options: 'i' 
-            } 
-        });
+        if (!query.searchBy) throw `No any 'searchBy' value provided!`
+        if (!query.search && (!query.startDate  || !query.endDate)) throw `No any 'search' value provided!`;
+
+        // Query the 'createdAt' with a date range
+        if (confirmCreatedAtQuery(query.searchBy, query.startDate, query.endDate)) {
+            posts = await db.PostMessage.find({ 
+                createdAt: {
+                    $gte: new Date(new Date(query.startDate).setHours(00, 00, 00)),
+                    $lt: new Date(new Date(query.endDate).setHours(23, 59, 59))
+                }
+            }).sort({ createdAt: 'asc'});
+        } 
+        
+        // Query the rest of the fields
+        if (query.searchBy !== CONSTANTS.FIELD_NAMES.createdAt) {
+            posts = await db.PostMessage.find({
+                [query.searchBy]: {
+                    $regex: query.search,
+                    $options: 'i' 
+                } 
+            });    
+        }
 
         if (!posts) throw 'Posts not found';
 
@@ -118,12 +134,12 @@ async function handleLikeRequest (postId, body) {
     const post = await getPost(postId);
     const userHasLike = post.likes.includes(body.user_id);
 
-    if (body.action === 'inc') {
+    if (body.action === CONSTANTS.FIELD_NAMES.inc) {
         if (!userHasLike) return insertLike(postId, body.user_id, post);
         throw 'User already has a like!'
     }
 
-    if (body.action === 'dec') {
+    if (body.action === CONSTANTS.FIELD_NAMES.dec) {
         if (userHasLike) return removeLike(postId, body.user_id, post) 
         throw 'User already has not any like!'
     }
@@ -145,4 +161,12 @@ async function getPost(id) {
 function basicDetails(post) {
     const { id, title, name, message, creator, selectedFile, createdAt, updated, tags, likes, comments } = post;
     return { id, title, name, message, creator, selectedFile, createdAt, updated, tags, likes, comments };
+}
+
+function confirmCreatedAtQuery(searchBy, startDate, endDate) {
+    return (
+        searchBy === CONSTANTS.FIELD_NAMES.createdAt &&
+        !!startDate &&
+        !!endDate
+    )
 }

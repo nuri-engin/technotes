@@ -46,11 +46,13 @@
             title="Filters"
             @click="showFilters = !showFilters"
             ><b-icon class="search-icon" icon="filter"
-          /></b-button>
+          /> Filters
+          </b-button>
         </div>
       </div>
     </div>
-    <div v-if="showFilters" class="filterbar-bottom">
+    <transition name="fade">
+        <div v-if="showFilters" class="filterbar-bottom">
       <div class="date-filters">
         <div class="startdate-wrapper">
           <b-form-datepicker
@@ -114,6 +116,7 @@
         </div>
       </div>
     </div>
+    </transition>
   </div>
 </template>
 
@@ -246,6 +249,8 @@ export default {
 
 .filterbar-right-side {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .filterbar-left-side {
@@ -358,6 +363,11 @@ export default {
   z-index: 2;
 }
 
+.filter-options-btn {
+  color: #3c6562 !important;
+  font-size: 14px !important;
+}
+
 .sortby-dd > .btn-secondary {
   border: none !important;
   background-color: transparent;
@@ -367,5 +377,12 @@ export default {
   width: 1.2rem !important;
   height: 1.2rem !important;
   margin-right: 16px !important;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

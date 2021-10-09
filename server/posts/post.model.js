@@ -2,13 +2,25 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-    title: String,
-    message: String,
-    creatorId: String,
+    title: {
+        type: String,
+        required: true
+    },
+    message: {
+        type: String,
+        required: true
+    },
+    creatorId: {
+        type: String,
+        required: true
+    },
     creatorName: String,
     category: String,
-    tags: [String],
     selectedFile: String,
+    tags: {
+        type: [String],
+        default: []
+    },
     likes: {
         type: [String],
         default: []

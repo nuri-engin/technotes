@@ -182,8 +182,8 @@ function basicDetails(post) {
         creatorId,
         creatorName,
         category,
-        tags,
         selectedFile,
+        tags,
         likes,
         updatedAt,
         createdAt
@@ -196,8 +196,8 @@ function basicDetails(post) {
         creatorId,
         creatorName,
         category,
-        tags,
         selectedFile,
+        tags,
         likes,
         updatedAt,
         createdAt    

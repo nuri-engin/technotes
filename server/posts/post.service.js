@@ -1,5 +1,6 @@
 ﻿const { func } = require('joi');
 const db = require('_helpers/db');
+const accountService = require('../accounts/account.service');
 const CONSTANTS = require('_helpers/constants');
 
 /**
@@ -7,6 +8,7 @@ const CONSTANTS = require('_helpers/constants');
  */
 module.exports = {
     getAll,
+    getCount,
     getById,
     handleQuery,
     create,
@@ -15,9 +17,22 @@ module.exports = {
     delete: _delete
 };
 
-async function getAll() {
-    const posts = await db.PostMessage.find();
+async function getAll(page = 1) {
+    const PAGE_SIZE = 24; // Similar to 'limit'
+    const skip = (page - 1) * PAGE_SIZE; // For page 1, the skip is: (1 - 1) * 24 => 0 * 24 = 0
+    const posts = await db.PostMessage.find({})  
+                                      .skip(skip)
+                                      .limit(PAGE_SIZE);
+
     return posts.map(x => basicDetails(x));
+}
+
+async function getCount() {
+    const count = await db.PostMessage.find().estimatedDocumentCount();
+
+    return {
+        total: count
+    }
 }
 
 async function getById(id) {
@@ -33,9 +48,13 @@ async function getPost(id) {
 }
 
 async function create(params) {
+    const account = await accountService.getById(params.creatorId);
+    
+    if (!account) throw 'Could not find the user with provided creator_id';
     const post = new db.PostMessage(params);
 
     post.createdAt = Date.now();
+    post.creatorName = account.userName;
 
     // save account
     await post.save();
@@ -49,7 +68,7 @@ async function update(id, params) {
     // copy params to account and save
     Object.assign(post, params);
 
-    post.updated = Date.now();
+    post.updatedAt = Date.now();
 
     await post.save();
 
@@ -77,7 +96,6 @@ async function removeLike(postId, user_id, post) {
 
     return basicDetails(post);
 }
-
 
 /**
  * Providing 'searchBy' functionality;
@@ -159,8 +177,33 @@ async function getPost(id) {
 }
 
 function basicDetails(post) {
-    const { id, title, name, message, creator, selectedFile, createdAt, updated, tags, likes, comments } = post;
-    return { id, title, name, message, creator, selectedFile, createdAt, updated, tags, likes, comments };
+    const {
+        id,
+        title,
+        message,
+        creatorId,
+        creatorName,
+        category,
+        selectedFile,
+        tags,
+        likes,
+        updatedAt,
+        createdAt
+    } = post;
+
+    return {
+        id,
+        title,
+        message,
+        creatorId,
+        creatorName,
+        category,
+        selectedFile,
+        tags,
+        likes,
+        updatedAt,
+        createdAt    
+    };
 }
 
 function confirmCreatedAtQuery(searchBy, startDate, endDate) {

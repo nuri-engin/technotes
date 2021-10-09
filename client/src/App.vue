@@ -71,7 +71,6 @@ body {
   background-color: #02252f !important;
 }
 .card-area-wrapper {
-  margin-top: 40px;
   padding: 20px 40px;
   display: flex;
   flex-direction: row;

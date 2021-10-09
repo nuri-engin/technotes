@@ -37,50 +37,81 @@
             ><b-icon class="search-icon" icon="search"
           /></b-button>
         </div>
+         <div class="filter-options-btn-wrapper">
+          <b-button
+            size="small"
+            class="btn filter-options-btn"
+            pill
+            v-b-tooltip.hover
+            title="Filters"
+            @click="showFilters = !showFilters"
+            ><b-icon class="search-icon" icon="filter"
+          /></b-button>
+        </div>
       </div>
     </div>
-    <div class="filterbar-bottom">
-      <div class="startdate-wrapper">
-        <b-form-datepicker
-          id="startdate-picker"
-          v-model="startdate"
-          name="startdate-picker"
-          placeholder="Start date"
-          :date-format-options="{
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-          }"
-          locale="en"
-          size="sm"
-          :max="enddate"
-        ></b-form-datepicker>
+    <div v-if="showFilters" class="filterbar-bottom">
+      <div class="date-filters">
+        <div class="startdate-wrapper">
+          <b-form-datepicker
+            id="startdate-picker"
+            v-model="startdate"
+            name="startdate-picker"
+            placeholder="Start date"
+            :date-format-options="{
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+            }"
+            locale="en"
+            size="sm"
+            :max="enddate"
+          ></b-form-datepicker>
+        </div>
+        <div class="enddate-wrapper">
+          <b-form-datepicker
+            id="enddate-picker"
+            v-model="enddate"
+            placeholder="End date"
+            name="enddate-picker"
+            :date-format-options="{
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+            }"
+            locale="en"
+            size="sm"
+            :min="startdate"
+          ></b-form-datepicker>
+        </div>
       </div>
-      <div class="enddate-wrapper">
-        <b-form-datepicker
-          id="enddate-picker"
-          v-model="enddate"
-          placeholder="End date"
-          name="enddate-picker"
-          :date-format-options="{
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-          }"
-          locale="en"
-          size="sm"
-          :min="startdate"
-        ></b-form-datepicker>
-      </div>
-      <div class="apply-filter-btn-wrapper">
-        <b-button v-b-tooltip.hover title="Apply Filters" pill size="sm" class="apply-filter-btn" style="display:flex;" :disabled="startdate === null" @click="applyFilters">
-          <b-icon class="filter-icon" icon="filter"></b-icon>
-        </b-button>
-      </div>
-      <div class="remove-filter-btn-wrapper">
-        <b-button v-b-tooltip.hover title="Remove Filters" pill size="sm" class="btn btn-danger remove-filter-btn" @click="removeFilters">
-          x
-        </b-button>
+      <div class="filter-actions">
+        <div class="apply-filter-btn-wrapper">
+          <b-button
+            v-b-tooltip.hover
+            title="Apply Filters"
+            pill
+            size="sm"
+            class="apply-filter-btn"
+            style="display: flex"
+            :disabled="startdate === null"
+            @click="applyFilters"
+          >
+            <b-icon class="filter-icon" icon="filter"></b-icon>
+          </b-button>
+        </div>
+        <div class="remove-filter-btn-wrapper">
+          <b-button
+            v-b-tooltip.hover
+            title="Remove Filters"
+            pill
+            size="sm"
+            class="btn btn-danger remove-filter-btn"
+            @click="removeFilters"
+          >
+            x
+          </b-button>
+        </div>
       </div>
     </div>
   </div>
@@ -96,8 +127,9 @@ export default {
       searchStr: "",
       smallCards: true,
       largeCards: false,
+      showFilters: false,
       startdate: null,
-      enddate: null
+      enddate: null,
     };
   },
   methods: {
@@ -145,15 +177,15 @@ export default {
       });
     },
     applyFilters(e) {
-      if(!this.startdate && !this.enddate ) {
-        alert('Please select a date range.')
+      if (!this.startdate && !this.enddate) {
+        alert("Please select a date range.");
       } else {
-        if(this.enddate === null) {
+        if (this.enddate === null) {
           this.enddate = this.startdate;
         }
         this.clearPosts();
         this.fetchPosts({
-          searchBy: 'createdAt',
+          searchBy: "createdAt",
           startDate: this.startdate,
           endDate: this.enddate,
         });
@@ -161,10 +193,10 @@ export default {
     },
     removeFilters() {
       this.clearPosts();
-      this.fetchPosts()
+      this.fetchPosts();
       this.startdate = null;
       this.enddate = null;
-    }
+    },
   },
 };
 </script>
@@ -184,6 +216,11 @@ export default {
   transition-duration: 1s;
 }
 
+.date-filters,
+.filter-actions {
+  display: flex;
+}
+
 .filterbar-wrapper {
   margin-top: 20px;
   display: flex;
@@ -197,13 +234,18 @@ export default {
 }
 
 .filterbar-bottom {
+  transition: all 300ms;
   display: flex;
-  margin-top: 10px;
+  margin-top: 20px;
   border: 1px solid gray !important;
-  width: max-content;
   padding: 10px;
   border-radius: 10px;
-  align-items:center !important;
+  align-items: center !important;
+  justify-content: space-between;
+}
+
+.filterbar-right-side {
+  display: flex;
 }
 
 .filterbar-left-side {
@@ -219,8 +261,12 @@ export default {
   justify-content: flex-start;
 }
 
+.filter-options-btn-wrapper {
+  margin-left: 10px;
+}
+
 .filter-icon {
-  margin-top: 3px;;
+  margin-top: 3px;
   font-size: 20px;
 }
 
@@ -241,7 +287,8 @@ export default {
   margin-left: 5px;
 }
 
-.remove-filter-btn, .apply-filter-btn {
+.remove-filter-btn,
+.apply-filter-btn {
   width: 30px;
   text-align: center;
   display: flex;
@@ -305,7 +352,8 @@ export default {
   color: #3c6562;
 }
 
-.search-btn {
+.search-btn,
+.filter-options-btn {
   background-color: #f3fcf0 !important;
   z-index: 2;
 }

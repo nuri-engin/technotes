@@ -1377,7 +1377,7 @@ components:
                 likes: 
                 updatedAt:
                   type: string
-                  example: "2021-04-24T18:11:52.600Z"
+                  example: "[Only with PUT] 2021-04-24T18:11:52.600Z"
                 createdAt:
                   type: string
                   example: "2021-04-24T18:11:52.600Z"

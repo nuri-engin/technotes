@@ -7,7 +7,7 @@
             <img width="40" src="@/assets/images/no-image.png" />
           </div>
           <div class="writer-name-date">
-            <span class="name">{{ post.name }}</span>
+            <span class="name">{{ post.creatorName }}</span>
             <span class="date">{{ setDateTimeFormat(post.createdAt)}}</span>
           </div>
         </div>
@@ -258,8 +258,7 @@ export default {
           title: this.postTitle,
           message: this.postDescription,
           tags: this.postTags.split(","),
-          name: this.currUser.userName,
-          creator: this.currUser.id,
+          creatorId: this.currUser.id,
         })
         .then((res) => {
           if (res.status === 200) {

@@ -8,6 +8,7 @@ const CONSTANTS = require('_helpers/constants');
  */
 module.exports = {
     getAll,
+    getCount,
     getById,
     handleQuery,
     create,
@@ -24,6 +25,12 @@ async function getAll(page = 1) {
                                       .limit(PAGE_SIZE);
 
     return posts.map(x => basicDetails(x));
+}
+
+async function getCount() {
+    const count = await db.PostMessage.find().estimatedDocumentCount();
+
+    return `Total: ${count}`
 }
 
 async function getById(id) {

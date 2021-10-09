@@ -13,6 +13,7 @@ const router = express.Router();
 
 // routes
 router.get('/', authorize(Role.Admin), getAll);
+router.get('/count', authorize(Role.Admin), getCount);
 router.get('/:id', authorize(Role.Admin), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
@@ -39,6 +40,18 @@ function getAll(req, res, next) {
         return postService.getAll(page)
             .then(posts => {
                 res.json(posts);
+            })
+            .catch(next);   
+    } catch (e) {
+        return res.status(500).json(e)
+    }
+}
+
+function getCount (req, res, next) {
+    try {    
+        return postService.getCount()
+            .then(count => {
+                res.json(count);
             })
             .catch(next);   
     } catch (e) {

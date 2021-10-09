@@ -30,7 +30,9 @@ async function getAll(page = 1) {
 async function getCount() {
     const count = await db.PostMessage.find().estimatedDocumentCount();
 
-    return `Total: ${count}`
+    return {
+        total: count
+    }
 }
 
 async function getById(id) {

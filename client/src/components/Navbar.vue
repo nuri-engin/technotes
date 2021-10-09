@@ -5,7 +5,6 @@
         <div class="navbar-title">Tech Notes</div>
         <div class="navbar-left-buttons">
           <b-button class="btn" @click="toggleNewNoteModal()">+ Note</b-button>
-          <b-button class="btn">filter</b-button>
         </div>
       </div>
       <div class="navbar-right-side">
@@ -152,8 +151,7 @@ export default {
           title: this.title,
           message: this.description,
           tags: this.tags,
-          name: this.currUser.userName,
-          creator: this.currUser.id,
+          creatorId: this.currUser.id,
         }).then(res => {
           if(res.status === 200) {
             this.showNewNoteModal = false

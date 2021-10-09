@@ -454,6 +454,9 @@ export default {
   opacity: 1;
   height: 32px;
   font-size: 14px;
+
+  overflow-y: scroll;
+  white-space: nowrap;
 }
 
 .techcard-actions {

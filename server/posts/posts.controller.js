@@ -24,21 +24,26 @@ router.delete('/:id', authorize(), _delete);
  */
 module.exports = router;
 
-
 function getAll(req, res, next) {
-    if (!isEmptyObject(req.query)) {
-        return postService.handleQuery(req.query)
-        .then(posts => {
-            res.json(posts);
-        })
-        .catch(next);
-    }
+    try {
+        const page = parseInt(req.query.page); // Make sure to parse the page to number
 
-    return postService.getAll()
-        .then(posts => {
-            res.json(posts);
-        })
-        .catch(next);
+        if (!isEmptyObject(req.query)) {
+            return postService.handleQuery(req.query)
+            .then(posts => {
+                res.json(posts);
+            })
+            .catch(next);
+        }
+    
+        return postService.getAll(page)
+            .then(posts => {
+                res.json(posts);
+            })
+            .catch(next);   
+    } catch (e) {
+        return res.status(500).json(e)
+    }
 }
 
 function getById(req, res, next) {
@@ -101,12 +106,14 @@ function _getSchemaRules() {
     const schemaRules = {
         title: Joi.string().empty(''),
         message: Joi.string().empty(''),
-        creator: Joi.string().empty(''),
-        name: Joi.string().empty(''),
+        creatorId: Joi.string().empty(''),
+        creatorName: Joi.string().empty(''),
+        category: Joi.string().empty(''),
         tags: Joi.array().empty(''),
         selectedFile: Joi.string().empty(''),
-        comments: Joi.array().empty(''),
-        likes: Joi.array().empty('')
+        likes: Joi.array().empty(''),
+        updatedAt: Joi.date().empty(''),
+        createdAt: Joi.date().empty('')
     };
 
     return schemaRules;

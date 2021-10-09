@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     title: String,
     message: String,
-    creator: String,
-    name: String,
+    creatorId: String,
+    creatorName: String,
     category: String,
     tags: [String],
     selectedFile: String,
@@ -13,7 +13,7 @@ const schema = new Schema({
         type: [String],
         default: []
     },
-    updated: Date,
+    updatedAt: Date,
     createdAt: {
         type: Date,
         default: new Date()

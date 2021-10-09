@@ -52,7 +52,7 @@ export default {
   computed: {
     ...mapGetters(["currUser", "posts", "loggedIn", "loadData"]),
     orderedPosts() {
-      return this.posts.reverse();
+      return this.posts;
     }
   },
   methods: {

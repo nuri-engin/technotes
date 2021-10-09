@@ -29,7 +29,7 @@ function getAll(req, res, next) {
     try {
         const page = parseInt(req.query.page); // Make sure to parse the page to number
 
-        if (!isEmptyObject(req.query)) {
+        if (!isEmptyObject(req.query) && !page ) {
             return postService.handleQuery(req.query)
             .then(posts => {
                 res.json(posts);

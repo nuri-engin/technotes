@@ -68,7 +68,7 @@
                     @input="(value) => updateDescription(value)"
                     rows="4"
                     max-rows="6"
-                    style="background: #F3FCF0;border-radius: 5px;height:160px;overflow: hidden;"
+                    style="background: #F3FCF0;border-radius: 5px;height:160px;overflow: hidden;overflow-y: scroll;"
                   ></b-form-textarea>
                 </b-form-group>
 

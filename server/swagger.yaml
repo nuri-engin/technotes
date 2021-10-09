@@ -706,16 +706,13 @@ paths:
                 properties:
                   title:
                     type: string
-                    example: "Sample post"
+                    example: "[required] Sample post"
                   message:
                     type: string
-                    example: "Sample post"
-                  name:
+                    example: "[required] Sample post"
+                  creatorId:
                     type: string
-                    example: "Jason (post owner 'userName')"
-                  creator:
-                    type: string
-                    example: "1233456 (post owner 'id')"
+                    example: "[required] 612a1d1d66e01000162d06de"
                   category:
                     type: string
                     example: "javascript"
@@ -723,48 +720,12 @@ paths:
                     type: array
                     example:  ["tag1, foo, bar"]
                 required:
-                  - name
-                  - creator
+                  - creatorId
                   - title
                   - message
         responses:
           "200":
-            description: Post created successfully. The details of the new post are returned.
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                      id:
-                        type: string
-                        example: "60845f68f84d58892f0bd3bf"
-                      title:
-                        type: string
-                        example: "Sample post title"
-                      message:
-                        type: string
-                        example: "Sample post message"
-                      name:
-                        type: string
-                        example: "Jason"
-                      creator:
-                        type: string
-                        example: "1233456"
-                      createdAt:
-                        type: string
-                        example: "2021-04-24T18:11:52.600Z"
-                      updated:
-                        type: string
-                        example: "2021-04-24T18:11:52.600Z"
-                      category:
-                        type: string
-                        example: "javascript"
-                      tags:
-                        type: array
-                        example:  ["tag1, foo, bar"]
-                      likes:
-                        type: array
-                        example:  []
+            $ref: "#/components/responses/Post200"
           "401":
             $ref: "#/components/responses/UnauthorizedError"
   /api/posts/{id}:
@@ -1382,6 +1343,44 @@ components:
       scheme: bearer
       bearerFormat: JWT
   responses:
+    Post200:
+      description: Post created successfully. The details of the new post are returned.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+                id:
+                  type: string
+                  example: "60845f68f84d58892f0bd3bf"
+                title:
+                  type: string
+                  example: "Sample post title"
+                message:
+                  type: string
+                  example: "Sample post message"
+                creatorId:
+                  type: string
+                  example: "1233456"
+                creatorName:
+                  type: string
+                  example: "Jason"
+                category:
+                  type: string
+                  example: "javascript"
+                selectedFile:
+                  type: string
+                  example: "BLOB:..."
+                tags:
+                  type: array
+                  example:  ["tag1, foo, bar"]
+                likes: 
+                updatedAt:
+                  type: string
+                  example: "[Only with PUT] 2021-04-24T18:11:52.600Z"
+                createdAt:
+                  type: string
+                  example: "2021-04-24T18:11:52.600Z"
     UnauthorizedError:
       description: Access token is missing or invalid, or the user does not have access to perform the action
       content:

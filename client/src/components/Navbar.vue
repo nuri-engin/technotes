@@ -5,7 +5,6 @@
         <div class="navbar-title">Tech Notes</div>
         <div class="navbar-left-buttons">
           <b-button class="btn" @click="toggleNewNoteModal()">+ Note</b-button>
-          <b-button class="btn">filter</b-button>
         </div>
       </div>
       <div class="navbar-right-side">

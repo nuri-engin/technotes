@@ -20,7 +20,8 @@ module.exports = {
 async function getAll(page = 1) {
     const PAGE_SIZE = 24; // Similar to 'limit'
     const skip = (page - 1) * PAGE_SIZE; // For page 1, the skip is: (1 - 1) * 24 => 0 * 24 = 0
-    const posts = await db.PostMessage.find({})  
+    const posts = await db.PostMessage.find({})
+                                      .sort({ _id: -1 })  
                                       .skip(skip)
                                       .limit(PAGE_SIZE);
 

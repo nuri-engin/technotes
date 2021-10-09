@@ -7,7 +7,7 @@
             <img width="40" src="@/assets/images/no-image.png" />
           </div>
           <div class="writer-name-date">
-            <span class="name">{{ post.creatorName ||  '-'}}</span>
+            <span class="name">{{ post.creatorName }}</span>
             <span class="date">{{ setDateTimeFormat(post.createdAt)}}</span>
           </div>
         </div>

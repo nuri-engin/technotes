@@ -225,6 +225,10 @@ export default {
 }
 
 .filterbar-wrapper {
+  font-family:"Quicksand", Helvetica, Arial !important;
+}
+
+.filterbar-wrapper {
   margin-top: 20px;
   display: flex;
   flex-direction: column;

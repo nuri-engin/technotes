@@ -400,6 +400,11 @@ export default {
 </script>
 
 <style scoped>
+body{
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family:"Quicksand-light", Helvetica, Arial !important;
+}
+
 .form-control,
 .form-control:focus {
   background: transparent;
@@ -476,7 +481,8 @@ export default {
 }
 
 .modal-header {
-  font-size: 30px;
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-size: 32px;
   margin-top: 0;
   margin-bottom: -20px;
   color: #3c6562;

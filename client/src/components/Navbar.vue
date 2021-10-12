@@ -48,7 +48,7 @@
                     id="input-1"
                     @input="(value) => updateTitle(value)"
                     required
-                    style="background: #F3FCF0;border-radius: 5px;"
+                    style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);background: #F3FCF0;border-radius: 5px;"
                   ></b-form-input>
                   <div v-if="displayError" class="error-content">
                     <b-icon icon="exclamation-circle" aria-hidden="true"></b-icon>
@@ -68,7 +68,7 @@
                     @input="(value) => updateDescription(value)"
                     rows="4"
                     max-rows="6"
-                    style="background: #F3FCF0;border-radius: 5px;height:160px;overflow: hidden;overflow-y: scroll;"
+                    style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);background: #F3FCF0;border-radius: 5px;height:160px;overflow: hidden;overflow-y: scroll;"
                   ></b-form-textarea>
                 </b-form-group>
 
@@ -82,7 +82,7 @@
                     id="input-3"
                     @input="(value) => updateTags(value)"
                     required
-                    style="margin-bottom:0px;background: #F3FCF0;border-radius: 5px;"
+                    style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);margin-bottom:0px;background: #F3FCF0;border-radius: 5px;"
                   ></b-form-input>
                   <span style="opacity:0.4;font-size:12px;margin-top:0px;">(Please use comma to separate the tags)</span>
                 </b-form-group>
@@ -165,6 +165,10 @@ export default {
 </script>
 
 <style scoped>
+body{
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family:"Quicksand-light", Helvetica, Arial !important;
+}
 .navbar-wrapper {
   margin-top: 30px;
   padding: 2px 30px;
@@ -262,7 +266,7 @@ export default {
 }
 
 .modal-container {
-  width: 32%;
+  width: 31%;
   height: max-content;
   margin: 0px auto;
   padding: 10px;
@@ -271,7 +275,7 @@ export default {
   color: black;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family:"Quicksand-light", Helvetica, Arial, sans-serif !important;
   position: relative;
 }
 
@@ -323,7 +327,8 @@ export default {
 }
 
 .modal-header {
-  font-size: 18px;
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-size: 24px;
   margin-top: 0;
   color: #3c6562;
   position: relative;
@@ -360,11 +365,14 @@ label {
 }
 
 .modal-body {
+  font-size: 17px;
   margin: -30px 0;
   border: none;
 }
 
 .modal-footer {
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-size: 18px;
   border: none;
   text-align: center;
   justify-content: center;

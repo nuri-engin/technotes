@@ -210,7 +210,7 @@
                 Yes
               </b-button>
               <b-button
-                id="delete-modal-default-button"
+                id="delete-modal-default-button-2"
                 @click="showDeleteModal = false"
               >
                 No
@@ -341,6 +341,11 @@ export default {
 </script>
 
 <style scoped>
+body{
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family:"Quicksand-light", Helvetica, Arial !important;
+}
+
 .description-input{
   overflow-y: hidden !important;
   height: 180px !important;
@@ -378,6 +383,7 @@ export default {
 }
 
 .more-dd {
+  font-family:"Quicksand", Helvetica, Arial !important;
   position: absolute;
   right: 15px;
   top: 10px;
@@ -410,6 +416,10 @@ export default {
 
 .writer-data {
   display: flex;
+}
+.writer-name-date {
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-size: 19px !important;
 }
 
 .writer-name-date {
@@ -609,7 +619,7 @@ export default {
   color: black;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family:"Quicksand-light", Helvetica, Arial, sans-serif;
   position: relative;
 }
 
@@ -633,6 +643,7 @@ export default {
 }
 
 .modal-header {
+  font-family:"Quicksand", Helvetica, Arial !important;
   font-size: 18px;
   margin-top: 0;
   color: #3c6562;
@@ -705,6 +716,7 @@ label {
 }
 
 .modal-footer {
+  font-family:"Quicksand", Helvetica, Arial !important;
   border: none;
   text-align: center;
   justify-content: flex-start;
@@ -738,8 +750,9 @@ label {
   color: #3c6562;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family:"Quicksand-light", Helvetica, Arial, sans-serif;
   position: relative;
+  text-align: center;
 }
 
 @media (max-width: 600px){
@@ -755,7 +768,8 @@ label {
 }
 
 .delete-modal-header {
-  font-size: 18px;
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-size: 22px;
   margin-top: 0;
   padding-bottom: 5px;
   color: #3c6562;
@@ -770,6 +784,16 @@ label {
   border: none;
   margin-bottom: 7px;
 }
+#delete-modal-default-button-2{
+  color: #3c6562;
+  background: #cdd9d1;
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-bottom: -20px;
+  padding: 1%;
+  width: 75px;
+  margin-left: 15px;
+}
 
 #delete-modal-default-button {
   color: #3c6562;
@@ -779,10 +803,10 @@ label {
   margin-bottom: -20px;
   padding: 1%;
   width: 75px;
-  margin-right: 10px;
+  margin-left: 166px;
 }
 
 #delete-modal-default-button {
-  float: right;
+  float: right !important;
 }
 </style>

@@ -44,14 +44,14 @@ async function create(params) {
 
         const comment = new db.Comments(params);
 
-        comment.creator_name = account.userName;
+        comment.creatorName = account.userName;
         comment.createdAt = Date.now();
     
         // save comment
         await comment.save();
     
         return comment;
-}
+    }
 
     throw 'There is missing information!'
 }

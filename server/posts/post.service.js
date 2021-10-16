@@ -10,6 +10,7 @@ module.exports = {
     getAll,
     getCount,
     getCategories,
+    postCategories,
     getById,
     handleQuery,
     create,
@@ -41,6 +42,19 @@ async function getCategories() {
     const categories = await db.PostCategories.find({});
 
     return categories
+}
+
+async function postCategories(params) {
+    const category = new db.PostCategories(params);
+
+    category.createdAt = Date.now();
+
+    // save category
+    await category.save();
+
+    return {
+        categories: category.value
+    };
 }
 
 async function getById(id) {

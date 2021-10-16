@@ -2,16 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-    categories: [
-        { 
-            value: {
-                type: String,
-                required: true,
-                unique: true
-            }, 
-            sub: [] 
-        }
-    ],
+    value: {
+        type: String,
+        required: true,
+        unique: true
+    }, 
+    subs: [],
     updatedAt: Date,
     createdAt: {
         type: Date,

@@ -11,7 +11,7 @@ module.exports = {
     getCount,
     getCategories,
     getCategoryById,
-    postCategory,
+    createCategory,
     updateCategory,
     deleteCategory,
     getById,
@@ -47,7 +47,7 @@ async function getCategories() {
     return categories
 }
 
-async function postCategory(params) {
+async function createCategory(params) {
     const category = new db.PostCategories(params);
 
     category.createdAt = Date.now();
@@ -55,9 +55,7 @@ async function postCategory(params) {
     // save category
     await category.save();
 
-    return {
-        categories: category.value
-    };
+    return category;
 }
 
 async function updateCategory(id, params) {
@@ -65,7 +63,12 @@ async function updateCategory(id, params) {
 
     const category = await getCategoryById(id);
 
-    // copy params to account and save
+    // Dynamically assing the values to the array
+    if (confirmSubsField(params, category)) {
+        assignSubsToCategory(params, category)
+    } 
+
+    // copy params to category
     Object.assign(category, params);
 
     category.updatedAt = Date.now();
@@ -263,4 +266,29 @@ function confirmCreatedAtQuery(searchBy, startDate, endDate) {
         !!startDate &&
         !!endDate
     )
+}
+
+function confirmSubsField(params, category) {
+    if (params.subs && !Array.isArray(params.subs)) {
+        throw "Please provide the sub-categories in an Array, ie: 'subs: [{value: 'The Category name'}]"; 
+    }
+ 
+    return (
+        (params.subs.length > 0) &&
+        (category.subs && category.subs.length > 0)
+    );
+}
+
+function assignSubsToCategory(params, category) {
+    params.subs.forEach(sub => {
+        if (subCategoryExist(category, sub.value)) throw "This sub-category already exist!";
+        
+        category.subs.push(sub);
+    });
+
+    delete params.subs;
+}
+
+function subCategoryExist(category, value) {
+    return category.subs.find(s => s.value === value);
 }

@@ -16,7 +16,7 @@ router.get('/', authorize(Role.Admin), getAll);
 router.get('/count', authorize(Role.Admin), getCount);
 
 router.get('/categories', authorize(Role.Admin), getCategories);
-router.post('/categories', authorize(Role.Admin), postCategory);
+router.post('/categories', authorize(Role.Admin), createCategory);
 router.get('/categories/:id', authorize(Role.Admin), getCategoryById);
 router.put('/categories/:id', authorize(Role.Admin), updateCategory);
 router.delete('/categories/:id', authorize(), deleteCategory);
@@ -78,9 +78,9 @@ function getCategories (req, res, next) {
     }
 }
 
-function postCategory(req, res, next) {
+function createCategory(req, res, next) {
     try {    
-        postService.postCategory(req.body)
+        postService.createCategory(req.body)
             .then(category => {
                 res.json(category);
             })

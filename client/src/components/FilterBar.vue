@@ -37,7 +37,7 @@
             ><b-icon class="search-icon" icon="search"
           /></b-button>
         </div>
-         <div class="filter-options-btn-wrapper">
+        <div class="filter-options-btn-wrapper">
           <b-button
             size="small"
             class="btn filter-options-btn"
@@ -45,77 +45,76 @@
             v-b-tooltip.hover
             title="Filters"
             @click="showFilters = !showFilters"
-            ><b-icon class="search-icon" icon="filter"
-          /> Filters
+            ><b-icon class="search-icon" icon="filter" /> Filters
           </b-button>
         </div>
       </div>
     </div>
     <transition name="fade">
-        <div v-if="showFilters" class="filterbar-bottom">
-      <div class="date-filters">
-        <div class="startdate-wrapper">
-          <b-form-datepicker
-            id="startdate-picker"
-            v-model="startdate"
-            name="startdate-picker"
-            placeholder="Start date"
-            :date-format-options="{
-              year: 'numeric',
-              month: 'numeric',
-              day: 'numeric',
-            }"
-            locale="en"
-            size="sm"
-            :max="enddate"
-          ></b-form-datepicker>
+      <div v-if="showFilters" class="filterbar-bottom">
+        <div class="date-filters">
+          <div class="startdate-wrapper">
+            <b-form-datepicker
+              id="startdate-picker"
+              v-model="startdate"
+              name="startdate-picker"
+              placeholder="Start date"
+              :date-format-options="{
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+              }"
+              locale="de"
+              size="sm"
+              :max="enddate"
+            ></b-form-datepicker>
+          </div>
+          <div class="enddate-wrapper">
+            <b-form-datepicker
+              id="enddate-picker"
+              v-model="enddate"
+              placeholder="End date"
+              name="enddate-picker"
+              :date-format-options="{
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+              }"
+              locale="de"
+              size="sm"
+              :min="startdate"
+            ></b-form-datepicker>
+          </div>
         </div>
-        <div class="enddate-wrapper">
-          <b-form-datepicker
-            id="enddate-picker"
-            v-model="enddate"
-            placeholder="End date"
-            name="enddate-picker"
-            :date-format-options="{
-              year: 'numeric',
-              month: 'numeric',
-              day: 'numeric',
-            }"
-            locale="en"
-            size="sm"
-            :min="startdate"
-          ></b-form-datepicker>
+        <div class="filter-actions">
+          <div class="apply-filter-btn-wrapper">
+            <b-button
+              v-b-tooltip.hover
+              title="Apply Filters"
+              pill
+              size="sm"
+              class="apply-filter-btn"
+              style="display: flex"
+              :disabled="startdate === null"
+              @click="applyFilters"
+            >
+              <b-icon class="filter-icon" icon="filter"></b-icon>
+            </b-button>
+          </div>
+          <div class="remove-filter-btn-wrapper">
+            <b-button
+              v-b-tooltip.hover
+              title="Remove Filters"
+              pill
+              size="sm"
+              class="btn btn-danger remove-filter-btn"
+              @click="removeFilters"
+            >
+              x
+            </b-button>
+          </div>
         </div>
       </div>
-      <div class="filter-actions">
-        <div class="apply-filter-btn-wrapper">
-          <b-button
-            v-b-tooltip.hover
-            title="Apply Filters"
-            pill
-            size="sm"
-            class="apply-filter-btn"
-            style="display: flex"
-            :disabled="startdate === null"
-            @click="applyFilters"
-          >
-            <b-icon class="filter-icon" icon="filter"></b-icon>
-          </b-button>
-        </div>
-        <div class="remove-filter-btn-wrapper">
-          <b-button
-            v-b-tooltip.hover
-            title="Remove Filters"
-            pill
-            size="sm"
-            class="btn btn-danger remove-filter-btn"
-            @click="removeFilters"
-          >
-            x
-          </b-button>
-        </div>
-      </div>
-    </div>
     </transition>
   </div>
 </template>
@@ -225,14 +224,12 @@ export default {
 }
 
 .filterbar-wrapper {
-  font-family:"Quicksand", Helvetica, Arial !important;
-}
-
-.filterbar-wrapper {
+  font-family: "Quicksand", Helvetica, Arial !important;
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  padding: 0 25px;
+  padding: 0;
+  position: relative;
 }
 
 .filterbar-top {
@@ -244,17 +241,24 @@ export default {
   transition: all 300ms;
   display: flex;
   margin-top: 20px;
-  border: 1px solid gray !important;
   padding: 10px;
-  border-radius: 10px;
   align-items: center !important;
   justify-content: space-between;
+  border-bottom: 1px solid gray !important;
+  box-shadow: 0px 23px 22px -20px rgb(215 204 204 / 75%);
+
+  position: absolute;
+  top: 18px;
+  z-index: 100;
+  width: 100%;
+  background-color: #02252f;
 }
 
 .filterbar-right-side {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-right: 20px;
 }
 
 .filterbar-left-side {
@@ -262,6 +266,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-left: 20px;
 }
 
 .filterbar-left-side {
@@ -383,8 +388,9 @@ export default {
   margin-right: 16px !important;
 }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;

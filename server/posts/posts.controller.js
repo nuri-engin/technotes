@@ -14,6 +14,13 @@ const router = express.Router();
 // routes
 router.get('/', authorize(Role.Admin), getAll);
 router.get('/count', authorize(Role.Admin), getCount);
+
+router.get('/categories', authorize(Role.Admin), getCategories);
+router.post('/categories', authorize(Role.Admin), createCategory);
+router.get('/categories/:id', authorize(Role.Admin), getCategoryById);
+router.put('/categories/:id', authorize(Role.Admin), updateCategory);
+router.delete('/categories/:id', authorize(), deleteCategory);
+
 router.get('/:id', authorize(Role.Admin), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
@@ -57,6 +64,60 @@ function getCount (req, res, next) {
     } catch (e) {
         return res.status(500).json(e)
     }
+}
+
+function getCategories (req, res, next) {
+    try {    
+        return postService.getCategories()
+            .then(categories => {
+                res.json(categories);
+            })
+            .catch(next);   
+    } catch (e) {
+        return res.status(500).json(e)
+    }
+}
+
+function createCategory(req, res, next) {
+    try {    
+        postService.createCategory(req.body)
+            .then(category => {
+                res.json(category);
+            })
+            .catch(next);   
+    } catch (e) {
+        return res.status(500).json(e)
+    }
+}
+
+function updateCategory(req, res, next) {
+    try {    
+        postService.updateCategory(req.params.id, req.body)
+            .then(category => {
+                res.json(category);
+            })
+            .catch(next);   
+    } catch (e) {
+        return res.status(500).json(e)
+    }
+}
+
+function getCategoryById(req, res, next) {
+    try {    
+        postService.getCategoryById(req.params.id)
+            .then(category => {
+                res.json(category);
+            })
+            .catch(next);   
+    } catch (e) {
+        return res.status(500).json(e)
+    }
+}
+
+function deleteCategory(req, res, next) {
+    postService.deleteCategory(req.params.id)
+        .then(() => res.json({ message: 'Category deleted successfully' }))
+        .catch(next);
 }
 
 function getById(req, res, next) {

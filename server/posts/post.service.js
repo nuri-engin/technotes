@@ -9,6 +9,11 @@ const CONSTANTS = require('_helpers/constants');
 module.exports = {
     getAll,
     getCount,
+    getCategories,
+    getCategoryById,
+    createCategory,
+    updateCategory,
+    deleteCategory,
     getById,
     handleQuery,
     create,
@@ -34,6 +39,58 @@ async function getCount() {
     return {
         total: count
     }
+}
+
+async function getCategories() {
+    const categories = await db.PostCategories.find({});
+
+    return categories
+}
+
+async function createCategory(params) {
+    const category = new db.PostCategories(params);
+
+    category.createdAt = Date.now();
+
+    // save category
+    await category.save();
+
+    return category;
+}
+
+async function updateCategory(id, params) {
+    if (!id && !params) throw 'Missing parameter OR body values exist!'
+
+    const category = await getCategoryById(id);
+    if (!category) throw "No any category found!"
+
+    // Dynamically assing the values to the array
+    if (confirmSubsField(params, category)) {
+        assignSubsToCategory(params, category)
+    } 
+
+    // copy params to category
+    Object.assign(category, params);
+
+    category.updatedAt = Date.now();
+
+    await category.save();
+
+    return category;
+}
+
+async function deleteCategory(id) {
+    const category = await getCategoryById(id);
+    
+    if (!category) throw "No any category found!"
+
+    await category.remove();
+}
+
+async function getCategoryById(id) {
+    const category = await db.PostCategories.findById(id);
+    if (!category) throw 'Category not found';
+    return category;
 }
 
 async function getById(id) {
@@ -107,7 +164,7 @@ async function removeLike(postId, user_id, post) {
  * @param {Object} query The native express-query object.
  */
  async function handleQuery(query) {
-     if (!!query.searchBy || !!query.search) {        
+    if (!!query.searchBy || !!query.search) {        
         let posts;
 
         if (!query.searchBy) throw `No any 'searchBy' value provided!`
@@ -120,7 +177,7 @@ async function removeLike(postId, user_id, post) {
                     $gte: new Date(new Date(query.startDate).setHours(00, 00, 00)),
                     $lt: new Date(new Date(query.endDate).setHours(23, 59, 59))
                 }
-            }).sort({ createdAt: 'asc'});
+            }).sort({ createdAt: 'desc'});
         } 
         
         // Query the rest of the fields
@@ -130,7 +187,7 @@ async function removeLike(postId, user_id, post) {
                     $regex: query.search,
                     $options: 'i' 
                 } 
-            });    
+            }).sort({ createdAt: 'desc'});    
         }
 
         if (!posts) throw 'Posts not found';
@@ -213,4 +270,27 @@ function confirmCreatedAtQuery(searchBy, startDate, endDate) {
         !!startDate &&
         !!endDate
     )
+}
+
+function confirmSubsField(params, category) {
+    if (params.subs && !Array.isArray(params.subs)) throw "Please provide the sub-categories in an Array, ie: 'subs: [{value: 'The Category name'}]"; 
+ 
+    return (
+        (params.subs.length > 0) &&
+        (category.subs && category.subs.length > 0)
+    );
+}
+
+function assignSubsToCategory(params, category) {
+    params.subs.forEach(sub => {
+        if (subCategoryExist(category, sub.value)) throw "This sub-category already exist!";
+
+        category.subs.push(sub);
+    });
+
+    delete params.subs;
+}
+
+function subCategoryExist(category, value) {
+    return category.subs.find(s => s.value === value);
 }

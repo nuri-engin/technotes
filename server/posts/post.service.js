@@ -71,16 +71,13 @@ async function updateCategory(id, params) {
 
     await category.save();
 
-    return {
-        category
-    };
+    return category;
 }
 
 async function getCategoryById(id) {
     const category = await db.PostCategories.findById(id);
     if (!category) throw 'Category not found';
     return category;
-
 }
 
 async function getById(id) {

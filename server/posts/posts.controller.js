@@ -17,8 +17,8 @@ router.get('/count', authorize(Role.Admin), getCount);
 
 router.get('/categories', authorize(Role.Admin), getCategories);
 router.post('/categories', authorize(Role.Admin), postCategory);
-router.get('categories/:category_id', authorize(Role.Admin), getCategoryById);
-router.put('categories/:category_id', authorize(Role.Admin), updateCategory);
+router.get('/categories/:id', authorize(Role.Admin), getCategoryById);
+router.put('/categories/:id', authorize(Role.Admin), updateCategory);
 
 router.get('/:id', authorize(Role.Admin), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
@@ -90,7 +90,6 @@ function postCategory(req, res, next) {
 }
 
 function updateCategory(req, res, next) {
-    debugger
     try {    
         postService.updateCategory(req.params.id, req.body)
             .then(category => {
@@ -103,7 +102,6 @@ function updateCategory(req, res, next) {
 }
 
 function getCategoryById(req, res, next) {
-    debugger
     try {    
         postService.getCategoryById(req.params.id)
             .then(category => {

@@ -63,7 +63,9 @@ const store = new Vuex.Store({
           commit("fetchPosts", { posts: data });
           commit('setLoadData', false)
         } else {
-          const { data } = await service().get("posts", {
+          const { data } = await service().get("posts",
+            { page : 1}, 
+            {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },

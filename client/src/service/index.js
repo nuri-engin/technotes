@@ -4,6 +4,7 @@ export default () => {
   const options = {};
   options.baseURL = process.env.VUE_APP_BASE_URL;
   options.headers = { 'Content-Type': 'application/json' };
+  // axios.defaults.params = { page: 1 }
   const instance = axios.create(options);
 
   // Set the AUTH token for any request

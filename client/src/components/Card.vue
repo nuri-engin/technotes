@@ -32,11 +32,11 @@
         </div>
       </div>
       <div class="techcard-footer">
-         <div class="techcard-tags">
-        <span v-for="(tag, index) in post.tags" :key="index">
-          #{{ tag.trim() }}
-        </span>
-      </div>
+         <div v-if="post.tags.length > 0" class="techcard-tags">
+            <span v-for="(tag, index) in post.tags" :key="index">
+              #{{ tag.trim() }}
+            </span>
+        </div>
       <div class="techcard-actions">
         <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
         <div class="comment-icon">
@@ -362,6 +362,7 @@ body{
   height: 320px;
   max-height: 320px;
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
   position: relative;
   z-index: 1;
@@ -380,6 +381,9 @@ body{
   border-top-left-radius: 10px;
   display: flex;
   position: relative;
+}
+
+.techcard-footer {
 }
 
 .more-dd {

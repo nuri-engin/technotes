@@ -37,8 +37,7 @@
       </div>
       <div class="techcard-content">
         <div class="techcard-content-title">{{ post.title }}</div>
-        <div class="techcard-content-text">
-          {{ post.message }}
+        <div :id="`post-${post.id}`" :refs="`post-${post.id}`" class="techcard-content-text">
         </div>
       </div>
       <div class="techcard-footer">
@@ -269,6 +268,8 @@
 
 <script>
 import service from "@/service";
+import { linkify } from "@/utils/linkify.js";
+import {setDateTimeFormat, setTimeFormat} from "@/utils/date.js"
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -289,11 +290,17 @@ export default {
       commentsLoaded: false,
     };
   },
+  mounted() {
+    // insert clickable content for posts
+    document.getElementById(`post-${this.post.id}`).innerHTML =  linkify(this.post.message)
+  },
   computed: {
     ...mapGetters(["currUser"]),
   },
   methods: {
     ...mapActions(["fetchPosts"]),
+    setDateTimeFormat,
+    setTimeFormat,
     updateDesc() {
       this.descEditMode = false;
       let { id } = this.post;
@@ -371,27 +378,7 @@ export default {
     },
     updateComment(value) {
       this.newComment = value;
-    },
-    setDateTimeFormat(date) {
-      let dateObject = new Date(date);
-
-      return `${this.setDateFormat(date)} ${dateObject.toLocaleTimeString()}`;
-    },
-    setDateFormat(date) {
-      let dateObject = new Date(date),
-        formattedDate;
-      var dd = String(dateObject.getDate()).padStart(2, "0");
-      var mm = String(dateObject.getMonth() + 1).padStart(2, "0"); //January is 0!
-      var yyyy = dateObject.getFullYear();
-
-      formattedDate = `${dd}/${mm}/${yyyy}`;
-
-      return formattedDate;
-    },
-    setTimeFormat(date) {
-      let dateObject = new Date(date);
-      return dateObject.toLocaleTimeString();
-    },
+    }
   },
 };
 </script>
@@ -511,7 +498,7 @@ body {
   font-weight: bold;
 }
 
-.techcard-content-text {
+.link {
   margin-top: 6px;
 }
 

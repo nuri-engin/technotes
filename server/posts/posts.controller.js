@@ -73,9 +73,9 @@ function getCategories (req, res, next) {
     }
 }
 
-function postCategories(req, res) {
+function postCategories(req, res, next) {
     try {    
-        return postService.postCategories(req.body)
+        postService.postCategories(req.body)
             .then(categories => {
                 res.json(categories);
             })

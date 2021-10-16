@@ -9,12 +9,17 @@ const store = new Vuex.Store({
   state: {
     user: null,
     loggedIn: false,
+    total: 0,
+    filtered: false,
     posts: [],
     loadData: true,
   },
   getters: {
     currUser: (state) => {
       return state.user;
+    },
+    total: (state) => {
+      return state.total;
     },
     posts: (state) => {
       return state.posts;
@@ -25,6 +30,9 @@ const store = new Vuex.Store({
     loadData: (state) => {
       return state.loadData;
     },
+    filtered: (state) => {
+      return state.filtered;
+    }
   },
   mutations: {
     fetchPosts(state, { posts }) {
@@ -44,6 +52,12 @@ const store = new Vuex.Store({
     },
     setLoadData(state, isLoading) {
       state.loadData = isLoading
+    },
+    setTotal(state, count) {
+      state.total = count;
+    },
+    isFiltered(state, isFiltered) {
+      state.filtered = isFiltered;
     }
   },
   actions: {
@@ -61,14 +75,21 @@ const store = new Vuex.Store({
             }
           );
           commit("fetchPosts", { posts: data });
-          commit('setLoadData', false)
+          if(!params.page) {
+            commit("isFiltered", true);
+          }
+          commit('setLoadData', false);
         } else {
-          const { data } = await service().get("posts", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
+          const { data } = await service().get("posts",
+            { page: 1 },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
           commit("fetchPosts", { posts: data });
+          commit("isFiltered", false);
+          dispatch("totalPosts");
           commit('setLoadData', false)
         }
       } catch (e) {
@@ -78,8 +99,8 @@ const store = new Vuex.Store({
         dispatch("logoutUser");
       }
     },
-    clearPosts({commit}) {
-        commit("fetchPosts", { posts: [] });
+    clearPosts({ commit }) {
+      commit("fetchPosts", { posts: [] });
     },
     loginUser({ commit, dispatch }, { email, password }) {
       return new Promise((resolve, reject) => {
@@ -113,6 +134,13 @@ const store = new Vuex.Store({
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       delete axios.defaults.headers.common["Authorization"];
+    },
+    totalPosts({ commit }) {
+      service().get('/posts/count').then(response => {
+        if (response.status === 200) {
+          commit("setTotal", response.data.total)
+        }
+      }).catch(error => console.error(error))
     }
   },
 });

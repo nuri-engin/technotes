@@ -14,6 +14,7 @@ const router = express.Router();
 // routes
 router.get('/', authorize(Role.Admin), getAll);
 router.get('/count', authorize(Role.Admin), getCount);
+router.get('/categories', authorize(Role.Admin), getCategories);
 router.get('/:id', authorize(Role.Admin), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
@@ -58,6 +59,19 @@ function getCount (req, res, next) {
         return res.status(500).json(e)
     }
 }
+
+function getCategories (req, res, next) {
+    try {    
+        return postService.getCategories()
+            .then(categories => {
+                res.json(categories);
+            })
+            .catch(next);   
+    } catch (e) {
+        return res.status(500).json(e)
+    }
+}
+
 
 function getById(req, res, next) {
     // users can get their own posts and admins can get any account

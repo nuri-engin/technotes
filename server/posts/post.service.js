@@ -9,6 +9,7 @@ const CONSTANTS = require('_helpers/constants');
 module.exports = {
     getAll,
     getCount,
+    getCategories,
     getById,
     handleQuery,
     create,
@@ -34,6 +35,12 @@ async function getCount() {
     return {
         total: count
     }
+}
+
+async function getCategories() {
+    const categories = await db.PostCategories.find({});
+
+    return categories
 }
 
 async function getById(id) {

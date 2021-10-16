@@ -21,6 +21,7 @@ mongoose.Promise = global.Promise;
 module.exports = {
     Comments: require('comments/comment.model'),
     PostMessage: require('posts/post.model'),
+    PostCategories: require('posts/categories.model'),
     Account: require('accounts/account.model'),
     RefreshToken: require('accounts/refresh-token.model'),
     isValidId

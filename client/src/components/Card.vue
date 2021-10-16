@@ -11,7 +11,7 @@
             <span class="date">{{ setDateTimeFormat(post.createdAt)}}</span>
           </div>
         </div>
-        <div class="more-dd">
+        <div v-if="post.creatorId === currUser.id" class="more-dd">
           <b-dropdown size="sm" variant="link" toggle-class="text-decoration-none" class="more-dd-btn more-menu" no-caret>
             <template #button-content>
               <b-icon icon="three-dots-vertical" aria-hidden="true"></b-icon>
@@ -19,7 +19,7 @@
             <b-dropdown-item-button style="width: 100px; left: -78px;" @click="showEditModal = true"
               >Edit</b-dropdown-item-button
             >
-            <b-dropdown-item-button style="width: 100px; left: -78px;" @click="showDeleteModal = true"
+            <b-dropdown-item-button  style="width: 100px; left: -78px;" @click="showDeleteModal = true"
               >Delete</b-dropdown-item-button
             >
           </b-dropdown>
@@ -32,11 +32,11 @@
         </div>
       </div>
       <div class="techcard-footer">
-         <div class="techcard-tags">
-        <span v-for="(tag, index) in post.tags" :key="index">
-          #{{ tag.trim() }}
-        </span>
-      </div>
+         <div v-if="post.tags.length > 0" class="techcard-tags">
+            <span v-for="(tag, index) in post.tags" :key="index">
+              #{{ tag.trim() }}
+            </span>
+        </div>
       <div class="techcard-actions">
         <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
         <div class="comment-icon">
@@ -172,7 +172,7 @@
                 </div>
               </div>
             </div>
-            <div class="modal-footer">
+            <div v-if="post.creatorId === currUser.id" class="modal-footer">
               <b-button
                 class="modal-default-button"
                 @click="checkEditCommentStatus()"
@@ -210,7 +210,7 @@
                 Yes
               </b-button>
               <b-button
-                id="delete-modal-default-button"
+                id="delete-modal-default-button-2"
                 @click="showDeleteModal = false"
               >
                 No
@@ -341,6 +341,11 @@ export default {
 </script>
 
 <style scoped>
+body{
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family:"Quicksand-light", Helvetica, Arial !important;
+}
+
 .description-input{
   overflow-y: hidden !important;
   height: 180px !important;
@@ -357,6 +362,7 @@ export default {
   height: 320px;
   max-height: 320px;
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
   position: relative;
   z-index: 1;
@@ -377,7 +383,11 @@ export default {
   position: relative;
 }
 
+.techcard-footer {
+}
+
 .more-dd {
+  font-family:"Quicksand", Helvetica, Arial !important;
   position: absolute;
   right: 15px;
   top: 10px;
@@ -410,6 +420,10 @@ export default {
 
 .writer-data {
   display: flex;
+}
+.writer-name-date {
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-size: 19px !important;
 }
 
 .writer-name-date {
@@ -490,7 +504,7 @@ export default {
   background-color: transparent;
 }
 
-.comment-icon:after {
+/* .comment-icon:after {
   position: absolute;
   content: "";
   width: 8px;
@@ -498,7 +512,7 @@ export default {
   height: 8px;
   border-radius: 5px;
   right: -2px;
-}
+} */
 
 .comments-form {
   position:relative;
@@ -609,7 +623,7 @@ export default {
   color: black;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family:"Quicksand-light", Helvetica, Arial, sans-serif;
   position: relative;
 }
 
@@ -633,6 +647,7 @@ export default {
 }
 
 .modal-header {
+  font-family:"Quicksand", Helvetica, Arial !important;
   font-size: 18px;
   margin-top: 0;
   color: #3c6562;
@@ -705,6 +720,7 @@ label {
 }
 
 .modal-footer {
+  font-family:"Quicksand", Helvetica, Arial !important;
   border: none;
   text-align: center;
   justify-content: flex-start;
@@ -738,8 +754,9 @@ label {
   color: #3c6562;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family:"Quicksand-light", Helvetica, Arial, sans-serif;
   position: relative;
+  text-align: center;
 }
 
 @media (max-width: 600px){
@@ -755,7 +772,8 @@ label {
 }
 
 .delete-modal-header {
-  font-size: 18px;
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-size: 22px;
   margin-top: 0;
   padding-bottom: 5px;
   color: #3c6562;
@@ -770,6 +788,16 @@ label {
   border: none;
   margin-bottom: 7px;
 }
+#delete-modal-default-button-2{
+  color: #3c6562;
+  background: #cdd9d1;
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-bottom: -20px;
+  padding: 1%;
+  width: 75px;
+  margin-left: 15px;
+}
 
 #delete-modal-default-button {
   color: #3c6562;
@@ -779,10 +807,10 @@ label {
   margin-bottom: -20px;
   padding: 1%;
   width: 75px;
-  margin-right: 10px;
+  margin-left: 166px;
 }
 
 #delete-modal-default-button {
-  float: right;
+  float: right !important;
 }
 </style>

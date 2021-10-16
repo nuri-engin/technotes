@@ -66,9 +66,14 @@ export default {
 </script>
 
 <style>
+
+@import './fonts/font.css';
+
 body {
   color: #fcf0f3 !important;
   background-color: #02252f !important;
+  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family:"Quicksand-light", Helvetica, Arial !important;
 }
 .card-area-wrapper {
   padding: 20px 40px;
@@ -97,7 +102,7 @@ body {
 }
 
 #app {
-  font-family: "Heiti-Medium", Helvetica, Arial, sans-serif;
+  font-family: "Quicksand-light", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

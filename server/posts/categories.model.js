@@ -15,10 +15,6 @@ const schema = new Schema({
     }
 });
 
-schema.virtual('isVerified').get(function () {
-    return !!(this.verified || this.passwordReset);
-});
-
 schema.set('toJSON', {
     virtuals: true,
     versionKey: false

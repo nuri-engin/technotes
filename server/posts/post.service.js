@@ -10,7 +10,9 @@ module.exports = {
     getAll,
     getCount,
     getCategories,
-    postCategories,
+    getCategoryById,
+    postCategory,
+    updateCategory,
     getById,
     handleQuery,
     create,
@@ -44,7 +46,7 @@ async function getCategories() {
     return categories
 }
 
-async function postCategories(params) {
+async function postCategory(params) {
     const category = new db.PostCategories(params);
 
     category.createdAt = Date.now();
@@ -55,6 +57,30 @@ async function postCategories(params) {
     return {
         categories: category.value
     };
+}
+
+async function updateCategory(id, params) {
+    if (!id && !params) throw 'Missing parameter OR body values exist!'
+
+    const category = await getCategoryById(id);
+
+    // copy params to account and save
+    Object.assign(category, params);
+
+    category.updatedAt = Date.now();
+
+    await category.save();
+
+    return {
+        category
+    };
+}
+
+async function getCategoryById(id) {
+    const category = await db.PostCategories.findById(id);
+    if (!category) throw 'Category not found';
+    return category;
+
 }
 
 async function getById(id) {

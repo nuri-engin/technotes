@@ -1,4 +1,5 @@
 # tech
+On live @ https://technotes-fe-main.herokuapp.com/
 
 ## Project setup
 ```

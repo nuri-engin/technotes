@@ -19,6 +19,7 @@ router.get('/categories', authorize(Role.Admin), getCategories);
 router.post('/categories', authorize(Role.Admin), postCategory);
 router.get('/categories/:id', authorize(Role.Admin), getCategoryById);
 router.put('/categories/:id', authorize(Role.Admin), updateCategory);
+router.delete('/categories/:id', authorize(), deleteCategory);
 
 router.get('/:id', authorize(Role.Admin), getById);
 router.post('/', authorize(Role.Admin), createSchema, create);
@@ -113,6 +114,11 @@ function getCategoryById(req, res, next) {
     }
 }
 
+function deleteCategory(req, res, next) {
+    postService.deleteCategory(req.params.id)
+        .then(() => res.json({ message: 'Category deleted successfully' }))
+        .catch(next);
+}
 
 function getById(req, res, next) {
     // users can get their own posts and admins can get any account

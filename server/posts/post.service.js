@@ -13,6 +13,7 @@ module.exports = {
     getCategoryById,
     postCategory,
     updateCategory,
+    deleteCategory,
     getById,
     handleQuery,
     create,
@@ -72,6 +73,11 @@ async function updateCategory(id, params) {
     await category.save();
 
     return category;
+}
+
+async function deleteCategory(id) {
+    const category = await getCategoryById(id);
+    await category.remove();
 }
 
 async function getCategoryById(id) {

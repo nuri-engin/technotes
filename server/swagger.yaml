@@ -1079,6 +1079,115 @@ paths:
             $ref: "#/components/responses/NotFoundError"
           "401":
             $ref: "#/components/responses/UnauthorizedError"
+  /api/posts/categories:
+    get:
+      summary: Get a list of all post message categories
+      description: Restricted to admin users.
+      operationId: getAllCategories
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/Category200"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    post:
+        summary: Create a new category. 
+        description: Restricted to admin users.
+        operationId: createCategory
+        security:
+          - bearerAuth: []
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  value:
+                    type: string
+                    example: "[required] Sample main category value"
+                  subs:
+                    type: array
+                    example: "Object of sub-categories, ie: subs = [ {value: 'Sub 1'}, {value: 'Sub 2'}, ... ]"
+                required:
+                  - value
+        responses:
+          "200":
+            $ref: "#/components/responses/Category200"
+          "401":
+            $ref: "#/components/responses/UnauthorizedError"
+  /api/posts/categories/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: Category id
+        required: true
+        example: "5eb12e197e06a76ccdefc121"
+        schema:
+          type: string
+    get:
+      summary: Get a single category by id
+      description: See a specific category.
+      operationId: getCategoryById
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          $ref: "#/components/responses/Category200"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      summary: Update a category
+      description: Update a category.
+      operationId: updateCategory
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: string
+                  example: "[required] Sample main category value"
+                subs:
+                  type: array
+                  example: "Object of sub-categories, ie: subs = [ {value: 'Sub 1'}, {value: 'Sub 2'}, ... ]"
+              required:
+                - value
+      responses:
+        "200":
+          $ref: "#/components/responses/Category200"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+    delete:
+      summary: Delete a category
+      description: Delete a category.
+      operationId: deleteCategory
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Category deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Category deleted successfully"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
 
   /api/comments:
     get:
@@ -1343,6 +1452,30 @@ components:
       scheme: bearer
       bearerFormat: JWT
   responses:
+    Category200:
+      description: An array of all post messsage categories
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: "60845f68f84d58892f0bd3bf"
+                value:
+                  type: string
+                  example: "Sample main category value"
+                subs:
+                  type: array
+                  example: "Object of sub-categories, ie: subs = [ {value: 'Sub 1'}, {value: 'Sub 2'}, ... ]"
+                createdAt:
+                  type: string
+                  example: "2021-04-24T18:11:52.600Z"
+                updatedAt:
+                  type: string
+                  example: "2021-04-24T18:11:52.600Z"
     Post200:
       description: Post created successfully. The details of the new post are returned.
       content:

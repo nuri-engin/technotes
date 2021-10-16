@@ -12,11 +12,11 @@
             <b-icon class="no-data-icon" icon="exclamation-triangle"></b-icon>
             <span>No Card Found</span>
         </div>
-        <div v-else v-for="(post, index) in orderedPosts" :key="index">
+        <div v-else-if="!loadData" v-for="(post, index) in orderedPosts" :key="index">
           <Card :post="post" />
         </div>
       </div>
-      <Pagination v-if="posts.length > 0" :rows="total" currentPage="1" />
+      <Pagination v-if="posts.length > 0" :rows="filtered ? posts.length : total" currentPage="1" />
     </div>
     <Login :loggedIn="loggedIn" />
   </div>
@@ -42,31 +42,25 @@ export default {
   },
   data() {
     return {
-      total:0
     };
   },
   mounted() {
       if (localStorage.getItem("token")) {
         document.getElementById("app").classList.remove("blur");
         this.fetchPosts();
-        service().get('/posts/count').then(response => {
-          if(response.status === 200) {
-            this.total = response.data.total
-          }
-        }).catch(error => console.error(error))
       } else {
         document.getElementById("app").classList.add("blur");
         this.loginState(true)
       }
   },
   computed: {
-    ...mapGetters(["currUser", "posts", "loggedIn", "loadData"]),
+    ...mapGetters(["currUser", "posts", "loggedIn", "loadData", "total", "filtered"]),
     orderedPosts() {
       return this.posts;
     }
   },
   methods: {
-    ...mapActions(["fetchPosts", "loginState", "logoutUser"]),
+    ...mapActions(["fetchPosts", "loginState", "logoutUser", "totalPosts"]),
     logout() {
       document.getElementById("app").classList.add("blur");
       this.logoutUser();

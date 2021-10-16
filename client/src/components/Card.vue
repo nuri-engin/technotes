@@ -11,7 +11,7 @@
             <span class="date">{{ setDateTimeFormat(post.createdAt)}}</span>
           </div>
         </div>
-        <div class="more-dd">
+        <div v-if="post.creatorId === currUser.id" class="more-dd">
           <b-dropdown size="sm" variant="link" toggle-class="text-decoration-none" class="more-dd-btn more-menu" no-caret>
             <template #button-content>
               <b-icon icon="three-dots-vertical" aria-hidden="true"></b-icon>
@@ -19,7 +19,7 @@
             <b-dropdown-item-button style="width: 100px; left: -78px;" @click="showEditModal = true"
               >Edit</b-dropdown-item-button
             >
-            <b-dropdown-item-button style="width: 100px; left: -78px;" @click="showDeleteModal = true"
+            <b-dropdown-item-button  style="width: 100px; left: -78px;" @click="showDeleteModal = true"
               >Delete</b-dropdown-item-button
             >
           </b-dropdown>
@@ -32,11 +32,11 @@
         </div>
       </div>
       <div class="techcard-footer">
-         <div class="techcard-tags">
-        <span v-for="(tag, index) in post.tags" :key="index">
-          #{{ tag.trim() }}
-        </span>
-      </div>
+         <div v-if="post.tags.length > 0" class="techcard-tags">
+            <span v-for="(tag, index) in post.tags" :key="index">
+              #{{ tag.trim() }}
+            </span>
+        </div>
       <div class="techcard-actions">
         <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
         <div class="comment-icon">
@@ -172,7 +172,7 @@
                 </div>
               </div>
             </div>
-            <div class="modal-footer">
+            <div v-if="post.creatorId === currUser.id" class="modal-footer">
               <b-button
                 class="modal-default-button"
                 @click="checkEditCommentStatus()"
@@ -362,6 +362,7 @@ body{
   height: 320px;
   max-height: 320px;
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
   position: relative;
   z-index: 1;
@@ -380,6 +381,9 @@ body{
   border-top-left-radius: 10px;
   display: flex;
   position: relative;
+}
+
+.techcard-footer {
 }
 
 .more-dd {
@@ -500,7 +504,7 @@ body{
   background-color: transparent;
 }
 
-.comment-icon:after {
+/* .comment-icon:after {
   position: absolute;
   content: "";
   width: 8px;
@@ -508,7 +512,7 @@ body{
   height: 8px;
   border-radius: 5px;
   right: -2px;
-}
+} */
 
 .comments-form {
   position:relative;

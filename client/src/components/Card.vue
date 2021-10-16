@@ -1,5 +1,5 @@
 <template>
-  <div style="z-index: 1 !important;">
+  <div style="z-index: 1 !important">
     <div class="techcard-wrapper">
       <div class="techcard-header">
         <div class="writer-data">
@@ -8,18 +8,28 @@
           </div>
           <div class="writer-name-date">
             <span class="name">{{ post.creatorName }}</span>
-            <span class="date">{{ setDateTimeFormat(post.createdAt)}}</span>
+            <span class="date">{{ setDateTimeFormat(post.createdAt) }}</span>
           </div>
         </div>
         <div v-if="post.creatorId === currUser.id" class="more-dd">
-          <b-dropdown size="sm" variant="link" toggle-class="text-decoration-none" class="more-dd-btn more-menu" no-caret>
+          <b-dropdown
+            size="sm"
+            variant="link"
+            toggle-class="text-decoration-none"
+            class="more-dd-btn more-menu"
+            no-caret
+          >
             <template #button-content>
               <b-icon icon="three-dots-vertical" aria-hidden="true"></b-icon>
             </template>
-            <b-dropdown-item-button style="width: 100px; left: -78px;" @click="showEditModal = true"
+            <b-dropdown-item-button
+              style="width: 100px; left: -78px"
+              @click="showEditModal = true"
               >Edit</b-dropdown-item-button
             >
-            <b-dropdown-item-button  style="width: 100px; left: -78px;" @click="showDeleteModal = true"
+            <b-dropdown-item-button
+              style="width: 100px; left: -78px"
+              @click="showDeleteModal = true"
               >Delete</b-dropdown-item-button
             >
           </b-dropdown>
@@ -32,19 +42,19 @@
         </div>
       </div>
       <div class="techcard-footer">
-         <div v-if="post.tags.length > 0" class="techcard-tags">
-            <span v-for="(tag, index) in post.tags" :key="index">
-              #{{ tag.trim() }}
-            </span>
+        <div v-if="post.tags.length > 0" class="techcard-tags">
+          <span v-for="(tag, index) in post.tags" :key="index">
+            #{{ tag.trim() }}
+          </span>
         </div>
-      <div class="techcard-actions">
-        <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
-        <div class="comment-icon">
-          <b-button @click="openCommentModal()">
-            <b-icon icon="chat-left-fill" />
-          </b-button>
+        <div class="techcard-actions">
+          <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
+          <div class="comment-icon">
+            <b-button @click="openCommentModal()">
+              <b-icon icon="chat-left-fill" />
+            </b-button>
+          </div>
         </div>
-      </div>
       </div>
     </div>
     <!-------- Edit Modal --------------->
@@ -78,12 +88,19 @@
 
             <div v-if="!commentMode" class="modal-body">
               <b-form>
-                <div style="display: flex;flex-direction:column;word-break:break-all;" class="label">
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    word-break: break-all;
+                  "
+                  class="label"
+                >
                   <div v-if="!descEditMode">{{ post.message }}</div>
                   <b-button
                     v-if="!descEditMode"
                     @click="descEditMode = !descEditMode"
-                    style="width: 70px;"
+                    style="width: 70px"
                     >Edit</b-button
                   >
                 </div>
@@ -100,8 +117,14 @@
                 ></b-form-textarea>
                 <span v-else>{{ post.description }}</span>
                 <div v-if="descEditMode" class="edit-save-close">
-                  <b-button class="edit-close" @click="descEditMode = !descEditMode">X</b-button>
-                  <b-button class="edit-save" @click="updateDesc()">Save</b-button>
+                  <b-button
+                    class="edit-close"
+                    @click="descEditMode = !descEditMode"
+                    >X</b-button
+                  >
+                  <b-button class="edit-save" @click="updateDesc()"
+                    >Save</b-button
+                  >
                 </div>
 
                 <br />
@@ -132,8 +155,7 @@
 
             <div v-else>
               <div class="comments-header">
-                 <b-form class="comments-form">
-
+                <b-form class="comments-form">
                   <div class="writer-img">
                     <img width="40" src="@/assets/images/no-image.png" />
                   </div>
@@ -146,7 +168,12 @@
                     required
                   >
                   </b-form-input>
-                  <b-button @click="sendComment()" :disabled="newComment === ''"> <b-icon icon="cursor-fill" ></b-icon> </b-button>
+                  <b-button
+                    @click="sendComment()"
+                    :disabled="newComment === ''"
+                  >
+                    <b-icon icon="cursor-fill"></b-icon>
+                  </b-button>
                 </b-form>
               </div>
               <div class="comments-content">
@@ -156,16 +183,33 @@
                 </div>
                 <div v-else v-for="(comment, index) in comments" :key="index">
                   <div class="comment-wrapper">
-                    <div class="comment-header d-flex justify-content-start align-items-center">
-                       <span class="comment-line"></span>
-                       <span class="comment-time">{{setTimeFormat(comment.createdAt)}}</span>
+                    <div
+                      class="
+                        comment-header
+                        d-flex
+                        justify-content-start
+                        align-items-center
+                      "
+                    >
+                      <span class="comment-line"></span>
+                      <span class="comment-time">{{
+                        setTimeFormat(comment.createdAt)
+                      }}</span>
                     </div>
                     <div class="comment-content d-flex flex-column my-2 mb-3">
-                      <div class="comment-user-name">@{{comment.creator_name}}</div>
-                      <div class="comment-msg">{{ comment.message }}
-                          <div class="comment-action d-flex justify-content-end">
-                           <div class="comment-delete-action" @click="deleteComment(comment.id)">Delete</div>
+                      <div class="comment-user-name">
+                        @{{ comment.creator_name }}
+                      </div>
+                      <div class="comment-msg">
+                        {{ comment.message }}
+                        <div class="comment-action d-flex justify-content-end">
+                          <div
+                            class="comment-delete-action"
+                            @click="deleteComment(comment.id)"
+                          >
+                            Delete
                           </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -177,7 +221,7 @@
                 class="modal-default-button"
                 @click="checkEditCommentStatus()"
               >
-                <div v-if="commentMode"> Description </div>
+                <div v-if="commentMode">Description</div>
                 <div v-else>Comments ></div>
               </b-button>
             </div>
@@ -242,7 +286,7 @@ export default {
       commentMode: false,
       newComment: "",
       showDeleteModal: false,
-      commentsLoaded: false
+      commentsLoaded: false,
     };
   },
   computed: {
@@ -299,7 +343,7 @@ export default {
             if (res.status === 200) {
               console.log(res);
               this.fetchComments();
-              this.newComment = '';
+              this.newComment = "";
             }
           });
       }
@@ -307,13 +351,13 @@ export default {
     deleteComment(commentId) {
       this.commentsLoaded = false;
       service()
-          .delete(`comments/${commentId}`)
-          .then((res) => {
-            if (res.status === 200) {
-              console.log(res);
-              this.fetchComments();
-            }
-          });  
+        .delete(`comments/${commentId}`)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            this.fetchComments();
+          }
+        });
     },
     openCommentModal() {
       this.showEditModal = true;
@@ -330,23 +374,35 @@ export default {
     },
     setDateTimeFormat(date) {
       let dateObject = new Date(date);
-      return `${dateObject.toLocaleDateString()} ${dateObject.toLocaleTimeString()}`
+
+      return `${this.setDateFormat(date)} ${dateObject.toLocaleTimeString()}`;
+    },
+    setDateFormat(date) {
+      let dateObject = new Date(date),
+        formattedDate;
+      var dd = String(dateObject.getDate()).padStart(2, "0");
+      var mm = String(dateObject.getMonth() + 1).padStart(2, "0"); //January is 0!
+      var yyyy = dateObject.getFullYear();
+
+      formattedDate = `${dd}/${mm}/${yyyy}`;
+
+      return formattedDate;
     },
     setTimeFormat(date) {
       let dateObject = new Date(date);
-      return dateObject.toLocaleTimeString()
-    }
+      return dateObject.toLocaleTimeString();
+    },
   },
 };
 </script>
 
 <style scoped>
-body{
-  font-family:"Quicksand", Helvetica, Arial !important;
-  font-family:"Quicksand-light", Helvetica, Arial !important;
+body {
+  font-family: "Quicksand", Helvetica, Arial !important;
+  font-family: "Quicksand-light", Helvetica, Arial !important;
 }
 
-.description-input{
+.description-input {
   overflow-y: hidden !important;
   height: 180px !important;
   background: #f3fcf0 !important;
@@ -387,7 +443,7 @@ body{
 }
 
 .more-dd {
-  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family: "Quicksand", Helvetica, Arial !important;
   position: absolute;
   right: 15px;
   top: 10px;
@@ -409,9 +465,9 @@ body{
 }
 
 /deep/ .dropdown-menu {
-    left: -65px !important;
-    min-width: 1rem !important;
-    box-shadow: -5px 6px 10px -7px rgb(0 0 0 / 49%);
+  left: -65px !important;
+  min-width: 1rem !important;
+  box-shadow: -5px 6px 10px -7px rgb(0 0 0 / 49%);
 }
 
 .writer-img {
@@ -422,7 +478,7 @@ body{
   display: flex;
 }
 .writer-name-date {
-  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family: "Quicksand", Helvetica, Arial !important;
   font-size: 19px !important;
 }
 
@@ -449,7 +505,6 @@ body{
   overflow-y: scroll;
 
   word-break: break-word;
-
 }
 
 .techcard-content-title {
@@ -461,7 +516,7 @@ body{
 }
 
 .techcard-tags {
-  background-color: #5C7A79;
+  background-color: #5c7a79;
   vertical-align: middle;
   padding: 5px;
   opacity: 1;
@@ -515,13 +570,13 @@ body{
 } */
 
 .comments-form {
-  position:relative;
+  position: relative;
   display: flex;
   height: 48px;
   max-height: 48px;
 }
 
-.comments-form .form-control{
+.comments-form .form-control {
   width: 90%;
   margin-bottom: 0px;
   height: 48px;
@@ -538,16 +593,16 @@ body{
   max-height: 280px;
   overflow-y: scroll;
   word-break: break-all;
-  margin-top:  30px;
+  margin-top: 30px;
   padding: 0px 15px;
 }
 
-.comments-content .loading-text{
+.comments-content .loading-text {
   font-weight: normal !important;
   font-size: 13px;
 }
 
-.comments-content .spinner-container .spinner-border{
+.comments-content .spinner-container .spinner-border {
   width: 2rem;
   height: 2rem;
 }
@@ -570,7 +625,7 @@ body{
   color: #7d7474;
 }
 
-.comment-user-name{
+.comment-user-name {
   font-size: 14px;
   font-weight: 200;
 }
@@ -623,11 +678,11 @@ body{
   color: black;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family:"Quicksand-light", Helvetica, Arial, sans-serif;
+  font-family: "Quicksand-light", Helvetica, Arial, sans-serif;
   position: relative;
 }
 
-@media (max-width: 600px){
+@media (max-width: 600px) {
   .modal-container {
     width: 90%;
   }
@@ -647,7 +702,7 @@ body{
 }
 
 .modal-header {
-  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family: "Quicksand", Helvetica, Arial !important;
   font-size: 18px;
   margin-top: 0;
   color: #3c6562;
@@ -684,19 +739,19 @@ label {
   cursor: pointer;
 }
 
-.edit-save-close{
+.edit-save-close {
   float: right;
   margin-top: -35px;
 }
 
-.edit-close{
+.edit-close {
   background: #d6e5db !important;
   border: 0 !important;
   margin-right: 9px;
   color: #3c6562 !important;
 }
 
-.edit-save{
+.edit-save {
   border-radius: 5px !important;
   width: 75px;
   height: 32px;
@@ -706,7 +761,7 @@ label {
   margin-right: 9px;
   padding: 5px !important;
 }
-.title-modal{
+.title-modal {
   border-radius: 8px !important;
   background: #f3fcf0 !important;
   border: 1px solid #3c6562 !important;
@@ -720,7 +775,7 @@ label {
 }
 
 .modal-footer {
-  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family: "Quicksand", Helvetica, Arial !important;
   border: none;
   text-align: center;
   justify-content: flex-start;
@@ -754,25 +809,25 @@ label {
   color: #3c6562;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family:"Quicksand-light", Helvetica, Arial, sans-serif;
+  font-family: "Quicksand-light", Helvetica, Arial, sans-serif;
   position: relative;
   text-align: center;
 }
 
-@media (max-width: 600px){
-    .delete-modal-container {
+@media (max-width: 600px) {
+  .delete-modal-container {
     width: 90%;
   }
 }
 
 @media (min-width: 600px) and (max-width: 1400px) {
-     .delete-modal-container {
+  .delete-modal-container {
     width: 65%;
   }
 }
 
 .delete-modal-header {
-  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family: "Quicksand", Helvetica, Arial !important;
   font-size: 22px;
   margin-top: 0;
   padding-bottom: 5px;
@@ -788,7 +843,7 @@ label {
   border: none;
   margin-bottom: 7px;
 }
-#delete-modal-default-button-2{
+#delete-modal-default-button-2 {
   color: #3c6562;
   background: #cdd9d1;
   border-radius: 8px;

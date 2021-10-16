@@ -107,7 +107,7 @@ async function removeLike(postId, user_id, post) {
  * @param {Object} query The native express-query object.
  */
  async function handleQuery(query) {
-     if (!!query.searchBy || !!query.search) {        
+    if (!!query.searchBy || !!query.search) {        
         let posts;
 
         if (!query.searchBy) throw `No any 'searchBy' value provided!`
@@ -120,7 +120,7 @@ async function removeLike(postId, user_id, post) {
                     $gte: new Date(new Date(query.startDate).setHours(00, 00, 00)),
                     $lt: new Date(new Date(query.endDate).setHours(23, 59, 59))
                 }
-            }).sort({ createdAt: 'asc'});
+            }).sort({ createdAt: 'desc'});
         } 
         
         // Query the rest of the fields
@@ -130,7 +130,7 @@ async function removeLike(postId, user_id, post) {
                     $regex: query.search,
                     $options: 'i' 
                 } 
-            });    
+            }).sort({ createdAt: 'desc'});    
         }
 
         if (!posts) throw 'Posts not found';

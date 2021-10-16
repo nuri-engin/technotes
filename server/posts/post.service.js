@@ -62,6 +62,7 @@ async function updateCategory(id, params) {
     if (!id && !params) throw 'Missing parameter OR body values exist!'
 
     const category = await getCategoryById(id);
+    if (!category) throw "No any category found!"
 
     // Dynamically assing the values to the array
     if (confirmSubsField(params, category)) {
@@ -80,6 +81,9 @@ async function updateCategory(id, params) {
 
 async function deleteCategory(id) {
     const category = await getCategoryById(id);
+    
+    if (!category) throw "No any category found!"
+
     await category.remove();
 }
 
@@ -269,9 +273,7 @@ function confirmCreatedAtQuery(searchBy, startDate, endDate) {
 }
 
 function confirmSubsField(params, category) {
-    if (params.subs && !Array.isArray(params.subs)) {
-        throw "Please provide the sub-categories in an Array, ie: 'subs: [{value: 'The Category name'}]"; 
-    }
+    if (params.subs && !Array.isArray(params.subs)) throw "Please provide the sub-categories in an Array, ie: 'subs: [{value: 'The Category name'}]"; 
  
     return (
         (params.subs.length > 0) &&
@@ -282,7 +284,7 @@ function confirmSubsField(params, category) {
 function assignSubsToCategory(params, category) {
     params.subs.forEach(sub => {
         if (subCategoryExist(category, sub.value)) throw "This sub-category already exist!";
-        
+
         category.subs.push(sub);
     });
 

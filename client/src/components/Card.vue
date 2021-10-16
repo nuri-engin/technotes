@@ -11,7 +11,7 @@
             <span class="date">{{ setDateTimeFormat(post.createdAt)}}</span>
           </div>
         </div>
-        <div class="more-dd">
+        <div v-if="post.creatorId === currUser.id" class="more-dd">
           <b-dropdown size="sm" variant="link" toggle-class="text-decoration-none" class="more-dd-btn more-menu" no-caret>
             <template #button-content>
               <b-icon icon="three-dots-vertical" aria-hidden="true"></b-icon>
@@ -19,7 +19,7 @@
             <b-dropdown-item-button style="width: 100px; left: -78px;" @click="showEditModal = true"
               >Edit</b-dropdown-item-button
             >
-            <b-dropdown-item-button style="width: 100px; left: -78px;" @click="showDeleteModal = true"
+            <b-dropdown-item-button  style="width: 100px; left: -78px;" @click="showDeleteModal = true"
               >Delete</b-dropdown-item-button
             >
           </b-dropdown>
@@ -172,7 +172,7 @@
                 </div>
               </div>
             </div>
-            <div class="modal-footer">
+            <div v-if="post.creatorId === currUser.id" class="modal-footer">
               <b-button
                 class="modal-default-button"
                 @click="checkEditCommentStatus()"
@@ -504,7 +504,7 @@ body{
   background-color: transparent;
 }
 
-.comment-icon:after {
+/* .comment-icon:after {
   position: absolute;
   content: "";
   width: 8px;
@@ -512,7 +512,7 @@ body{
   height: 8px;
   border-radius: 5px;
   right: -2px;
-}
+} */
 
 .comments-form {
   position:relative;

@@ -112,11 +112,18 @@
                 Please try again or create a new account.
               </div>
             </div>
+            <div>
+                <b-link class="link" @click="backToLobyy()">
+                  <b-icon icon="arrow-left" />
+                  Back to Login</b-link
+                >
+              </div>
             <div class="create-new-acc-btn-wrapper">
               <b-button @click="goToRegister()" class="create-new-acc-btn"
                 >Create New Account</b-button
               >
             </div>
+            
           </div>
           <div v-if="registerSuccess" class="modal-inner-container msg-modal">
             <div class="success-icon-wrapper">
@@ -339,6 +346,10 @@ export default {
       this.showLoginModal = false;
       document.getElementById("app").classList.remove("blur");
     },
+    backToLobyy() {
+      this.loginStep = true;
+      this.loginError = false;
+    },
     register() {
       if (
         [
@@ -496,6 +507,13 @@ body{
   color: #3c6562;
   font-size: 13px;
   opacity: 0.7;
+}
+.linkv2 {
+  text-decoration: none;
+  color: #3c6562;
+  font-size: 13px;
+  opacity: 0.7;
+  margin-top: 15px !important;
 }
 
 .modal-body {

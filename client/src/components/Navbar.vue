@@ -100,11 +100,15 @@
                       class="modal-default-button add-category-button"
                       style="border-radius: 8px"
                       size="sm"
+                      @click="showCategoriesModal = true"
                     >
                       <b-icon icon="plus" />
                       Add Category
                     </b-button>
-                    <div v-if="displayCategoryError" class="category-error-content">
+                    <div
+                      v-if="displayCategoryError"
+                      class="category-error-content"
+                    >
                       <b-icon
                         icon="exclamation-circle"
                         aria-hidden="true"
@@ -151,6 +155,86 @@
         </div>
       </div>
     </transition>
+
+    <!--------------------- Categories Modal --------------------------->
+    <transition name="modal">
+      <div v-if="showCategoriesModal" class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-container">
+            <div class="modal-header">
+              <b-icon
+                class="close-icon"
+                icon="x"
+                scale="2"
+                @click="showCategoriesModal = false"
+              />
+              Categories
+            </div>
+
+            <div class="modal-body categories-modal">
+              <b-form
+                style="display: flex; align-items: center; margin-top: 20px"
+              >
+                <b-form-group
+                  id="input-group-1"
+                  label="New Category Name"
+                  label-for="input-8"
+                >
+                  <b-form-input
+                    name="category_name"
+                    v-model="new_category_name"
+                    id="input-8"
+                    @input="(value) => newCategoryName(value)"
+                    required
+                    style="
+                      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+                      background: #f3fcf0;
+                      border-radius: 5px;
+                    "
+                  ></b-form-input>
+                </b-form-group>
+                <b-button
+                  size="sm"
+                  class="add-category-button"
+                  @click="AddCategory"
+                  >Add</b-button
+                >
+              </b-form>
+              <div class="categories-table">
+              <b-table
+                hover
+                :items="categories"
+                :busy="isBusy"
+                :fields="['id', 'value', 'actions']"
+              >
+                <template #table-busy>
+                  <div class="text-center text-danger my-2">
+                    <b-spinner class="align-middle"></b-spinner>
+                    <strong>Loading...</strong>
+                  </div>
+                </template>
+                <template #cell(id)="data">
+                  <span style="font-size: 13px">{{ data.value }}</span>
+                </template>
+                <template #cell(value)="data">
+                  <span style="font-weight: bold">{{ data.value }}</span>
+                </template>
+                <template #cell(actions)="data">
+                  <b-button
+                    size="sm"
+                    class="btn-delete-category"
+                    variant="danger"
+                    @click="deleteCategory(data.item.id)"
+                    >Delete</b-button
+                  >
+                </template>
+              </b-table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -164,20 +248,19 @@ export default {
   data() {
     return {
       showNewNoteModal: false,
+      showCategoriesModal: false,
       title: "",
       description: "",
       tags: [],
+      new_category_name: "",
       displayError: false,
       displayCategoryError: false,
       selected_category: "",
-      categories_options: [],
+      isBusy: false,
     };
   },
   computed: {
     ...mapGetters(["currUser", "categories"]),
-  },
-  mounted() {
-    this.fetchCategories();
   },
   methods: {
     ...mapActions(["fetchPosts", "fetchCategories"]),
@@ -193,14 +276,21 @@ export default {
     updateTags(value) {
       this.tags = value && value.split(",");
     },
+    newCategoryName(value) {
+      this.new_category_name = value;
+    },
     toggleNewNoteModal() {
       this.displayError = false;
       this.showNewNoteModal = !this.showNewNoteModal;
+      if(this.categories.length === 0) {
+        this.fetchCategories()
+      }
     },
     generateNote() {
       if ([this.title, this.description].includes("")) {
         this.displayError = true;
-      } if (this.selected_category === '') {
+      }
+      if (this.selected_category === "") {
         this.displayCategoryError = true;
       } else {
         this.displayError = false;
@@ -220,6 +310,33 @@ export default {
             }
           });
       }
+    },
+    AddCategory() {
+      this.isBusy = true;
+      if (this.new_category_name !== "") {
+        service()
+          .post("posts/categories", {
+            value: this.new_category_name,
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              this.new_category_name = "";
+              this.fetchCategories();
+              this.isBusy = false;
+            }
+          });
+      }
+    },
+    deleteCategory(id) {
+      this.isBusy = true;
+      service()
+        .delete(`posts/categories/${id}`)
+        .then((res) => {
+          if (res.status === 200) {
+            this.fetchCategories();
+            this.isBusy = false;
+          }
+        });
     },
   },
 };
@@ -267,6 +384,17 @@ body {
   background: #bef992;
 }
 
+.btn-delete-category {
+  color: #fff;
+  background: #c82333;
+  border: none;
+}
+
+.btn-delete-category:hover {
+  background: #e74a5a;
+  box-shadow: 3px 3px 4px #c82333;
+}
+
 .navbar-title {
   font-weight: 200;
   font-size: 20px;
@@ -310,9 +438,9 @@ body {
 }
 
 .category-error-content {
-    color: red;
-    font-size: 14px;
-    margin-left: 15px;
+  color: red;
+  font-size: 14px;
+  margin-left: 15px;
 }
 
 .modal-mask {
@@ -413,6 +541,7 @@ body {
 
 .add-category-button {
   padding: 6px 8px;
+  height: 37px;
 }
 
 .modal-header {
@@ -457,6 +586,28 @@ label {
   font-size: 17px;
   margin: -30px 0;
   border: none;
+}
+
+.categories-modal {
+  min-height: 600px;
+  overflow-y: scroll;
+}
+
+.categories-modal .add-category-button {
+  background-color:#3c6562 ;
+}
+
+.categories-table{
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.categories-modal .form-group {
+  width: 50% !important;
+}
+
+.categories-modal .form-control {
+  margin-top: 15px;
 }
 
 .modal-footer {

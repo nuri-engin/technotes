@@ -127,17 +127,38 @@ export default {
   data() {
     return {
       searchStr: "",
-      smallCards: true,
-      largeCards: false,
+      smallCards: localStorage.getItem("view") === 'smallCards',
+      largeCards: localStorage.getItem("view") === 'largeCards',
       showFilters: false,
       startdate: null,
       enddate: null,
     };
   },
+  computed: {
+    ...mapGetters(["posts"])
+  },
+  watch: {
+    posts(newValue) {
+      if(newValue.length > 0) {
+        if(this.largeCards) {
+          this.largeView()
+        }else {
+          this.smallView()
+        }
+      }
+    }
+  },
   methods: {
     ...mapActions(["fetchPosts", "clearPosts"]),
     updateSearchStr(value) {
       this.searchStr = value;
+    },
+    checkViewStatus() {
+       if(this.largeCards) {
+        this.largeView()
+      } else {
+        this.smallView()
+      }
     },
     enterSearch(e) {
       if (e.keyCode === 13) {
@@ -166,17 +187,19 @@ export default {
       this.smallCards = true;
       this.largeCards = false;
       const cards = document.querySelectorAll(".techcard-wrapper");
-      cards.forEach((card) => {
+      cards && cards.forEach((card) => {
         card.classList.remove("large-view");
       });
+      localStorage.setItem('view', 'smallCards')
     },
     largeView(e) {
       this.smallCards = false;
       this.largeCards = true;
       const cards = document.querySelectorAll(".techcard-wrapper");
-      cards.forEach((card) => {
+      cards && cards.forEach((card) => {
         card.classList.add("large-view");
       });
+      localStorage.setItem('view', 'largeCards')
     },
     applyFilters(e) {
       if (!this.startdate && !this.enddate) {

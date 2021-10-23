@@ -8,6 +8,9 @@ const swStats = require('swagger-stats');
 const YAML = require('yamljs');
 const helmet = require("helmet");
 const enforce = require('express-sslify');
+const xss = require('xss-clean');
+const mongoSanitize = require('express-mongo-sanitize');
+const compression = require('compression')
 
 // Load your swagger specification 
 let apiSpec = {};
@@ -35,16 +38,22 @@ app.use(cookieParser());
 // allow cors requests from any origin and with credentials
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
 
+// gzip compression
+app.use(compression());
+
 // Enable swagger-stats middleware in express app, passing swagger specification as option 
 app.use(swStats.getMiddleware({
     swaggerSpec: JSON.stringify(apiSpec)
 }));
 
-app.use(helmet());
-
 if(process.env.NODE_ENV == "development") {
     app.use(enforce.HTTPS());
 }
+
+/* make sure this comes before any routes */
+app.use(xss())
+app.use(helmet());
+app.use(mongoSanitize());
 
 // Welcome the visitors...
 app.get('/', (req, res) => {

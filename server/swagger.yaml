@@ -643,6 +643,13 @@ paths:
           $ref: "#/components/responses/UnauthorizedError"
 
   /api/posts:
+    parameters:
+      - in: path
+        name: page
+        description: Pagination number, defaults to 1. Data response will be 24 records.
+        example: "1"
+        schema:
+          type: number
     get:
       summary: Get a list of all post messages
       description: Restricted to admin users.

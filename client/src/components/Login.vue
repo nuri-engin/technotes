@@ -8,9 +8,9 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div v-if="loginStep" class="modal-inner-container">
-            <div class="modal-header">Login</div>
+            <div class="modal-header" :class="[{'faded' : loginLoading}]">Login</div>
 
-            <div class="modal-body" style="margin-top: 20px;">
+            <div class="modal-body" :class="[{'faded' : loginLoading}]" style="margin-top: 20px;">
               <b-form>
                 <b-form-group id="input-group-1" label-for="input-email">
                   <b-form-input
@@ -41,9 +41,10 @@
 
             <div class="modal-footer">
               <b-button class="modal-default-button login-btn" @click="login()">
+                <b-spinner v-if="loginLoading" small type="grow"></b-spinner>
                 Login
               </b-button>
-              <div class="bottom-wrapper">
+              <div class="bottom-wrapper" :class="[{'faded' : loginLoading}]">
                 <b-form-checkbox
                   v-model="status"
                   name="rememberme-checkbox"
@@ -242,6 +243,7 @@ export default {
   data() {
     return {
       showLoginModal: true,
+      loginLoading: false,
       email: "",
       password: "",
       newUsername: "",
@@ -308,10 +310,12 @@ export default {
         });
     },
     login() {
+      this.loginLoading = true;
       this.loginUser({ email: this.email, password: this.password }).then(
         (res) => {
           if (res.status === 200) {
             this.showLoginModal = false;
+            this.loginLoading = false;
           }
           if (res.response && res.response.status === 400) {
             this.showLoginModal = true;
@@ -497,6 +501,10 @@ body{
   border: none;
   justify-content: center !important;
   z-index: 10;
+}
+
+.faded {
+  opacity: 0.4;
 }
 
 .link {

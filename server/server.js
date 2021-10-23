@@ -1,13 +1,21 @@
 ﻿require('rootpath')();
 
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-
 const dotenv = require('dotenv');
-const router = express.Router();
+const swStats = require('swagger-stats');    
+const YAML = require('js-yaml');
 
+// Load your swagger specification 
+let apiSpec = {};
+try {
+    apiSpec = YAML.load(fs.readFileSync('./swagger.yaml', 'utf8'));
+} catch (e) {
+    console.log(e);
+}
 /**
  * Server Startup File
  * 
@@ -25,6 +33,12 @@ app.use(cookieParser());
 
 // allow cors requests from any origin and with credentials
 app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
+
+// Enable swagger-stats middleware in express app, passing swagger specification as option 
+app.use(swStats.getMiddleware({
+    swaggerSpec: JSON.stringify(apiSpec)
+}));
+
 
 // Welcome the visitors...
 app.get('/', (req, res) => {

@@ -1,10 +1,11 @@
+const fs = require('fs');
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
-const YAML = require('yamljs');
+const YAML = require('js-yaml');
 
 const router = express.Router();
 
-const swaggerDocument = YAML.load('./swagger.yaml');
+const swaggerDocument = YAML.load(fs.readFileSync('./swagger.yaml', 'utf8'));
 
 router.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

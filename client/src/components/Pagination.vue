@@ -2,6 +2,7 @@
   <div class="pagination-wrapper pb-3">
     <b-pagination
       v-model="page"
+      per-page="24"
       :total-rows="rows"
       @change="(page) => updatePage(page)"
       align="center"

@@ -13,7 +13,7 @@
             <img width="60" src="@/assets/images/no-image.png" />
           </div>
           <div>
-            <span>{{username}}</span>
+            <span>{{ username }}</span>
           </div>
         </div>
         <div class="logout-btn-wrapper">
@@ -48,12 +48,19 @@
                     id="input-1"
                     @input="(value) => updateTitle(value)"
                     required
-                    style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);background: #F3FCF0;border-radius: 5px;"
+                    style="
+                      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+                      background: #f3fcf0;
+                      border-radius: 5px;
+                    "
                   ></b-form-input>
                   <div v-if="displayError" class="error-content">
-                    <b-icon icon="exclamation-circle" aria-hidden="true"></b-icon>
+                    <b-icon
+                      icon="exclamation-circle"
+                      aria-hidden="true"
+                    ></b-icon>
                     Required
-                  </div>  
+                  </div>
                 </b-form-group>
 
                 <b-form-group
@@ -63,16 +70,55 @@
                 >
                   <b-form-textarea
                     id="input-2"
-                    name= "description"
+                    name="description"
                     placeholder="Add more details ..."
                     @input="(value) => updateDescription(value)"
                     rows="4"
                     max-rows="6"
-                    style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);background: #F3FCF0;border-radius: 5px;height:160px;overflow: hidden;overflow-y: scroll;"
+                    style="
+                      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+                      background: #f3fcf0;
+                      border-radius: 5px;
+                      height: 160px;
+                      overflow: hidden;
+                      overflow-y: scroll;
+                    "
                   ></b-form-textarea>
                 </b-form-group>
 
-                  <b-form-group
+                <div class="form-group">
+                  <span>Category *</span>
+                  <div class="category-options-wrapper">
+                    <v-select
+                      class="category-options"
+                      v-model="selected_category"
+                      label="value"
+                      :options="categories"
+                    >
+                    </v-select>
+                    <b-button
+                      class="modal-default-button add-category-button"
+                      style="border-radius: 8px"
+                      size="sm"
+                      @click="showCategoriesModal = true"
+                    >
+                      <b-icon icon="table" />
+                      Categories
+                    </b-button>
+                    <div
+                      v-if="displayCategoryError"
+                      class="category-error-content"
+                    >
+                      <b-icon
+                        icon="exclamation-circle"
+                        aria-hidden="true"
+                      ></b-icon>
+                      Required
+                    </div>
+                  </div>
+                </div>
+
+                <b-form-group
                   id="input-group-3"
                   label="Tags"
                   label-for="input-3"
@@ -82,9 +128,16 @@
                     id="input-3"
                     @input="(value) => updateTags(value)"
                     required
-                    style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);margin-bottom:0px;background: #F3FCF0;border-radius: 5px;"
+                    style="
+                      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+                      margin-bottom: 0px;
+                      background: #f3fcf0;
+                      border-radius: 5px;
+                    "
                   ></b-form-input>
-                  <span style="opacity:0.4;font-size:12px;margin-top:0px;">(Please use comma to separate the tags)</span>
+                  <span style="opacity: 0.4; font-size: 12px; margin-top: 0px"
+                    >(Please use comma to separate the tags)</span
+                  >
                 </b-form-group>
               </b-form>
             </div>
@@ -93,10 +146,90 @@
               <b-button
                 class="modal-default-button"
                 @click="generateNote()"
-                style="border-radius:8px;"
+                style="border-radius: 8px"
               >
                 Create
               </b-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <!--------------------- Categories Modal --------------------------->
+    <transition name="modal">
+      <div v-if="showCategoriesModal" class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-container">
+            <div class="modal-header">
+              <b-icon
+                class="close-icon"
+                icon="x"
+                scale="2"
+                @click="showCategoriesModal = false"
+              />
+              Categories
+            </div>
+
+            <div class="modal-body categories-modal">
+              <b-form
+                style="display: flex; align-items: center; margin-top: 20px"
+              >
+                <b-form-group
+                  id="input-group-1"
+                  label="New Category Name"
+                  label-for="input-8"
+                >
+                  <b-form-input
+                    name="category_name"
+                    v-model="new_category_name"
+                    id="input-8"
+                    @input="(value) => newCategoryName(value)"
+                    required
+                    style="
+                      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+                      background: #f3fcf0;
+                      border-radius: 5px;
+                    "
+                  ></b-form-input>
+                </b-form-group>
+                <b-button
+                  size="sm"
+                  class="add-category-button"
+                  @click="AddCategory"
+                  >Add</b-button
+                >
+              </b-form>
+              <div class="categories-table">
+              <b-table
+                hover
+                :items="categories"
+                :busy="isBusy"
+                :fields="['id', 'value', 'actions']"
+              >
+                <template #table-busy>
+                  <div class="text-center text-danger my-2">
+                    <b-spinner class="align-middle"></b-spinner>
+                    <strong>Loading...</strong>
+                  </div>
+                </template>
+                <template #cell(id)="data">
+                  <span style="font-size: 13px">{{ data.value }}</span>
+                </template>
+                <template #cell(value)="data">
+                  <span style="font-weight: bold">{{ data.value }}</span>
+                </template>
+                <template #cell(actions)="data">
+                  <b-button
+                    size="sm"
+                    class="btn-delete-category"
+                    variant="danger"
+                    @click="deleteCategory(data.item.id)"
+                    >Delete</b-button
+                  >
+                </template>
+              </b-table>
+              </div>
             </div>
           </div>
         </div>
@@ -107,67 +240,110 @@
 
 <script>
 import service from "@/service";
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Navbar",
-  props: ['logout', 'username'],
+  props: ["logout", "username"],
   data() {
     return {
       showNewNoteModal: false,
-      title: '',
-      description: '',
+      showCategoriesModal: false,
+      title: "",
+      description: "",
       tags: [],
-      displayError:false
+      new_category_name: "",
+      displayError: false,
+      displayCategoryError: false,
+      selected_category: "",
+      isBusy: false,
     };
   },
   computed: {
-    ...mapGetters(['currUser'])
+    ...mapGetters(["currUser", "categories"]),
   },
   methods: {
-    ...mapActions(['fetchPosts']),
+    ...mapActions(["fetchPosts", "fetchCategories"]),
     logoutUser() {
-      this.logout()
+      this.logout();
     },
     updateTitle(value) {
-      this.title = value
+      this.title = value;
     },
     updateDescription(value) {
-      this.description = value
+      this.description = value;
     },
     updateTags(value) {
-      this.tags = value && value.split(',')
+      this.tags = value && value.split(",");
+    },
+    newCategoryName(value) {
+      this.new_category_name = value;
     },
     toggleNewNoteModal() {
       this.displayError = false;
       this.showNewNoteModal = !this.showNewNoteModal;
+      this.fetchCategories()
     },
     generateNote() {
-      if([this.title, this.description].includes('')) {
+      if ([this.title, this.description].includes("")) {
         this.displayError = true;
+      }
+      if (this.selected_category === "") {
+        this.displayCategoryError = true;
       } else {
         this.displayError = false;
-        service().post('posts', {
-          title: this.title,
-          message: this.description,
-          tags: this.tags,
-          creatorId: this.currUser.id,
-        }).then(res => {
-          if(res.status === 200) {
-            this.showNewNoteModal = false
-            this.fetchPosts()
-          }
-        })
+        this.displayCategoryError = false;
+        service()
+          .post("posts", {
+            title: this.title,
+            message: this.description,
+            tags: this.tags,
+            creatorId: this.currUser.id,
+            category: this.selected_category.value,
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              this.showNewNoteModal = false;
+              this.fetchPosts();
+            }
+          });
       }
-    }
+    },
+    AddCategory() {
+      this.isBusy = true;
+      if (this.new_category_name !== "") {
+        service()
+          .post("posts/categories", {
+            value: this.new_category_name,
+          })
+          .then((res) => {
+            if (res.status === 200) {
+              this.new_category_name = "";
+              this.fetchCategories();
+              this.isBusy = false;
+            }
+          });
+      }
+    },
+    deleteCategory(id) {
+      this.isBusy = true;
+      service()
+        .delete(`posts/categories/${id}`)
+        .then((res) => {
+          if (res.status === 200) {
+            this.fetchCategories();
+            this.isBusy = false;
+          }
+        });
+    },
   },
 };
 </script>
 
 <style scoped>
-body{
-  font-family:"Quicksand", Helvetica, Arial !important;
-  font-family:"Quicksand-light", Helvetica, Arial !important;
+body {
+  font-family: "Quicksand", Helvetica, Arial !important;
+  font-family: "Quicksand-light", Helvetica, Arial !important;
 }
 .navbar-wrapper {
   margin-top: 30px;
@@ -204,6 +380,17 @@ body{
 
 .btn:hover {
   background: #bef992;
+}
+
+.btn-delete-category {
+  color: #fff;
+  background: #c82333;
+  border: none;
+}
+
+.btn-delete-category:hover {
+  background: #e74a5a;
+  box-shadow: 3px 3px 4px #c82333;
 }
 
 .navbar-title {
@@ -248,6 +435,12 @@ body{
   font-size: 14px;
 }
 
+.category-error-content {
+  color: red;
+  font-size: 14px;
+  margin-left: 15px;
+}
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -270,16 +463,33 @@ body{
   height: max-content;
   margin: 0px auto;
   padding: 10px;
-  background-color: #CDD9D1;
+  background-color: #cdd9d1;
   border-radius: 10px;
   color: black;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family:"Quicksand-light", Helvetica, Arial, sans-serif !important;
+  font-family: "Quicksand-light", Helvetica, Arial, sans-serif !important;
   position: relative;
 }
 
-@media (max-width: 600px){
+.category-options-wrapper {
+  display: flex;
+  align-items: center;
+  border-bottom: none !important;
+  margin-bottom: 40px;
+}
+
+.category-options-wrapper .v-select {
+  width: 50%;
+}
+
+.category-options {
+  box-shadow: rgb(0 0 0 / 33%) 0px 2px 8px !important;
+  background: rgb(243, 252, 240) !important;
+  border-radius: 5px !important;
+}
+
+@media (max-width: 600px) {
   .modal-container {
     width: 90%;
   }
@@ -292,7 +502,8 @@ body{
     align-items: center;
   }
 
-  .navbar-left-side, .navbar-right-side {
+  .navbar-left-side,
+  .navbar-right-side {
     width: 100%;
     justify-content: space-between;
   }
@@ -309,8 +520,8 @@ body{
     margin-left: 50px;
   }
 
-  .user-img img{
-    width:45px;
+  .user-img img {
+    width: 45px;
   }
 }
 
@@ -326,8 +537,13 @@ body{
   border: 1px solid #3c6562;
 }
 
+.add-category-button {
+  padding: 6px 8px;
+  height: 37px;
+}
+
 .modal-header {
-  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family: "Quicksand", Helvetica, Arial !important;
   font-size: 24px;
   margin-top: 0;
   color: #3c6562;
@@ -370,8 +586,30 @@ label {
   border: none;
 }
 
+.categories-modal {
+  min-height: 600px;
+  overflow-y: scroll;
+}
+
+.categories-modal .add-category-button {
+  background-color:#3c6562 ;
+}
+
+.categories-table{
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.categories-modal .form-group {
+  width: 50% !important;
+}
+
+.categories-modal .form-control {
+  margin-top: 15px;
+}
+
 .modal-footer {
-  font-family:"Quicksand", Helvetica, Arial !important;
+  font-family: "Quicksand", Helvetica, Arial !important;
   font-size: 18px;
   border: none;
   text-align: center;

@@ -47,12 +47,15 @@
           </span>
         </div>
         <div class="techcard-actions">
-          <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
-          <div class="comment-icon">
-            <b-button @click="openCommentModal()">
-              <b-icon icon="chat-left-fill" />
-            </b-button>
+          <div class="techcard-like-comment">
+              <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
+              <div class="comment-icon">
+                <b-button @click="openCommentModal()">
+                  <b-icon icon="chat-left-fill" />
+                </b-button>
+              </div>
           </div>
+          <div v-if="post.category" class="category-label">{{post.category}}</div>
         </div>
       </div>
     </div>
@@ -521,6 +524,20 @@ body {
   border-bottom-left-radius: 10px;
   padding: 10px;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.techcard-like-comment {
+  display: flex;
+}
+
+.category-label {
+  font-size: 12px;
+  background-color:#bef992;
+  padding: 0px 10px;
+  border-radius: 100px;
+  border:1px solid #3b4547;
 }
 
 .heart-icon {

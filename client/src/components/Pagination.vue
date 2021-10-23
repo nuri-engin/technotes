@@ -6,6 +6,9 @@
       @change="(page) => updatePage(page)"
       align="center"
     ></b-pagination>
+    <div class="total-notes">
+      {{rows}} of {{rows}} Notes
+    </div>
   </div>
 </template>
 
@@ -39,12 +42,20 @@ export default {
     position: fixed;
     bottom: 0px;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .page-item.active .page-link {
   background-color: #3c6562 !important;
   border-color: #3c6562 !important;
   font-weight: bold !important;
   color: #fff !important;
+}
+
+.total-notes {
+  margin-top: 0px;
 }
 
 .page-link {

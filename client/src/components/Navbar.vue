@@ -87,7 +87,7 @@
                 </b-form-group>
 
                 <div class="form-group">
-                  <span>Category *</span>
+                  <span>Category</span>
                   <div class="category-options-wrapper">
                     <v-select
                       class="category-options"
@@ -105,16 +105,6 @@
                       <b-icon icon="table" />
                       Categories
                     </b-button>
-                    <div
-                      v-if="displayCategoryError"
-                      class="category-error-content"
-                    >
-                      <b-icon
-                        icon="exclamation-circle"
-                        aria-hidden="true"
-                      ></b-icon>
-                      Required
-                    </div>
                   </div>
                 </div>
 
@@ -254,7 +244,6 @@ export default {
       tags: [],
       new_category_name: "",
       displayError: false,
-      displayCategoryError: false,
       selected_category: "",
       isBusy: false,
     };
@@ -287,24 +276,21 @@ export default {
     generateNote() {
       if ([this.title, this.description].includes("")) {
         this.displayError = true;
-      }
-      if (this.selected_category === "") {
-        this.displayCategoryError = true;
       } else {
         this.displayError = false;
-        this.displayCategoryError = false;
         service()
           .post("posts", {
             title: this.title,
             message: this.description,
             tags: this.tags,
             creatorId: this.currUser.id,
-            category: this.selected_category.value,
+            category: this.selected_category.value || '',
           })
           .then((res) => {
             if (res.status === 200) {
               this.showNewNoteModal = false;
               this.fetchPosts();
+              this.selected_category= '';
             }
           });
       }

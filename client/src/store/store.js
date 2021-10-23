@@ -13,6 +13,7 @@ const store = new Vuex.Store({
     filtered: false,
     posts: [],
     loadData: true,
+    categories: [],
   },
   getters: {
     currUser: (state) => {
@@ -23,6 +24,9 @@ const store = new Vuex.Store({
     },
     posts: (state) => {
       return state.posts;
+    },
+    categories: (state) => {
+      return state.categories;
     },
     loggedIn: (state) => {
       return state.loggedIn;
@@ -37,6 +41,9 @@ const store = new Vuex.Store({
   mutations: {
     fetchPosts(state, { posts }) {
       state.posts = posts;
+    },
+    fetchCategories(state, {categories}) {
+      state.categories = categories
     },
     updateUser(state, { user }) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -97,6 +104,21 @@ const store = new Vuex.Store({
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         dispatch("logoutUser");
+      }
+    },
+    async fetchCategories({ commit }) {
+      try {
+        const { data } = await service().get(
+          "posts/categories",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        commit("fetchCategories", { categories: data });
+      } catch (e) {
+        console.error(e.message);
       }
     },
     clearPosts({ commit }) {

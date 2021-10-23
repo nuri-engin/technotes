@@ -1,18 +1,16 @@
 ﻿require('rootpath')();
-
-const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const swStats = require('swagger-stats');    
-const YAML = require('js-yaml');
+const YAML = require('yamljs');
 
 // Load your swagger specification 
 let apiSpec = {};
 try {
-    apiSpec = YAML.load(fs.readFileSync('./swagger.yaml', 'utf8'));
+    apiSpec = YAML.load('./swagger.yaml');
 } catch (e) {
     console.log(e);
 }

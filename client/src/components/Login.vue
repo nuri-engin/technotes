@@ -113,7 +113,7 @@
               </div>
             </div>
             <div>
-                <b-link class="link" @click="backToLobyy()">
+                <b-link class="link" @click="backToLogin()">
                   <b-icon icon="arrow-left" />
                   Back to Login</b-link
                 >
@@ -337,6 +337,7 @@ export default {
       this.registerSuccess = false;
       this.registerError = null;
       this.loginStep = true;
+      this.loginError = false;
     },
     goToForgotPass() {
       this.loginStep = false;
@@ -345,10 +346,6 @@ export default {
     closeModal() {
       this.showLoginModal = false;
       document.getElementById("app").classList.remove("blur");
-    },
-    backToLobyy() {
-      this.loginStep = true;
-      this.loginError = false;
     },
     register() {
       if (

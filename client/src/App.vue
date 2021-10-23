@@ -16,7 +16,7 @@
           <Card :post="post" />
         </div>
       </div>
-      <Pagination v-if="posts.length > 0" :rows="filtered ? posts.length : total" currentPage="1" />
+      <Pagination v-if="posts.length > 0" :posts="posts" :rows="filtered ? posts.length : total" currentPage="1" />
     </div>
     <Login :loggedIn="loggedIn" />
   </div>
@@ -28,7 +28,6 @@ import Filterbar from "@/components/FilterBar.vue";
 import Card from "@/components/Card.vue";
 import Pagination from "@/components/Pagination.vue";
 import Login from "@/components/Login.vue";
-import service from "@/service";
 import { mapActions, mapGetters } from "vuex";
 
 export default {

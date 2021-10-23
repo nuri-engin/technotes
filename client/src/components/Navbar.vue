@@ -102,8 +102,8 @@
                       size="sm"
                       @click="showCategoriesModal = true"
                     >
-                      <b-icon icon="plus" />
-                      Add Category
+                      <b-icon icon="table" />
+                      Categories
                     </b-button>
                     <div
                       v-if="displayCategoryError"
@@ -282,9 +282,7 @@ export default {
     toggleNewNoteModal() {
       this.displayError = false;
       this.showNewNoteModal = !this.showNewNoteModal;
-      if(this.categories.length === 0) {
-        this.fetchCategories()
-      }
+      this.fetchCategories()
     },
     generateNote() {
       if ([this.title, this.description].includes("")) {

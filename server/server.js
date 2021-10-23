@@ -6,6 +6,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const swStats = require('swagger-stats');    
 const YAML = require('yamljs');
+const helmet = require("helmet");
+const enforce = require('express-sslify');
 
 // Load your swagger specification 
 let apiSpec = {};
@@ -14,6 +16,7 @@ try {
 } catch (e) {
     console.log(e);
 }
+
 /**
  * Server Startup File
  * 
@@ -37,6 +40,11 @@ app.use(swStats.getMiddleware({
     swaggerSpec: JSON.stringify(apiSpec)
 }));
 
+app.use(helmet());
+
+if(process.env.NODE_ENV == "development") {
+    app.use(enforce.HTTPS());
+}
 
 // Welcome the visitors...
 app.get('/', (req, res) => {

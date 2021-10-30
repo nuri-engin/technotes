@@ -18,10 +18,10 @@ import { mapActions } from "vuex";
 
 export default {
   name: "Pagination",
-  props: ["currentPage", "rows", "posts"],
+  props: ["currentPage", "rows", "posts", "filtered"],
   data() {
     return { 
-      current_page_total: 24,
+      current_page_total: this.filtered ? this.posts.length : 24,
       current_page: 1,
     }
   },

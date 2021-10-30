@@ -16,7 +16,7 @@
           <Card :post="post" />
         </div>
       </div>
-      <Pagination v-if="posts.length > 0" :posts="posts" :rows="filtered ? posts.length : total" currentPage="1" />
+      <Pagination v-if="posts.length > 0" :posts="posts" :filtered="filtered" :rows="filtered ? posts.length : total" currentPage="1" />
     </div>
     <Login :loggedIn="loggedIn" />
   </div>

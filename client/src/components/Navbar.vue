@@ -271,7 +271,6 @@ export default {
     toggleNewNoteModal() {
       this.displayError = false;
       this.showNewNoteModal = !this.showNewNoteModal;
-      this.fetchCategories()
     },
     generateNote() {
       if ([this.title, this.description].includes("")) {

@@ -866,7 +866,7 @@ label {
   margin-bottom: -20px;
   padding: 1%;
   width: 75px;
-  margin-left: 160px;
+  margin-left: 33%;
 }
 
 #delete-modal-default-button {

@@ -1,4 +1,5 @@
 ﻿require('rootpath')();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -10,10 +11,13 @@ const helmet = require("helmet");
 const enforce = require('express-sslify');
 const xss = require('xss-clean');
 const mongoSanitize = require('express-mongo-sanitize');
-const compression = require('compression')
+const compression = require('compression');
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 
 // Load your swagger specification 
 let apiSpec = {};
+
 try {
     apiSpec = YAML.load('./swagger.yaml');
 } catch (e) {
@@ -85,6 +89,14 @@ app.use(errorHandler);
 
 // start server
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
+
+const httpServer = createServer(app);
+
+const io = new Server(httpServer, { /* options */ });
+
+io.on("connection", (socket) => {  
+    console.log("Socket", socket);
+});
 
 app.listen(port, () => {
     console.log('Server listening on port ' + port);

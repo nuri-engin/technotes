@@ -4,6 +4,7 @@ import store from '@/store/store'
 import Axios from 'axios'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import vSelect from 'vue-select'
+import VueSocketIO from 'vue-socket.io'
 
 import 'vue-select/dist/vue-select.css';
 import 'bootstrap/dist/css/bootstrap.css'
@@ -21,6 +22,12 @@ const token = localStorage.getItem('token')
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token
 }
+
+// Socket.io connections
+Vue.use(new VueSocketIO({
+  debug: true,
+  connection: process.env.SOCKET_IO_CONNECTION,
+}))
 
 new Vue({
   render: h => h(App),

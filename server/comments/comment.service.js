@@ -14,7 +14,8 @@ module.exports = {
 };
 
 async function getAll() {
-    const comments = await db.Comments.find();
+    const comments = await db.Comments.find({}).sort({ _id: -1 });
+
     return comments;
 }
 
@@ -29,7 +30,7 @@ async function getComment(id) {
 }
 
 async function getPostmessageComments(postmessage_id) {
-    const comments = await db.Comments.find({ postmessage_id });
+    const comments = await db.Comments.find({ postmessage_id }).sort({ _id: -1 });
 
     if (!comments) throw 'No comment found';
 

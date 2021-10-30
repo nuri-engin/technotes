@@ -145,7 +145,7 @@ const store = new Vuex.Store({
               commit("updateUser", { user: response.data });
               dispatch("loginState", { login: true });
               dispatch("fetchPosts");
-              dispatch('totalUsers');
+              dispatch('fetchUsers');
               resolve(response);
             }
           })
@@ -172,7 +172,7 @@ const store = new Vuex.Store({
         }
       }).catch(error => console.error(error))
     },
-    async totalUsers({commit}) {
+    async fetchUsers({commit}) {
       try {
         const users = await service().get(
           "accounts",

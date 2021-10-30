@@ -316,7 +316,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchPosts"]),
+    ...mapActions(["fetchPosts", "fetchUsers"]),
     setDateTimeFormat,
     setTimeFormat,
     updateDesc() {
@@ -386,6 +386,9 @@ export default {
         });
     },
     openCommentModal() {
+      if(this.totalUsers.length === 0) {
+        this.fetchUsers();
+      }
       this.showEditModal = true;
       this.checkEditCommentStatus();
     },

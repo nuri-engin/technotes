@@ -60,6 +60,13 @@ async function create(params) {
 async function update(id, params) {
     const comment = await getComment(id);
 
+    // Which means this is an old version based created data!
+    if (!comment.creatorName) {
+        const account = await accountService.getById(comment.creator_id);
+    
+        comment.creatorName = account.userName;
+    }
+
     // copy params to comment and save
     Object.assign(comment, params);
 

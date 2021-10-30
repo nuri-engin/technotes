@@ -8,6 +8,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     user: null,
+    users: [],
     loggedIn: false,
     total: 0,
     filtered: false,
@@ -21,6 +22,9 @@ const store = new Vuex.Store({
     },
     total: (state) => {
       return state.total;
+    },
+    totalUsers: (state) => {
+      return state.users
     },
     posts: (state) => {
       return state.posts;
@@ -62,6 +66,9 @@ const store = new Vuex.Store({
     },
     setTotal(state, count) {
       state.total = count;
+    },
+    setTotalUsers(state, users) {
+      state.users = users;
     },
     isFiltered(state, isFiltered) {
       state.filtered = isFiltered;
@@ -138,6 +145,7 @@ const store = new Vuex.Store({
               commit("updateUser", { user: response.data });
               dispatch("loginState", { login: true });
               dispatch("fetchPosts");
+              dispatch('totalUsers');
               resolve(response);
             }
           })
@@ -163,6 +171,21 @@ const store = new Vuex.Store({
           commit("setTotal", response.data.total)
         }
       }).catch(error => console.error(error))
+    },
+    async totalUsers({commit}) {
+      try {
+        const users = await service().get(
+          "accounts",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        users.data.length > 0 && commit('setTotalUsers', users.data)
+      } catch (error) {
+        console.error(error.message);
+      }
     }
   },
 });

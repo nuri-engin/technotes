@@ -321,6 +321,7 @@ export default {
             this.showLoginModal = true;
             this.loginStep = false;
             this.loginError = true;
+            this.loginLoading = false;
           }
         }
       );

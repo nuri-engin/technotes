@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 const schema = new Schema({
     postmessage_id: String,
     creator_id: String,
-    creator_name: String,
+    creatorName: String,
     message: String,
-    updated: Date,
+    updatedAt: Date,
     createdAt: {
         type: Date,
         default: new Date()

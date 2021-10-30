@@ -59,7 +59,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchPosts", "loginState", "logoutUser", "totalPosts"]),
+    ...mapActions(["fetchPosts", "loginState", "logoutUser", "totalPosts", "totalUsers"]),
     logout() {
       document.getElementById("app").classList.add("blur");
       this.logoutUser();
@@ -74,6 +74,12 @@ export default {
 
 html, body {
   overflow: hidden;
+}
+
+.form-control:focus {
+  border-color: inherit !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 body {

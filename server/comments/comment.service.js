@@ -70,7 +70,7 @@ async function update(id, params) {
     // copy params to comment and save
     Object.assign(comment, params);
 
-    comment.updated = Date.now();
+    comment.updatedAt = Date.now();
 
     await comment.save();
 

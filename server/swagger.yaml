@@ -1416,7 +1416,7 @@ components:
                 createdAt:
                   type: string
                   example: "2021-04-24T18:11:52.600Z"
-                updated:
+                updatedAt:
                   type: string
                   example: "2021-04-24T18:11:52.600Z"
     CommentsObject200:
@@ -1444,7 +1444,7 @@ components:
               createdAt:
                 type: string
                 example: "2021-04-24T18:11:52.600Z"
-              updated:
+              updatedAt:
                 type: string
                 example: "2021-04-24T18:11:52.600Z"
     UnauthorizedError:

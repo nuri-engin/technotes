@@ -157,16 +157,18 @@
 
             <div v-else>
               <div class="comments-header">
-                <b-form class="comments-form">
+                <b-form class="comments-form" autocomplete="off">
                   <div class="writer-img">
                     <img width="40" src="@/assets/images/no-image.png" />
                   </div>
                   <b-form-input
                     name="comment"
+                    ref="new-comment"
                     :value="newComment"
                     id="input-comment"
                     @input="(value) => updateComment(value)"
-                    placeholder="text..."
+                    @keydown="openUsersList"
+                    placeholder="Write your comment ..."
                     required
                   >
                   </b-form-input>
@@ -176,6 +178,11 @@
                   >
                     <b-icon icon="cursor-fill"></b-icon>
                   </b-button>
+                  <ul v-if="display_userslist" class="users-list" :style="`left: ${userslist_position}px`">
+                    <li v-for="user in totalUsers" :key="user.id" @click="setMentionIds(user)">
+                      @{{user.userName}}
+                    </li>
+                  </ul>
                 </b-form>
               </div>
               <div class="comments-content">
@@ -291,6 +298,9 @@ export default {
       newComment: "",
       showDeleteModal: false,
       commentsLoaded: false,
+      userslist_position: 50,
+      display_userslist: false,
+      comment_mention_ids: [],
     };
   },
   mounted() {
@@ -298,7 +308,12 @@ export default {
     document.getElementById(`post-${this.post.id}`).innerHTML =  linkify(this.post.message)
   },
   computed: {
-    ...mapGetters(["currUser"]),
+    ...mapGetters(["currUser", "totalUsers"]),
+    userNames() {
+      return this.totalUsers.reduce((acc, item) => {
+        return [...acc, item.userName]
+      }, [])
+    }
   },
   methods: {
     ...mapActions(["fetchPosts"]),
@@ -348,6 +363,7 @@ export default {
             postmessage_id: this.post.id,
             message: this.newComment,
             creator_id: this.currUser.id,
+            mention_ids: this.comment_mention_ids
           })
           .then((res) => {
             if (res.status === 200) {
@@ -381,6 +397,26 @@ export default {
     },
     updateComment(value) {
       this.newComment = value;
+      this.totalUsers.forEach(user => {
+        if(!this.newComment.includes(user.userName)) {
+          this.comment_mention_ids = this.comment_mention_ids.filter(id => id !== user.id)
+        }
+      })
+    },
+    openUsersList(e, options) {
+      if(e.keyCode == 50) {
+        this.userslist_position = this.newComment.length * 5 + this.userslist_position
+
+        this.display_userslist = true;
+      } else {
+        this.display_userslist = false;
+      }
+    },
+    setMentionIds(user) {
+      let {id, userName} = user
+      this.comment_mention_ids = [...this.comment_mention_ids, id]
+      this.newComment = this.newComment.concat(userName)
+      this.display_userslist = false
     }
   },
 };
@@ -563,16 +599,6 @@ body {
   background-color: transparent;
 }
 
-/* .comment-icon:after {
-  position: absolute;
-  content: "";
-  width: 8px;
-  background-color: #bef992;
-  height: 8px;
-  border-radius: 5px;
-  right: -2px;
-} */
-
 .comments-form {
   position: relative;
   display: flex;
@@ -589,12 +615,45 @@ body {
 .comments-form button {
   position: absolute;
   border: none !important;
-  right: 15px;
+  right: 31px;
   bottom: 5px;
+
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.comments-form .users-list{
+  list-style: none;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 7px 1px lightgray;
+  z-index: 2;
+
+  position: absolute;
+  top: 50px;
+}
+
+.comments-form .users-list li {
+  padding-right: 10px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.comments-form .users-list li:hover {
+  color: rgb(99, 99, 231);
+  font-weight: bold;
+  background-color: #d6e5db;
+  border-radius: 10px;
+}
+
 
 .comments-content {
   max-height: 280px;
+  min-height: 280px;
   overflow-y: scroll;
   word-break: break-all;
   margin-top: 30px;

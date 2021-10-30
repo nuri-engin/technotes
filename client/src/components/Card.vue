@@ -207,7 +207,7 @@
                     </div>
                     <div class="comment-content d-flex flex-column my-2 mb-3">
                       <div class="comment-user-name">
-                        @{{ comment.creator_name }}
+                        @{{ comment.creatorName }}
                       </div>
                       <div class="comment-msg">
                         {{ comment.message }}

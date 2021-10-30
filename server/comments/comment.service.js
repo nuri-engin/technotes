@@ -14,7 +14,8 @@ module.exports = {
 };
 
 async function getAll() {
-    const comments = await db.Comments.find();
+    const comments = await db.Comments.find({}).sort({ _id: -1 });
+
     return comments;
 }
 
@@ -29,7 +30,7 @@ async function getComment(id) {
 }
 
 async function getPostmessageComments(postmessage_id) {
-    const comments = await db.Comments.find({ postmessage_id });
+    const comments = await db.Comments.find({ postmessage_id }).sort({ _id: -1 });
 
     if (!comments) throw 'No comment found';
 
@@ -59,10 +60,17 @@ async function create(params) {
 async function update(id, params) {
     const comment = await getComment(id);
 
+    // Which means this is an old version based created data!
+    if (!comment.creatorName) {
+        const account = await accountService.getById(comment.creator_id);
+    
+        comment.creatorName = account.userName;
+    }
+
     // copy params to comment and save
     Object.assign(comment, params);
 
-    comment.updated = Date.now();
+    comment.updatedAt = Date.now();
 
     await comment.save();
 

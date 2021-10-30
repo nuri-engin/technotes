@@ -106,6 +106,8 @@ const store = new Vuex.Store({
           dispatch("totalPosts");
           commit('setLoadData', false)
         }
+        dispatch('fetchUsers');
+        dispatch("fetchCategories");
       } catch (e) {
         console.error(e.message);
         localStorage.removeItem("token");
@@ -145,7 +147,6 @@ const store = new Vuex.Store({
               commit("updateUser", { user: response.data });
               dispatch("loginState", { login: true });
               dispatch("fetchPosts");
-              dispatch('fetchUsers');
               resolve(response);
             }
           })

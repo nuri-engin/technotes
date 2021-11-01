@@ -16,7 +16,7 @@
           <Card :post="post" />
         </div>
       </div>
-      <Pagination v-if="posts.length > 0" :rows="filtered ? posts.length : total" currentPage="1" />
+      <Pagination v-if="posts.length > 0" :posts="posts" :filtered="filtered" :rows="filtered ? posts.length : total" currentPage="1" />
     </div>
     <Login :loggedIn="loggedIn" />
   </div>
@@ -28,7 +28,6 @@ import Filterbar from "@/components/FilterBar.vue";
 import Card from "@/components/Card.vue";
 import Pagination from "@/components/Pagination.vue";
 import Login from "@/components/Login.vue";
-import service from "@/service";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -60,7 +59,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchPosts", "loginState", "logoutUser", "totalPosts"]),
+    ...mapActions(["fetchPosts", "loginState", "logoutUser", "totalPosts", "totalUsers"]),
     logout() {
       document.getElementById("app").classList.add("blur");
       this.logoutUser();
@@ -75,6 +74,12 @@ export default {
 
 html, body {
   overflow: hidden;
+}
+
+.form-control:focus {
+  border-color: inherit !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 body {

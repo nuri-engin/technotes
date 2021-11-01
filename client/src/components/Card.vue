@@ -23,22 +23,31 @@
               <b-icon icon="three-dots-vertical" aria-hidden="true"></b-icon>
             </template>
             <b-dropdown-item-button
-              style="width: 100px; left: -78px"
+              style="left: -78px"
               @click="showEditModal = true"
               >Edit</b-dropdown-item-button
             >
             <b-dropdown-item-button
-              style="width: 100px; left: -78px"
+              style="left: -78px"
               @click="showDeleteModal = true"
               >Delete</b-dropdown-item-button
+            >
+            <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item-button
+              style="left: -78px"
+              @click="showCategoriesModal = true"
+              >Categories</b-dropdown-item-button
             >
           </b-dropdown>
         </div>
       </div>
       <div class="techcard-content">
         <div class="techcard-content-title">{{ post.title }}</div>
-        <div :id="`post-${post.id}`" :refs="`post-${post.id}`" class="techcard-content-text">
-        </div>
+        <div
+          :id="`post-${post.id}`"
+          :refs="`post-${post.id}`"
+          class="techcard-content-text"
+        ></div>
       </div>
       <div class="techcard-footer">
         <div v-if="post.tags.length > 0" class="techcard-tags">
@@ -48,14 +57,16 @@
         </div>
         <div class="techcard-actions">
           <div class="techcard-like-comment">
-              <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
-              <div class="comment-icon">
-                <b-button @click="openCommentModal()">
-                  <b-icon icon="chat-left-fill" />
-                </b-button>
-              </div>
+            <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
+            <div class="comment-icon">
+              <b-button @click="openCommentModal()">
+                <b-icon icon="chat-left-fill" />
+              </b-button>
+            </div>
           </div>
-          <div v-if="post.category" class="category-label">{{post.category}}</div>
+          <div v-if="post.category" class="category-label">
+            {{ post.category }}
+          </div>
         </div>
       </div>
     </div>
@@ -157,16 +168,18 @@
 
             <div v-else>
               <div class="comments-header">
-                <b-form class="comments-form">
+                <b-form class="comments-form" autocomplete="off">
                   <div class="writer-img">
                     <img width="40" src="@/assets/images/no-image.png" />
                   </div>
                   <b-form-input
                     name="comment"
+                    ref="new-comment"
                     :value="newComment"
                     id="input-comment"
                     @input="(value) => updateComment(value)"
-                    placeholder="text..."
+                    @keydown="openUsersList"
+                    placeholder="Write your comment ..."
                     required
                   >
                   </b-form-input>
@@ -176,6 +189,19 @@
                   >
                     <b-icon icon="cursor-fill"></b-icon>
                   </b-button>
+                  <ul
+                    v-if="display_userslist"
+                    class="users-list"
+                    :style="`left: ${userslist_position}px`"
+                  >
+                    <li
+                      v-for="user in totalUsers"
+                      :key="user.id"
+                      @click="setMentionIds(user)"
+                    >
+                      @{{ user.userName }}
+                    </li>
+                  </ul>
                 </b-form>
               </div>
               <div class="comments-content">
@@ -200,7 +226,7 @@
                     </div>
                     <div class="comment-content d-flex flex-column my-2 mb-3">
                       <div class="comment-user-name">
-                        @{{ comment.creator_name }}
+                        @{{ comment.creatorName }}
                       </div>
                       <div class="comment-msg">
                         {{ comment.message }}
@@ -266,13 +292,51 @@
         </div>
       </div>
     </transition>
+
+    <!---------- Categories Modal ------------->
+    <transition name="modal">
+      <div v-if="showCategoriesModal" class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-container categories-modal">
+            <div class="modal-header">
+              <div>Set/Update Category</div>
+            </div>
+
+            <div class="modal-body">
+              <ul class="categories-list">
+                <li
+                  v-for="category in categories"
+                  :key="category.id"
+                  @click="setCategory(category)"
+                  :class="[{'active': category.value === post.category}]"
+                >
+                  {{ category.value }}
+                </li>
+              </ul>
+            </div>
+            <div
+              class="modal-footer"
+              style="border: 0; justify-content: center"
+            >
+              <b-button
+                class="btn-danger"
+                size="sm"
+                @click="showCategoriesModal = false"
+              >
+                close
+              </b-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
 import service from "@/service";
 import { linkify } from "@/utils/linkify.js";
-import {setDateTimeFormat, setTimeFormat} from "@/utils/date.js"
+import { setDateTimeFormat, setTimeFormat } from "@/utils/date.js";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -291,17 +355,28 @@ export default {
       newComment: "",
       showDeleteModal: false,
       commentsLoaded: false,
+      userslist_position: 50,
+      display_userslist: false,
+      comment_mention_ids: [],
+      showCategoriesModal: false,
     };
   },
   mounted() {
     // insert clickable content for posts
-    document.getElementById(`post-${this.post.id}`).innerHTML =  linkify(this.post.message)
+    document.getElementById(`post-${this.post.id}`).innerHTML = linkify(
+      this.post.message
+    );
   },
   computed: {
-    ...mapGetters(["currUser"]),
+    ...mapGetters(["currUser", "totalUsers", "categories"]),
+    userNames() {
+      return this.totalUsers.reduce((acc, item) => {
+        return [...acc, item.userName];
+      }, []);
+    },
   },
   methods: {
-    ...mapActions(["fetchPosts"]),
+    ...mapActions(["fetchPosts", "fetchUsers"]),
     setDateTimeFormat,
     setTimeFormat,
     updateDesc() {
@@ -331,6 +406,24 @@ export default {
           }
         });
     },
+    setCategory(category) {
+      this.showCategoriesModal = false;
+      let { id } = this.post;
+      service()
+        .put(`posts/${id}`, {
+          title: this.postTitle,
+          message: this.postDescription,
+          tags: this.postTags.split(","),
+          creatorId: this.currUser.id,
+          category: category.value,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            // this.fetchPosts();
+            this.post.category = category.value;
+          }
+        });
+    },
     async fetchComments() {
       try {
         const { data } = await service().get(`comments/post/${this.post.id}`);
@@ -348,6 +441,7 @@ export default {
             postmessage_id: this.post.id,
             message: this.newComment,
             creator_id: this.currUser.id,
+            mention_ids: this.comment_mention_ids,
           })
           .then((res) => {
             if (res.status === 200) {
@@ -370,6 +464,9 @@ export default {
         });
     },
     openCommentModal() {
+      if (this.totalUsers.length === 0) {
+        this.fetchUsers();
+      }
       this.showEditModal = true;
       this.checkEditCommentStatus();
     },
@@ -381,7 +478,30 @@ export default {
     },
     updateComment(value) {
       this.newComment = value;
-    }
+      this.totalUsers.forEach((user) => {
+        if (!this.newComment.includes(user.userName)) {
+          this.comment_mention_ids = this.comment_mention_ids.filter(
+            (id) => id !== user.id
+          );
+        }
+      });
+    },
+    openUsersList(e, options) {
+      if (e.keyCode == 50) {
+        this.userslist_position =
+          this.newComment.length * 5 + this.userslist_position;
+
+        this.display_userslist = true;
+      } else {
+        this.display_userslist = false;
+      }
+    },
+    setMentionIds(user) {
+      let { id, userName } = user;
+      this.comment_mention_ids = [...this.comment_mention_ids, id];
+      this.newComment = this.newComment.concat(userName);
+      this.display_userslist = false;
+    },
   },
 };
 </script>
@@ -534,10 +654,10 @@ body {
 
 .category-label {
   font-size: 12px;
-  background-color:#bef992;
+  background-color: #bef992;
   padding: 0px 10px;
   border-radius: 100px;
-  border:1px solid #3b4547;
+  border: 1px solid #3b4547;
 }
 
 .heart-icon {
@@ -563,16 +683,6 @@ body {
   background-color: transparent;
 }
 
-/* .comment-icon:after {
-  position: absolute;
-  content: "";
-  width: 8px;
-  background-color: #bef992;
-  height: 8px;
-  border-radius: 5px;
-  right: -2px;
-} */
-
 .comments-form {
   position: relative;
   display: flex;
@@ -589,12 +699,44 @@ body {
 .comments-form button {
   position: absolute;
   border: none !important;
-  right: 15px;
+  right: 31px;
   bottom: 5px;
+
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.comments-form .users-list {
+  list-style: none;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 7px 1px lightgray;
+  z-index: 2;
+
+  position: absolute;
+  top: 50px;
+}
+
+.comments-form .users-list li {
+  padding-right: 10px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.comments-form .users-list li:hover {
+  color: rgb(99, 99, 231);
+  font-weight: bold;
+  background-color: #d6e5db;
+  border-radius: 10px;
 }
 
 .comments-content {
   max-height: 280px;
+  min-height: 280px;
   overflow-y: scroll;
   word-break: break-all;
   margin-top: 30px;
@@ -866,10 +1008,41 @@ label {
   margin-bottom: -20px;
   padding: 1%;
   width: 75px;
-  margin-left: 166px;
+  margin-left: 33%;
 }
 
 #delete-modal-default-button {
   float: right !important;
+}
+
+.categories-modal {
+  max-width: 300px;
+}
+
+ul.categories-list {
+  list-style: none;
+  text-align: center;
+  padding: 0px;
+  margin-top: 20px;
+
+  max-height: 260px;
+  overflow-y: scroll;
+}
+
+ul.categories-list li {
+  font-weight: 500;
+  margin-bottom: 5px;
+  border: 1px solid lightgray;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 300ms;
+}
+
+ul.categories-list li:hover,
+ul.categories-list li.active {
+  font-weight: bold;
+  transition: all 300ms;
+  background-color: #3b4547;
+  color: #fff;
 }
 </style>

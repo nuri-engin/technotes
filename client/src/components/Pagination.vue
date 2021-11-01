@@ -7,6 +7,9 @@
       @change="(page) => updatePage(page)"
       align="center"
     ></b-pagination>
+    <div v-if="rows" class="total-notes">
+      {{current_page_total}} of {{rows}} Notes
+    </div>
   </div>
 </template>
 
@@ -15,7 +18,13 @@ import { mapActions } from "vuex";
 
 export default {
   name: "Pagination",
-  props: ["currentPage", "rows"],
+  props: ["currentPage", "rows", "posts", "filtered"],
+  data() {
+    return { 
+      current_page_total: this.filtered ? this.posts.length : 24,
+      current_page: 1,
+    }
+  },
   computed: {
     page: {
       get() {
@@ -26,10 +35,23 @@ export default {
       },
     },
   },
+  watch: {
+    posts(newValue) {
+       newValue.length > 0 &&  this.calculateCurrentTotal(this.current_page)
+    }
+  },
   methods: {
     ...mapActions(["fetchPosts"]),
     updatePage(page) {
         this.fetchPosts({page})
+        this.current_page = page;
+    },
+    calculateCurrentTotal(page) {
+      let lastPagesTotal = 0;
+      for(let i=1;i<page;i++) {
+        lastPagesTotal = lastPagesTotal + ( i * 24)
+      }
+      this.current_page_total = this.posts.length + lastPagesTotal;
     }
   },
 };
@@ -40,12 +62,20 @@ export default {
     position: fixed;
     bottom: 0px;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .page-item.active .page-link {
   background-color: #3c6562 !important;
   border-color: #3c6562 !important;
   font-weight: bold !important;
   color: #fff !important;
+}
+
+.total-notes {
+  margin-top: 0px;
 }
 
 .page-link {

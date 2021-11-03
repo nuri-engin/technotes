@@ -12,8 +12,8 @@ const enforce = require('express-sslify');
 const xss = require('xss-clean');
 const mongoSanitize = require('express-mongo-sanitize');
 const compression = require('compression');
-const { createServer } = require("http");
-const { Server } = require("socket.io");
+const http = require("http");
+const socketio = require("socket.io");
 
 // Load your swagger specification 
 let apiSpec = {};
@@ -33,6 +33,20 @@ try {
 dotenv.config();
 
 const app = express();
+// create http server and wrap the express app
+const server = http.createServer(app);
+
+// bind socket.io to that server
+const io = socketio(server, {
+    cors: {
+        origin: "http://localhost",
+        methods: ["GET", "POST"],
+        credentials: true,
+        transports: ['websocket', 'polling'],
+    },
+    allowEIO3: true
+});
+
 const errorHandler = require('_middleware/error-handler');
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -90,14 +104,15 @@ app.use(errorHandler);
 // start server
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
 
-const httpServer = createServer(app);
+// will fire for every new websocket connection
+io.on("connection", (socket) => {
+    console.info(`Socket ${socket.id} has connected.`);
 
-const io = new Server(httpServer, { /* options */ });
-
-io.on("connection", (socket) => {  
-    console.log("Socket", socket);
+    socket.on("disconnect", () => {
+        console.info(`Socket ${socket.id} has disconnected.`);
+    });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log('Server listening on port ' + port);
 });

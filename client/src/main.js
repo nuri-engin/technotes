@@ -25,7 +25,7 @@ if (token) {
 
 // Socket.io connections
 Vue.use(new VueSocketIO({
-  debug: true,
+  debug: false,
   connection: process.env.VUE_APP_SOCKET_IO_CONNECTION,
 }))
 

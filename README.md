@@ -1,5 +1,5 @@
-# technotes
-Just another Tech Notes app.
+# TechNotes
+Take and share your technology notes
 
 INFO: Keep the BIN folder!
 

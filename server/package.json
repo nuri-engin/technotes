@@ -1,11 +1,11 @@
 {
-    "name": "node-mongo-signup-verification-api",
+    "name": "technotes_api",
     "version": "1.0.0",
-    "description": "NodeJS + MongoDB API for Email Sign Up with Verification, Authentication & Forgot Password",
+    "description": "Take and share your technology notes",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/cornflourblue/node-mongo-signup-verification-api.git"
+        "url": "https://github.com/nuri-engin/technotes"
     },
     "scripts": {
         "start": "node ./server.js",

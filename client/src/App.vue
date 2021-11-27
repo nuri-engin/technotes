@@ -76,6 +76,10 @@ html, body {
   overflow: hidden;
 }
 
+*, *::before, *::after{
+  outline: none;
+}
+
 .form-control:focus {
   border-color: inherit !important;
   -webkit-box-shadow: none !important;

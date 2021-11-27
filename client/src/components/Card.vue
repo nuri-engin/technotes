@@ -57,7 +57,24 @@
         </div>
         <div class="techcard-actions">
           <div class="techcard-like-comment">
-            <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div>
+            <!-- <div class="heart-icon"><b-icon icon="suit-heart" scale="1" /></div> -->
+            <b-tooltip :target="() => $refs[`like-${post.id}`]">
+              {{numberOflikes}} likes
+            </b-tooltip>
+            <div class="like-icon">
+              <svg :ref="`like-${post.id}`" class="one" :class="[{'on' : post.likes.length > 0}]" viewBox="0 0 100 100">
+                <g class="heartOne" @click="toggleLike()">
+                  <path
+                    class="heartEX"
+                    d="M 90,40 a 20 20 0 1 0 -40,-25 a 20 20 0 1 0 -40,25 l 40,50  z"
+                  />
+                  <path
+                    class="heart"
+                    d="M 90,40 a 20 20 0 1 0 -40,-25 a 20 20 0 1 0 -40,25 l 40,50  z"
+                  />
+                </g>
+              </svg>
+            </div>
             <div class="comment-icon">
               <b-button @click="openCommentModal()">
                 <b-icon icon="chat-left-fill" />
@@ -308,7 +325,7 @@
                   v-for="category in categories"
                   :key="category.id"
                   @click="setCategory(category)"
-                  :class="[{'active': category.value === post.category}]"
+                  :class="[{ active: category.value === post.category }]"
                 >
                   {{ category.value }}
                 </li>
@@ -374,11 +391,35 @@ export default {
         return [...acc, item.userName];
       }, []);
     },
+    numberOflikes: {
+      get() {
+        return this.post.likes.length
+      },
+      set(value) {
+        return value
+      }
+    }
   },
   methods: {
     ...mapActions(["fetchPosts", "fetchUsers"]),
     setDateTimeFormat,
     setTimeFormat,
+    toggleLike() {
+      let currentLike = this.$refs[`like-${this.post.id}`]
+      let { id } = this.post;
+      if(this.post.likes.includes(this.currUser.id)) {
+        service().patch(`posts/${id}`, {
+          user_id: this.currUser.id,
+          action: 'dec'
+        })
+      } else {
+        service().patch(`posts/${id}`, {
+          user_id: this.currUser.id,
+          action: 'inc'
+        })
+      }
+      currentLike.classList.toggle('on');
+    },
     updateDesc() {
       this.descEditMode = false;
       let { id } = this.post;
@@ -510,6 +551,45 @@ export default {
 body {
   font-family: "Quicksand", Helvetica, Arial !important;
   font-family: "Quicksand-light", Helvetica, Arial !important;
+}
+
+svg.one {
+  cursor: pointer;
+}
+svg.one .heart {
+    fill: transparent;
+    stroke: #922c36;
+    stroke-width: 7;
+    transition: all .6s ease-out;
+}
+svg.one .heartEX {
+    fill: none;
+    stroke: transparent;
+    transform-box: border-box;
+    transform-origin:50% 50%;
+    stroke-width: 12px;
+    transform: scale(.5);
+    transition:none;
+}
+svg.one.on .heartEX {
+   transform: scale(2);
+      opacity:0;
+      stroke: #922c36;
+      transform-box: border-box;
+      transform-origin: 50% 50%;
+      transition: transform, stroke, opacity;
+      transition-duration: .6s, .01s, .4s;
+      transition-delay: 0s, 0s, .2s;
+      
+}
+svg.one.on .heart {
+    fill: #922c36;
+}
+svg {
+  overflow:visible;
+  width: 20px;
+  height: 15px;
+  margin-right: 5px;
 }
 
 .description-input {

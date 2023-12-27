@@ -9,7 +9,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^1.6.3",
     "bootstrap": "^5.0.1",
     "bootstrap-vue": "^2.21.2",
     "dotenv": "^8.6.0",
